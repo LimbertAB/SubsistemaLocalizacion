@@ -1,0 +1,50 @@
+extends layout2
+
+block content
+    nav.navbar.navbar-inverse
+        .container-fluid
+          .collapse.navbar-collapse(id="bs-example-navbar-collapse-1")
+            ul.nav.navbar-nav.col-md-12
+              li(class="col-md-1")
+                a(href="MenuPrincipal")
+                  span(class="glyphicon glyphicon-home", aria-hidden="true")
+              li(class="col-md-2")
+                a(href='Usuarios') USUARIOS
+              li(class="col-md-2")
+                a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal") MENSAJES
+              li(class="dropdown col-md-2")
+                a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") LOCALIZACION
+                  span(class="caret")
+                    ul(class="dropdown-menu")
+                      li
+                        a(href="Principal_TiempoReal") Tiempo Real
+                      li
+                        a(href="#") Localizacion GPS
+              li(class="dropdown col-md-2 col-md-offset-3 avatarrr")
+    .ventanaModal
+      .contenido
+        h1.h1Success #{confirmacion}
+        img.imgSuccess(src='../images/success.png')
+        input.btnSuccess(type="submit",placeholder="Aceptar", name="aceptar", value="Aceptar")
+    section.Registro
+      form(method="post")
+        h1 Registrar Nuevo Usuario
+        p Nick
+        input.nombreR(type="text",placeholder="Nombres",name="nombres",id="entradas")
+        .errores(id='mensaje1') Campo Requerido!
+        p Nombre Completo
+        input.apellidoR(type="text",placeholder="apellidos",name="apellidos",id="entradas")
+        .errores(id='mensaje2') Campo Requerido!
+        p Contraseña
+        input.contrasR(type="password",placeholder="password",name="password",id="entradas")
+        .errores(id='mensaje3') Campo Requerido!
+        p Cargo
+        input.cargoR(type="text",placeholder="cargo",name="cargo",id="entradas")
+        .errores(id='mensaje4') Campo Requerido!
+        p Domicilio
+        input.domicilioR(type="text",placeholder="domicilio",name="domicilio",id="entradas")
+        .errores(id='mensaje5') Campo Requerido!
+        p Telefono
+        input(type="text",placeholder="telefono",name="telefono",id="entradas")
+        input.btnEnviarRegistro(type="submit", value="Enviar")
+    script(src="/javascripts/bootstrap.min.js")

@@ -1,0 +1,26 @@
+extends layout
+
+block content
+	.MenuArriba
+			nav
+				ul
+					li
+						img.logo(src='../images/logo.png')
+					li
+						a.nombre(href='#') SERVICIO DEPARTAMENTAL DE CAMINOS POTOSI
+					li
+						a.ayuda(href='#') AYUDA							
+	section
+		h1 BIENVENIDO
+		p Al sítio Web Del SE.DE.CA.
+		p.pb Potosí - Bolivia
+	section
+		.login-form
+			h2#Accede ACCEDE A LA PAGINA
+			input.Entradas(type='text',size='50', name="nombre",id="nombre")
+			input.Entradas(type='password',size='50', name="contraseña",id="contraseña")
+			input.btnEnviar(type="submit",value="INICIAR SESION",id="btnEnviarLogin")
+			.cajaError
+				a.error
+				img.errorLogo(src='../images/warning.png')
+			a.forgot(href='#') Olvidaste tu contraseña?

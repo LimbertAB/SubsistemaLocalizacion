@@ -1,0 +1,39 @@
+extends layoutGeo
+
+block content
+    .row(style="width:100%;margin:0;")
+        nav.navbar.navbar-inverse(style="margin:0;")
+            .container-fluid
+                .collapse.navbar-collapse(id="bs-example-navbar-collapse-1")
+                    ul.nav.navbar-nav.col-md-12
+                        li(class="col-md-1")
+                            a(href="MenuPrincipal")
+                                span(class="glyphicon glyphicon-home", aria-hidden="true")
+                        
+                        li(class="col-md-3")
+                            a(href='Principal_TiempoReal') PRINCIPAL LOCALIZACION
+                        li(class="col-md-3")
+                            a(href='Localizacion_All_TR') LOCALIZAR USUARIOS
+                        li(class="dropdown col-md-2")
+                            a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") MOSTRAR MAS
+                                span(class="caret")
+                                    ul(class="dropdown-menu")                    
+                                        li
+                                            a(href="Usuarios") Usuarios
+                                        li
+                                            a(href="RegistrarUsuario") Registrar Usuarios
+                                        li
+                                            a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal") Mensajes
+                                        li
+                                            a(href="AdminTRealPrincipal") Localizacion GPS
+                        li(class="dropdown col-md-2 col-md-offset-3 avatarrr")
+    .row
+        .col-md-2(style="margin:0;padding-right:0;")
+            .row.localizadosTile
+                h4(style="margin:0; text-align:center;background:#898989;color:white; font-weight:bold;padding-left:5px;") USUARIOS 
+                h4(style="margin:0; text-align:center;background:#898989;color:white; font-weight:bold;padding-left:5px;") LOCALIZADOS
+            .row(style="margin:0;overflow-y:scroll;height:574px;background:white;")
+                table.table.table-hover.ListaLocalizados
+        .col-md-10.mapa(style="padding:0;")
+            #mimapa(style="top: 52px;margin:0;width:84%;height: 92%;")
+    script(src="/javascripts/bootstrap.min.js")

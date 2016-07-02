@@ -1,0 +1,84 @@
+extends layoutGeo
+
+block content
+    .row(style="width:100%;margin:0;")
+        nav.navbar.navbar-inverse
+            .container-fluid
+                .collapse.navbar-collapse(id="bs-example-navbar-collapse-1")
+                    ul.nav.navbar-nav.col-md-12
+                        li(class="col-md-1")
+                            a(href="MenuPrincipal")
+                                span(class="glyphicon glyphicon-home", aria-hidden="true")
+                        li(class="col-md-3")
+                            a(href='#') PRINCIPAL LOCALIZACION
+                        li(class="col-md-3")
+                            a(href='Localizacion_All_TR') LOCALIZAR USUARIOS
+                        li(class="dropdown col-md-2 col-md-offset-3 avatarrr")
+                        li(class="dropdown col-md-2")
+                            a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") MOSTRAR MAS
+                                span(class="caret")
+                                    ul(class="dropdown-menu")                    
+                                        li
+                                            a(href="Usuarios") Usuarios
+                                        li
+                                            a(href="RegistrarUsuario") Registrar Usuarios
+                                        li
+                                            a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal") Mensajes
+                                        li
+                                            a(href="AdminTRealPrincipal") Localizacion GPS
+    .row
+        h3(style="margin:0; text-align:center;right:100px;") INFORMACION DE AREAS FUNCIONALES
+        .col-md-2(style="margin:0;padding-right:0;top:15px;")
+            .row(style="margin:0;overflow-y:scroll;height:535px;background:white;")
+                #accordion.panel-group(role='tablist', aria-multiselectable='true')
+                    .panel.panel-default
+                        #headingOne.panel-heading(role='tab',style="background:#FA5656;")
+                            h4.panel-title(style="text-align:center;color:white; font-weight:bold;")
+                                a(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapseOne', aria-expanded='false', aria-controls='collapseOne')
+                                    | RESIDENCIA ACASIO
+                        #collapseOne.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='headingOne')
+                          .panel-body
+                            | Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                    .panel.panel-default
+                        #headingTwo.panel-heading(role='tab',style="background:#E9E45D;")
+                            h4.panel-title(style="text-align:center;color:white; font-weight:bold;")
+                                a.collapsed(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapseTwo', aria-expanded='false', aria-controls='collapseTwo')
+                                    | RESIDENCIA RETIRO
+                        #collapseTwo.panel-collapse.collapse(role='tabpanel', aria-labelledby='headingTwo')
+                          .panel-body
+                            | Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                    .panel.panel-default
+                        #headingThree.panel-heading(role='tab',style="background:#EC9F53;")
+                            h4.panel-title(style="text-align:center;color:white; font-weight:bold;")
+                                a.collapsed(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapseThree', aria-expanded='false', aria-controls='collapseThree')
+                                    | RESIDENCIA TUPIZA
+                        #collapseThree.panel-collapse.collapse(role='tabpanel', aria-labelledby='headingThree')
+                          .panel-body
+                            | Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                    .panel.panel-default
+                        #headingFour.panel-heading(role='tab',style="background:#69D389;")
+                            h4.panel-title(style="text-align:center;color:white; font-weight:bold;")
+                                a.collapsed(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapseFour', aria-expanded='false', aria-controls='collapseFour')
+                                    | RESIDENCIA UNCIA
+                        #collapseFour.panel-collapse.collapse(role='tabpanel', aria-labelledby='headingFour')
+                          .panel-body
+                            | Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                    .panel.panel-default
+                        #headingFive.panel-heading(role='tab',style="background:#627DDF;")
+                            h4.panel-title(style="text-align:center;color:white; font-weight:bold;")
+                                a.collapsed(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapseFive', aria-expanded='false', aria-controls='collapseFive')
+                                    | RESIDENCIA UYUNI
+                        #collapseFive.panel-collapse.collapse(role='tabpanel', aria-labelledby='headingFive')
+                          .panel-body
+                            | Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                    .panel.panel-default
+                        #headingSix.panel-heading(role='tab',style="background:#D280C7;")
+                            h4.panel-title(style="text-align:center;color:white; font-weight:bold;")
+                                a.collapsed(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapseSix', aria-expanded='false', aria-controls='collapseSix')
+                                    | RESIDENCIA VILLA MAR
+                        #collapseSix.panel-collapse.collapse(role='tabpanel', aria-labelledby='headingSix')
+                          .panel-body
+                            | Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+        .col-md-10.mapa(style="padding:0;")
+            #mimapa
+    script(src="/javascripts/bootstrap.min.js")

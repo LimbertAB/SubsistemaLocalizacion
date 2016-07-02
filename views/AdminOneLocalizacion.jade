@@ -1,0 +1,40 @@
+extends layoutGeo
+
+block content
+    .row(style="width:100%;margin:0;")
+        nav.navbar.navbar-inverse(style="margin:0;")
+            .container-fluid
+                .collapse.navbar-collapse(id="bs-example-navbar-collapse-1")
+                    ul.nav.navbar-nav.col-md-12
+                        li(class="col-md-1")
+                            a(href="MenuPrincipal")
+                                span(class="glyphicon glyphicon-home", aria-hidden="true")
+                        li(class="col-md-3")
+                            a(href='Principal_TiempoReal') PRINCIPAL LOCALIZACION
+                        li(class="col-md-3")
+                            a(href='Localizacion_All_TR') LOCALIZAR USUARIOS
+                        li(class="dropdown col-md-2")
+                            a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") MOSTRAR MAS
+                                span(class="caret")
+                                    ul(class="dropdown-menu")                    
+                                        li
+                                            a(href="Usuarios") Usuarios
+                                        li
+                                            a(href="RegistrarUsuario") Registrar Usuarios
+                                        li
+                                            a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal") Mensajes
+                                        li
+                                            a(href="AdminTRealPrincipal") Localizacion GPS
+                        li(class="dropdown col-md-2 col-md-offset-3 avatarrr")
+    .row(style="padding:5px;background:yellow;")
+        .col-md-1.col-md-offset-1
+            a(href="#",style="font-size:2em;")
+                span(class="glyphicon glyphicon-arrow-left", aria-hidden="true")
+        .col-md-8
+            h2.titleOneUser(style="margin:0; text-align:center;right:100px;")
+        .col-md-1
+            a(href="#",style="font-size:2em;")
+                span(class="glyphicon glyphicon-arrow-right", aria-hidden="true")
+    .row
+        #mimapa(style="top: 100px;margin:0;width:100%;height: 85%;left:0;")
+    script(src="/javascripts/bootstrap.min.js")

@@ -1,0 +1,130 @@
+* {
+	box-sizing: border-box;
+}
+body {
+	position: relative;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  width: 100%;
+  font-family: sans-serif;
+  margin: 0;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  background-color: white;
+}
+::-webkit-scrollbar-track {
+  background-color: white;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background-color: rgba(0,0,0,0.6);
+}
+
+.col-md-10.mapa{
+  position: static;
+  height: 90%;
+}
+#mimapa {
+  position: absolute;
+  border:1px solid black;
+	width: 81%;
+	height: 80%;
+	top: 115px;
+  margin-left: 1.5em;
+  margin-right: 1.5em;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.leaflet-popup-content p {
+    margin: 1px;
+    font-size: .9em;
+}
+.row.localizadosTile{
+  width: 100%;
+  margin: 0;
+}
+table tr:hover{
+  cursor: pointer;
+}
+
+//mensajes
+
+.ventanaModalMensaje{
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background: rgba(0,0,0, .8);
+  margin: 0 auto;
+  display: none;
+}
+.containerMensaje{
+  width: 50%;
+  height: 44em;
+  margin: 0 auto;
+  background: white;
+  margin-top:25px;
+}
+.main.row {
+  width: 50%;
+}
+.main.row  h1{
+  margin: 0;
+}
+.modal-body{
+  overflow-y:scroll;
+  height: 36em;
+}
+.table{
+  margin: 0;
+}
+.nombresMensajes.col-md-9{
+  font-size: 1.2em;
+  margin: 0;
+  padding: 0;
+}
+.fechasMensajes.col-md-3{
+  margin: 0;
+  padding: 0;
+  color:#959090;
+  font-size: .8em;
+}
+.filaMensajes.row.col-md-12{
+  cursor: pointer;
+  padding: .5em;
+}
+.filaMensajes.row.col-md-12:hover{
+  background: #C6E7E6;
+}
+.listasMensajes.col-md-12{
+  padding-right: 1px;
+}
+.row.col-md-12.filaorigen{
+  background: #1da1f2;
+  border-radius: 10px;
+}
+.row.col-md-12.filaorigen h5{
+  color:white;
+}
+.row.col-md-12.filadestino{
+  background: #e1e8ed;
+  border-radius: 10px;
+}
+.col-md-12.unUsuarioMensajes{
+  padding-right: 1px;
+}
+.col-md-12.footer{
+  padding-left: 1px;
+  padding-right: 1px;
+}
+.col-md-12.footer textarea{
+  outline: none;
+  resize:none;
+}
+.modal-footer{
+  background: #D8E5E7;
+}

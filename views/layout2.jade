@@ -1,0 +1,32 @@
+doctype html
+html
+  head
+    title= title
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel='stylesheet', href='/stylesheets/style2.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/leaflet.css')
+    script(src="/javascripts/jquery.js")
+    script(src="/javascripts/principal.js")
+    script(src="/javascripts/Mensajes.js")
+    script(src="/javascripts/leaflet.js")
+    script(src="/socket.io/socket.io.js")
+    script(type='text/javascript').
+        function onDocumentReady() {
+            var map = L.map('mimapa');
+            map.locate({  //mas presicion pero un poco mas lento al obtener presicion
+                enableHighAccuracy:false,
+            });
+            map.on('locationfound',onLocationFound);
+            function onLocationFound(position){
+                console.log(position);
+            }
+            map.on('locationfound', onLocationFound);
+            function onLocationError(e) {
+                alert(e.message);
+            }
+            map.on('locationerror', onLocationError);
+        }
+        $(document).on('ready', onDocumentReady);
+  body
+    block content
