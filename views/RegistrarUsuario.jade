@@ -1,50 +1,112 @@
 extends layout2
 
 block content
-    nav.navbar.navbar-inverse
+    nav.navbar.navbar-inverse(style="margin-bottom:0px;")
         .container-fluid
-          .collapse.navbar-collapse(id="bs-example-navbar-collapse-1")
-            ul.nav.navbar-nav.col-md-12
+          .collapse.navbar-collapse(id="bs-example-navbar-collapse-1",style="padding-left:0;")
+            ul.nav.navbar-nav.col-md-12(id="global-actions",style="padding-left:0;")
+              li(class="col-md-2 col-sm-2 col-xs-12")
+                img(src="/images/logoSEDECA.png",class="logoSEDECA")
               li(class="col-md-1")
                 a(href="MenuPrincipal")
                   span(class="glyphicon glyphicon-home", aria-hidden="true")
-              li(class="col-md-2")
-                a(href='Usuarios') USUARIOS
-              li(class="col-md-2")
-                a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal") MENSAJES
-              li(class="dropdown col-md-2")
-                a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") LOCALIZACION
+              li.active(class="dropdown col-md-1 col-sm-1",style="padding-left:0;padding-right:0;")
+                a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") USUARIOS
+                  span(class="caret")
+                    ul(class="dropdown-menu")
+                      li
+                        a(href="Usuarios") Listar Usuarios
+                      li
+                        a(href="RegistrarUsuario") Nuevo Usuario
+              li(class="col-md-1 col-sm-2",style="padding-left:0;padding-right:0;")
+                a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal",style="padding-left:0;padding-right:0;") MENSAJES
+              li(class="dropdown col-md-1 col-sm-1",style="padding-left:0;padding-right:0;")
+                a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") UBICACION
                   span(class="caret")
                     ul(class="dropdown-menu")
                       li
                         a(href="Principal_TiempoReal") Tiempo Real
                       li
                         a(href="#") Localizacion GPS
-              li(class="dropdown col-md-2 col-md-offset-3 avatarrr")
-    .ventanaModal
-      .contenido
-        h1.h1Success #{confirmacion}
-        img.imgSuccess(src='../images/success.png')
-        input.btnSuccess(type="submit",placeholder="Aceptar", name="aceptar", value="Aceptar")
-    section.Registro
-      form(method="post")
-        h1 Registrar Nuevo Usuario
-        p Nick
-        input.nombreR(type="text",placeholder="Nombres",name="nombres",id="entradas")
-        .errores(id='mensaje1') Campo Requerido!
-        p Nombre Completo
-        input.apellidoR(type="text",placeholder="apellidos",name="apellidos",id="entradas")
-        .errores(id='mensaje2') Campo Requerido!
-        p Contraseña
-        input.contrasR(type="password",placeholder="password",name="password",id="entradas")
-        .errores(id='mensaje3') Campo Requerido!
-        p Cargo
-        input.cargoR(type="text",placeholder="cargo",name="cargo",id="entradas")
-        .errores(id='mensaje4') Campo Requerido!
-        p Domicilio
-        input.domicilioR(type="text",placeholder="domicilio",name="domicilio",id="entradas")
-        .errores(id='mensaje5') Campo Requerido!
-        p Telefono
-        input(type="text",placeholder="telefono",name="telefono",id="entradas")
-        input.btnEnviarRegistro(type="submit", value="Enviar")
+              li(class="dropdown col-md-1 col-sm-2 avatarrr",style="padding-left:0;padding-right:0;") 
+    h1.resultadoRegistro(style="display:none;") #{estado}
+    #myModal.modal.fade.in.modalRegistro(role='dialog', tabindex='-1', aria-labelledby='myModalLabel', style='display: none;')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header.modalRegistroResult
+            image.imagenRegistro(style='height:130px;margin:0 auto;display:block;')
+            button.close.cerrarmodalRegistro(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+            h3#myModalLabel.modal-title
+          .modal-body(style='height: 200px;overflow:hidden;padding-right: 0px;padding-top: 0px;') 
+            .row
+              h1.registroEstado(style='text-align:center;margin-top:40px;')
+            .row
+              h4.registroDescripcion(style='text-align:center;')
+          .modal-footer
+            button.btn.btn-primary.cerrarmodalRegistro(type='button') ACEPTAR
+
+    form.form-horizontal(method="post")
+        .form-group
+          h1 Registrar Nuevo Usuario
+        .form-group.form1.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.col-sm-offset-2.control-label Nombre Completo
+          .col-sm-5
+            input.form-control.apellidoR(type='text', placeholder='Nombres y Apellidos',name="nombres")
+            span(class="span1 glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
+        .form-group.form2.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 Nombre de Usuario
+          .col-sm-5
+            input.form-control.nombreR(type='text', placeholder='Mayor a 10 caracteres Ejemplo: Limbert1990',name="nick")
+            span(class="span2 glyphicon glyphicon-remove form-control-feedback")
+        .form-group.form3.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 CI
+          .col-sm-5
+            input.form-control.ci(type='number', placeholder='Carnet de Identidad',name="ci")
+            span(class="span3 glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
+        .form-group.form4.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 Contraseña
+          .col-sm-5
+            input.form-control.contrasR(type='password', placeholder='Minimo 10 caracteres',name='password')
+            span(class="span4 glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
+        .form-group.form5.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 Repita Contraseña
+          .col-sm-5
+            input.form-control.repcontrasR(type='password', placeholder='Minimo 10 caracteres')
+            span(class="span5 glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
+        .form-group.form6.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 Cargo en el Sistema
+          .col-sm-5
+            select.form-control.cargoSistemaR(name="cargosis")
+              option Seleccione Cargo
+              option Administrador
+              option Encargado de Residencia
+              option Encargado de Campamento
+              option Trabajador
+        .form-group.opcionres.form7.has-error.has-feedback.formulariosRegistro(style="display:none;")
+          label.col-sm-2.control-label.col-sm-offset-2 Seleccione Residencia
+          .col-sm-5
+            select.form-control.ResidenciaR(name="residencia")
+              option Seleccione Residencia
+              option Acasio
+              option Uyuni
+              option Retiro
+              option Tupiza
+        .form-group.form8.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 Domicilio
+          .col-sm-5
+            input.form-control.domicilioR(type='text', placeholder='Ejemplo: Av.Maestro S/N',name="domicilio")
+            span(class="span8 glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
+        .form-group
+          label.col-sm-2.control-label.col-sm-offset-2 Telefono
+          .col-sm-5
+            input.form-control(type='number', placeholder='Ejemplo: 6212654',name="telefono")
+        .form-group
+          label.col-sm-2.control-label.col-sm-offset-2 Celular
+          .col-sm-5
+            input.form-control(type='number', placeholder='Ejemplo: 73433423',name="celular")
+        .form-group
+          .col-sm-offset-4.col-sm-10
+            button.btn.btn-primary.btnEnviarRegistro.disabled(type='submit' data-loading-text="Enviando Registro..." autocomplete="off") REGISTRAR
     script(src="/javascripts/bootstrap.min.js")
+    .closeModalfondo

@@ -12,7 +12,7 @@ _____________________________________________________________________*/
 		socket.emit('ListaMisMensajes',MiCi);
 	});
 	socket.on('RespuestaMisMensajes',function(valores){
-		console.log('....',valores);
+		
 		var nomb=[];var mensa=[];var fech=[];var ciss=[];var nom;var men;var fec;var CI;
 		for(var i=valores.nombres.length-1;i>=0;i--){
 			if(valores.nombres[i]!=''){

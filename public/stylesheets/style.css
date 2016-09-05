@@ -17,7 +17,7 @@ nav{
 nav ul{
 	background:  #000;
 	box-shadow: 0 3px rgba(0,0,0,.5);
-	height: 5rem;
+	height: 4.6rem;
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -180,14 +180,14 @@ p{
 	background-size:cover;
 }
 .logo{
-	color: white;
-	width: 90%;
+	width: 76%;
+	height: 50%;
 	padding-left: 10px;
 }
 .nombre{
-	color:#E4EA43;
+	color:white;
 	font-family:Arial;
-	font-size: 10em;
+	font-size: 12em;
 }
 .nombre:hover{
 	background: rgba(0,0,0, .10);
@@ -205,7 +205,7 @@ p{
     	background-size: cover;
 	} 
 	.nombre{
-		color:#E4EA43;
+		color:white;
 		font-size: 6em;
 	}
 	
@@ -216,7 +216,7 @@ p{
     	background-size: cover;
     }
     .nombre{
-		color:#E4EA43;
+		color:white;
 		font-size: 99%;
 	}
 }

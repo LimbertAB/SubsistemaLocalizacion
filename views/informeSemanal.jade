@@ -1,12 +1,36 @@
 extends layoutInfoSemanal
 
 block content
-	table.table.table-bordered
+	h2 INFORME SEMANAL DE ACTIVIDADES - COMPUTOS METRICOS
+	table(style="width:95%;margin:0 auto;")
 		thead
 			tr
-				th(rowspan="2",style="width:20px;") DIA
-				th(rowspan="2",style="width:20px;") RUTA
-				th(class="rotat",rowspan="2",style="width:35px;background:yellow;")
+				td RUTA
+				td chaco punta tomave
+				td SEMANA DEL:
+				td 01
+				td AL:
+				td 15
+			tr
+				td DISTRITO
+				td 03
+				td RESIDENCIA
+				td ACASIO
+				td MES
+				td Abril
+				td AÑO
+				td 2016
+
+	table.table.table-bordered(style="width:95%;margin:0 auto;")
+		thead
+			tr.head1
+				th(rowspan="2",style="width:20px;") 
+					div
+						span DIA
+				th(rowspan="2",style="width:20px;")
+					div
+						span RUTA
+				th(class="rotat",rowspan="2",style="width:35px;")
 					div
 						span SECCION
 				th(class="rotat",rowspan="2")
@@ -33,32 +57,32 @@ block content
 				th(rowspan="2",style="text-align:center")
 					div
 						span OBSERVACIONES
-			tr
-				th(class="rotat",style="width:35px;background:yellow;")
+			tr.head2
+				th(class="rotat",style="width:35px;")
 					div
 						span CLASE
 				th(class="rotat")
 					div
 						span HORAS REGULARES
-				th(class="rotat",style="width:35px;background:yellow;")
+				th(class="rotat",style="width:35px;")
 					div
 						span CLASE
 				th(class="rotat")
 					div
 						span HORAS REGULARES
-				th(class="rotat",style="width:35px;background:yellow;")
+				th(class="rotat",style="width:35px;")
 					div
 						span CLASE
 				th(style="width:20px;")
 					div
 						span CANTIDAD
-				th(class="rotat",style="width:35px;background:yellow;")
+				th(class="rotat",style="width:35px;")
 					div
 						span CLASE
 				th(style="width:20px;")
 					div
 						span CANTIDAD
-				th(class="rotat",style="width:35px;background:yellow;")
+				th(class="rotat",style="width:35px;")
 					div
 						span CLASE
 				th(class="rotat")
@@ -67,7 +91,7 @@ block content
 				th(class="rotat")
 					div
 						span HORAS UTILIZADAS
-				th(class="rotat",style="width:35px;background:yellow;")
+				th(class="rotat",style="width:35px;")
 					div
 						span CLASE
 				th(class="rotat")

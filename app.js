@@ -34,10 +34,10 @@ app.use(function(req, res, next) {
 });
 
 var settings={
-  host:"localhost",
-  user:"root",
-  password:"",
-  database:"EjemploSistema",
+  host:"190.129.24.218",
+  user:"sistemas",
+  password:"Abc123",
+  database:"SubsistemaLocalizacion",
   port:""
 }
 var query2=db.mysql(settings);
@@ -112,24 +112,24 @@ io.on("connection",function(socket){
 
     query2.get("usuarios").where({"nick":nick,"pass":pass}).execute(function(v){ 
       if(v.result.length==1){
-        var ci=v.result[0].ci;
+        var ci=v.result[0].idusuario;
         var cargo=v.result[0].cargo;
-        var auxx=nick + ' con CI: ' + ci;
+        var auxx=nick + ' id Usuario: ' + ci;
         console.log('Ingreso a la pagina: ' , auxx);
-        var aux=v.result[0].cargo;
         var desc=v.result[0].descripcion;
-        if(aux=='ADMINISTRADOR'){
+        var nombre=v.result[0].nombres_apellidos;
+        if(cargo=='ADMINISTRADOR'){
           var estado=true;
             socket.emit('LoginRespuesta',{"nombre":nick,"ci":ci,"estado":estado, "cargo":cargo});
         }else{
-          if(aux=='RESIDENTE'){
+          if(cargo=='RESIDENTE'){
             var estado=true;
             socket.emit('LoginRespuesta',{"nombre":nick,"ci":ci,"estado":estado,"cargo":cargo,"descripcion":desc});
           }
           else{
-            if((aux=='TRABAJADOR')||(aux=='ENCARGADO CAMPAMENTO')){
+            if((cargo=='TRABAJADOR')||(cargo=='ENCARGADO CAMPAMENTO')){
               var estado=true;
-              socket.emit('LoginRespuesta',{"nombre":nick,"ci":ci,"estado":estado,"cargo":cargo});
+              socket.emit('LoginRespuesta',{"nick":nick,"nombre":nombre,"ci":ci,"estado":estado,"cargo":cargo});
             }
           }
         }
@@ -162,7 +162,7 @@ io.on("connection",function(socket){
         query2.get("notificaciones").execute(function(rows2){
             for(var i=0; i<rows2.result.length; i++){
               for(var j=0; j<rows1.result.length; j++){
-                if(rows2.result[i].ciNoti==rows1.result[j].ci){
+                if(rows2.result[i].ciNoti==rows1.result[j].idusuario){
                   nombresNoti.push(rows1.result[j].nombres_apellidos);
                   cargo.push(rows1.result[j].cargo);
                   descripNoti.push(rows2.result[i].descripcion);
@@ -182,7 +182,7 @@ io.on("connection",function(socket){
         console.log('estos son los nombres '+rows2.result.length);
         for(var i=0; i<rows2.result.length; i++){
           nombreCompleto.push(rows2.result[i].nombres_apellidos);
-          ci.push(rows2.result[i].ci);
+          ci.push(rows2.result[i].idusuario);
         }
         socket.emit('RespuestaBuscador',{'nombreCompleto':nombreCompleto,'ci':ci});
       }else{
@@ -197,16 +197,16 @@ io.on("connection",function(socket){
         for(var i=0; i<rows2.result.length; i++){
           for(var j=0; j<rows1.result.length; j++){
             if(rows2.result[i].ciOrigen==valor){
-              if(rows2.result[i].ciDestino==rows1.result[j].ci){
+              if(rows2.result[i].ciDestino==rows1.result[j].idusuario){
                 nombresMensaje.push(rows1.result[j].nombres_apellidos);
-                CIMensaje.push(rows1.result[j].ci);
+                CIMensaje.push(rows1.result[j].idusuario);
                 Mensajes.push(rows2.result[i].mensaje);
                 fechaMensaje.push(rows2.result[i].fecha);
               }
             }else{
-              if(rows2.result[i].ciOrigen==rows1.result[j].ci){
+              if(rows2.result[i].ciOrigen==rows1.result[j].idusuario){
                 nombresMensaje.push(rows1.result[j].nombres_apellidos);
-                CIMensaje.push(rows1.result[j].ci);
+                CIMensaje.push(rows1.result[j].idusuario);
                 Mensajes.push(rows2.result[i].mensaje);
                 fechaMensaje.push(rows2.result[i].fecha);   
               }
@@ -332,5 +332,120 @@ io.on("connection",function(socket){
       });
     });
   });
+  socket.on('buscarnombreusuario',function(valor){
+    query2.get("usuarios").where({'nick':valor}).execute(function(rows2){
+      if(rows2.result.length==0){
+        socket.emit('respuestanombreusuario',true);
+      }else{
+        socket.emit('respuestanombreusuario',false); 
+      }
+    });
+  });
 });
 module.exports = app;
+
+
+// socket.on('insertarInformeSemanal',function(datos){
+//     console.log('llegaron',datos);
+//     var inforsemanal=Object();
+//     inforsemanal.idresidencia=datos.idresidencia;
+//     inforsemanal.idusuario=datos.idusuario;
+//     inforsemanal.ruta=datos.ruta;
+//     inforsemanal.semanadel=datos.semanadel;
+//     inforsemanal.semanaal=datos.semanaal;
+//     inforsemanal.mes=datos.mes;
+//     inforsemanal.año=datos.año;
+//     inforsemanal.distrito=datos.distrito;
+//     query2.save("informesemanal",inforsemanal,(function(r){
+//       if(r.affectedRows==1){
+//         query2.get("informesemanal").where({'idusuario':datos.idusuario}).execute(function(a){
+//           var ultimoInforme=a.result[a.result.length-1].idInformeSemanal;
+//           var detalleInforme=Object();
+//           for(var i=1;i<=datos.dia.length;i++){
+//             detalleInforme.idinformesemanal=ultimoInforme;
+//             detalleInforme.dia=datos.dia[i];
+//             detalleInforme.ruta=datos.ruta[i];
+//             detalleInforme.seccion=datos.seccion[i];
+//             detalleInforme.kilometroinicial=datos.kilometroinicial[i];
+//             detalleInforme.kilometrofinal=datos.kilometrofinal[i];
+//             detalleInforme.idactividad=datos.idactividad[i];
+//             detalleInforme.personalclase=datos.personalclase[i];
+//             detalleInforme.personalhorasregulares=datos.personalhorasregulares[i];
+//             detalleInforme.materialesclase=datos.materialesclase[i];
+//             detalleInforme.materialescantidad=datos.materialescantidad[i];
+//             detalleInforme.equiposnumerointerno=datos.equiposnumerointerno[i];
+//             detalleInforme.equiposhorasutilizadas=datos.equiposhorasutilizadas[i];
+//             detalleInforme.observaciones=datos.observaciones[i];
+//             query2.save("detalleinformesemanal",datos,(function(resultado){
+//               if(resultado.affectedRows==1){
+//                 console.log('insertado!!!');
+//               }
+//             }));
+//           }
+//         });
+//       }
+//     }));
+//   });
+//   socket.on('listarInformeSemanal',function(valor){//?año=2016&mes=marzo&semana=1
+//     console.log('entro a la lista');
+//       var fecha=valor.mes;
+//       var ci=valor.ci;
+//       var idresidencia;var idusuario; var ruta;var semanadel; var semanaal;var mes; var año; var distrito;
+//       var dia=[];var ruta=[];var seccion=[];var kilometroinicial=[];var kilometrofinal=[];var idactividad=[];
+//       var personalclase=[];var personalhorasregulares=[];var materialesclase=[];var materialescantidad=[];
+//       var equiposnumerointerno=[];var equiposhorasutilizadas=[];var observaciones=[];
+//       if(fecha==undefined){
+//         query2.get("informesemanal").where({"IdUsuario":ci}).execute(function(v){
+//           if(v.result.length>0){
+//             var estado='true';
+//             var ultimo=v.result.length-1;
+//             var ultimoInforme=v.result[ultimo].idInformeSemanal;
+//             idresidencia=v.result[ultimo].idresidencia;idusuario=v.result[ultimo].idusuario;ruta=v.result[ultimo].ruta;semanadel=v.result[ultimo].semanadel;
+//             semanaal=v.result[ultimo].semanaal;mes=v.result[ultimo].mes;año=v.result[ultimo].año;distrito=v.result[ultimo].distrito;
+//             query2.get("detalleinformesemanal").where({'idinformesemanal':ultimoInforme}).execute(function(a){
+//               for(var i=0;i<a.result.length;i++){
+//                 dia.push(a.result[i].dia);
+//                 ruta.push(a.result[i].ruta);
+//                 seccion.push(a.result[i].seccion);
+//                 kilometroinicial.push(a.result[i].kilometroinicial);
+//                 kilometrofinal.push(a.result[i].kilometrofinal);
+//                 idactividad.push(a.result[i].idactividad);
+//                 personalclase.push(a.result[i].personalclase);
+//                 personalhorasregulares.push(a.result[i].personalhorasregulares);
+//                 materialesclase.push(a.result[i].materialesclase);
+//                 materialescantidad.push(a.result[i].materialescantidad);
+//                 equiposnumerointerno.push(a.result[i].equiposnumerointerno);
+//                 equiposhorasutilizadas.push(a.result[i].equiposhorasutilizadas);
+//                 observaciones.push(a.result[i].observaciones);
+//               }
+//               socket.emit('respuestalistainformesemanal', {estado:estado,idresidencia:idresidencia,idusuario:idusuario,ruta:ruta,semanadel:semanadel,semanaal:semanaal,mes:mes,año:año,distrito:distrito,dia:dia,ruta:ruta,seccion:seccion,kilometroinicial:kilometroinicial,kilometrofinal:kilometrofinal,idactividad:idactividad,personalclase:personalclase,personalhorasregulares:personalhorasregulares,materialesclase:materialesclase,materialescantidad:materialescantidad,equiposnumerointerno:equiposnumerointerno,equiposhorasutilizadas:equiposhorasutilizadas,observaciones:observaciones});
+//             });
+//           }
+            
+//         });
+//       }else{
+//         query2.get("informesemanal").where({"IdUsuario":ci,"Fecha":fecha}).execute(function(v){
+//           if(v.result.length>0){
+//             var estado='true';
+//             var idd=v.result[0].idPartesDiarios;
+//             mañanaIngreso=v.result[0].MañanaIngreso;mañanaSalida=v.result[0].MañanaSalida;TardeIngreso=v.result[0].TardeIngreso;TardeSalida=v.result[0].TardeSalida;
+//             ocupacion=v.result[0].Ocupacion;NroInterno=v.result[0].NroInterno;idResidencia=v.result[0].idResidencia;Tramo=v.result[0].Tramo;
+//             InicioHorometro=v.result[0].InicioHorometro;FinHorometro=v.result[0].FinHorometro;CantidadCombus=v.result[0].CantidadCombus;tipoCombu=v.result[0].TipoCombus;
+//             query2.get("detallestrabajo").where({'idParteDiario':idd}).execute(function(a){
+//               console.log('________',a);
+//               for(var i=0;i<a.result.length;i++){
+//                 horaInicioActividad.push(a.result[i].horaInicioActividad);horaFinActividad.push(a.result[i].horaFinActividad);Descripcion.push(a.result[i].Descripcion);
+//               }
+//               console.log(horaInicioActividad,horaFinActividad,Descripcion);
+//               socket.emit('respuestadatosParteDiario', {estado:estado,mañanaIngreso:mañanaIngreso,mañanaSalida:mañanaSalida,tardeingreso:TardeIngreso,tardesalida:TardeSalida,ocupacion:ocupacion,tramo:Tramo,nrointerno:NroInterno,iniciohorometro:InicioHorometro,finhorometro:FinHorometro,cantidad:CantidadCombus,tipo:tipoCombu,horaInicioActividad:horaInicioActividad,horaFinActividad:horaFinActividad,Descripcion:Descripcion});
+//             });
+//           }
+//           else{
+//             var estado='false';
+//             socket.emit('respuestadatosParteDiario', {estado:estado});
+//           }
+//         });
+//       }
+//   });   
+
+

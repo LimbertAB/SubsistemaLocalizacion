@@ -28,7 +28,6 @@ body {
 }
 #mimapa {
   position: absolute;
-  border:1px solid black;
 	width: 81%;
 	height: 80%;
 	top: 115px;
@@ -49,7 +48,7 @@ table tr:hover{
   cursor: pointer;
 }
 
-//mensajes
+/*mensajes*/
 
 .ventanaModalMensaje{
   position: absolute;
@@ -127,4 +126,19 @@ table tr:hover{
 }
 .modal-footer{
   background: #D8E5E7;
+}
+/*_______________________________*/
+.logoSEDECA{
+  width: 100%;
+  height: 50px;
+  border:0;
+}
+#global-actions>li.active>a {
+    border-bottom: 4px solid #D91A1A;
+}
+#global-actions>li>a {
+    transition: all .10s ease-in-out;
+}
+#global-actions>li:hover>a:not(.menuUs){
+  border-bottom: 4px solid #A93939;
 }

@@ -3,58 +3,19 @@ var router = express.Router();
 var formidable = require('formidable');
 var db=require("mysql_orm");
 var settings={
-	host:"localhost",
-	user:"root",
-	password:"",
-	database:"EjemploSistema",
-	port:""
+  host:"190.129.24.218",
+  user:"sistemas",
+  password:"Abc123",
+  database:"SubsistemaLocalizacion",
+  port:""
 }
 var query=db.mysql(settings);
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Servicio Departamental De Caminos Potosi' });
 });
-//LOGEAR USUARIOS
-router.post('/', function(req, res) {
-	var nick=req.body.nombre;
-	var pass=req.body.contraseña;
-	console.log(nick, pass);
-	query.get("usuarios").where({"nick":nick,"pass":pass}).execute(function(v){	
-		if(v.result.length==1){
-			var ci=v.result[0].ci;
-			var aux=v.result[0].cargo;
-			if(aux=='ADMINISTRADOR'){
-				res.redirect('MenuPrincipal');
-			}else{
-				if(aux=='geolocalizacion')
-					res.render('GeolocMenuPrincipal',{ title: 'Geolocalizacion', nombre: nick, ci:ci});
-				else
-					res.render('ResidenciaMenuPrincipal');
-			}
-		}
-		else{
-			res.render('index', { error:'ERROR: Verifique sus datos'});
-		}
-	});
-});
 router.get('/MenuPrincipal', function(req, res) {
-	var nombresNoti=[];var cargo=[];var descripNoti=[];var fechaNoti=[];var imagenDir=[];
-	query.get("usuarios").execute(function(usuariosNoti){
-		query.get("notificaciones").execute(function(noti){
-			for(var i=0; i<noti.result.length; i++){
-				for(var j=0; j<usuariosNoti.result.length; j++){
-					if(noti.result[i].ciNoti==usuariosNoti.result[j].ci){
-						nombresNoti.push(usuariosNoti.result[j].nombres_apellidos);
-						cargo.push(usuariosNoti.result[j].cargo);
-						descripNoti.push(noti.result[i].descripcion);
-						fechaNoti.push(noti.result[i].fecha);
-						imagenDir.push(noti.result[i].descripcion);
-					}
-				}
-			}
-  			res.render('MenuPrincipal',{ title: 'Administrador', NombreNoti:nombresNoti, cargoNoti: cargo, descNoti:descripNoti, fechNoti:fechaNoti,imagenDir:imagenDir});
-  		});
-  	});
+	res.render('MenuPrincipal',{title:'Administrador'});
 });
 router.post('/MenuPrincipal', function(req, res) {
 	var dirImagen='';
@@ -121,19 +82,34 @@ router.get('/RegistrarUsuario',function(req ,res){
 	res.render('RegistrarUsuario',{ title: 'Administrador'});
 });
 router.post('/RegistrarUsuario',function(req ,res){
+	console.log(req.body);
 	var user=Object();
-	user.nick=req.body.nombres;
-	user.nombres_apellidos=req.body.apellidos;
+	user.nombres_apellidos=req.body.nombres;
+	user.nick=req.body.nick;
+	user.ci=req.body.ci;
 	user.pass=req.body.password;
-	user.cargo=req.body.cargo;
+	user.cargo=req.body.cargosis;
+	if(req.body.cargosis=='Encargado de Residencia'){
+		user.ubicacion=req.body.residencia;
+	}
 	user.domicilio=req.body.domicilio;
 	user.telefono=req.body.telefono;
-	console.log({nombre:user.nick,apellido:user.nombres_apellidos,contraseña:user.pass,cargo:user.cargo,domicilio:user.domicilio, telefono: user.telefono});
+	user.celular=req.body.celular;
+	
+	console.log({nombres:user.nombres_apellidos,nick:user.nick,contrasena:user.pass,cargo:user.cargo,ubicacion:user.ubicacion,domicilio:user.domicilio, telefono:user.telefono,celular:user.celular});
 	query.save("usuarios",user,(function(r){
-		res.render('RegistrarUsuario',{confirmacion:'REGISTRO EXITOSO!'});
+		console.log('---',r);
+		if(r.affectedRows==1){
+			res.render('RegistrarUsuario',{estado:'true'});
+		}else{
+			res.render('RegistrarUsuario',{estado:'false'});
+		}
 	}));
 });
 router.get('/informeSemanal',function(req ,res){
 	res.render('informeSemanal',{ title: 'informes'});
+});
+router.get('/insertInfoSemanal',function(req ,res){
+	res.render('InsertInfoSemanal',{ title: 'informes'});
 });
 module.exports = router;

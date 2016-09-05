@@ -5,16 +5,20 @@ block content
         nav.navbar.navbar-inverse(style="margin:0;")
             .container-fluid
                 .collapse.navbar-collapse(id="bs-example-navbar-collapse-1")
-                    ul.nav.navbar-nav.col-md-12
+                    ul.nav.navbar-nav.col-md-12(id="global-actions",style="padding-left:0;")
+                        li(class="col-md-2 col-sm-2 col-xs-12")
+                            img(src="/images/logoSEDECA.png",class="logoSEDECA")
                         li(class="col-md-1")
                             a(href="MenuPrincipal")
                                 span(class="glyphicon glyphicon-home", aria-hidden="true")
-                        li(class="col-md-3")
-                            a(href='Principal_TiempoReal') PRINCIPAL LOCALIZACION
-                        li(class="col-md-3")
-                            a(href='Localizacion_All_TR') LOCALIZAR USUARIOS
+                        li(class="col-md-2")
+                            a(href='Principal_TiempoReal',style="padding-left:0;padding-right:0;text-align:center;") PRINCIPAL
+                                span(class="glyphicon glyphicon-map-marker", aria-hidden="true")
+                        li.active(class="col-md-2")
+                            a(href="Localizacion_All_TR",style="padding-left:0;padding-right:0;text-align:center;") LOCALIZAR
+                                span(class="glyphicon glyphicon-map-marker", aria-hidden="true")
                         li(class="dropdown col-md-2")
-                            a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") MOSTRAR MAS
+                            a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;text-align:center;") MOSTRAR MAS
                                 span(class="caret")
                                     ul(class="dropdown-menu")                    
                                         li
@@ -26,15 +30,15 @@ block content
                                         li
                                             a(href="AdminTRealPrincipal") Localizacion GPS
                         li(class="dropdown col-md-2 col-md-offset-3 avatarrr")
-    .row(style="padding:5px;background:yellow;")
-        .col-md-1.col-md-offset-1
-            a(href="#",style="font-size:2em;")
+    .row(style="width:100%;margin:0;background:#75B6D4;")
+        .col-md-1(style="padding:5px;margin:0;")
+            a(href="#",style="text-align:center;display:block;font-size:1.5em;")
                 span(class="glyphicon glyphicon-arrow-left", aria-hidden="true")
-        .col-md-8
-            h2.titleOneUser(style="margin:0; text-align:center;right:100px;")
-        .col-md-1
-            a(href="#",style="font-size:2em;")
+        .col-md-10(style="padding:0px;margin:0;")
+            h2.titleOneUser(style="margin:0; text-align:center;right:100px;padding:0")
+        .col-md-1(style="padding:5px;margin:0;")
+            a(href="#",style="text-align:center;display:block;font-size:1.5em;")
                 span(class="glyphicon glyphicon-arrow-right", aria-hidden="true")
     .row
-        #mimapa(style="top: 100px;margin:0;width:100%;height: 85%;left:0;")
+        #mimapa(style="top: 95px;margin:0;width:100%;height: 85%;left:0;")
     script(src="/javascripts/bootstrap.min.js")
