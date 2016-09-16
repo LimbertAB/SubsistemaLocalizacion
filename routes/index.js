@@ -64,19 +64,7 @@ router.get('/ResidenciaMenuPrincipal', function(req, res, next) {
   res.render('ResidenciaMenuPrincipal');
 });
 router.get('/Usuarios', function(req, res) {
-	query.get("usuarios").execute(function(v){
-		var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];var lista6=[];	
-		for(var i=0; i<v.result.length; i++){
-			lista1.push(v.result[i].ci);lista2.push(v.result[i].nick);lista3.push(v.result[i].nombres_apellidos);
-			lista4.push(v.result[i].cargo);lista5.push(v.result[i].domicilio);lista6.push(v.result[i].telefono);
-		}
-		res.render('Usuarios',{ title: 'Administrador', cii:lista1, 
-														nick:lista2,
-														nombres:lista3,
-														cargos:lista4,
-														domicilios:lista5,
-														telefonos:lista6});
-	});
+	res.render('Usuarios',{ title: 'Administrador'});
 });
 router.get('/RegistrarUsuario',function(req ,res){
 	res.render('RegistrarUsuario',{ title: 'Administrador'});

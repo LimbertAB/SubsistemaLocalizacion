@@ -76,6 +76,58 @@ io.on("connection",function(socket){
   socket.on('ConectarUsuario',function(ci){
     socket.join('salaChat'+ci+'');
   });
+  socket.on('listarUsuarios',function(aux){
+    console.log(aux);
+    if(aux!=''){
+      query2.get("usuarios").where({'ubicacion':aux}).execute(function(v){
+        if(v.result.length>0){
+          var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];  
+          for(var i=0; i<v.result.length; i++){
+            lista1.push(v.result[i].idusuario);lista2.push(v.result[i].ci);lista3.push(v.result[i].nombres_apellidos);lista4.push(v.result[i].cargo);lista5.push(v.result[i].ubicacion);
+          }
+          socket.emit('respuestaListarUsuarios',{"idusuario":lista1,"ci":lista2,'nombres':lista3,'cargo':lista4,'ubicacion':lista5});
+        }
+        else{
+          socket.emit('respuestaListarUsuarios',{'estado':false});
+        }
+        
+      });
+    }
+    else{
+      query2.get("usuarios").execute(function(v){
+        var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];  
+        for(var i=0; i<v.result.length; i++){
+          lista1.push(v.result[i].idusuario);lista2.push(v.result[i].ci);lista3.push(v.result[i].nombres_apellidos);lista4.push(v.result[i].cargo);lista5.push(v.result[i].ubicacion);
+        }
+        socket.emit('respuestaListarUsuarios',{"idusuario":lista1,"ci":lista2,'nombres':lista3,'cargo':lista4,'ubicacion':lista5});
+      });
+    }
+    
+  });
+  socket.on('listaUnUsuario',function(aux){
+    console.log('???',aux);
+    query2.get("usuarios").where({'idusuario':aux}).execute(function(v){
+      if(v.result.length==1){
+        var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];var lista6=[];var lista7=[]; var lista8=[];var lista9=[];  
+        lista1.push(v.result[0].idusuario);lista2.push(v.result[0].nombres_apellidos);lista3.push(v.result[0].nick);lista4.push(v.result[0].ci);lista5.push(v.result[0].cargo);lista6.push(v.result[0].ubicacion);lista7.push(v.result[0].domicilio);lista8.push(v.result[0].telefono);lista9.push(v.result[0].celular);
+        socket.emit('RespuestaListaUnUsuario',{"idusuario":lista1,"nombres":lista2,'nick':lista3,'ci':lista4,'cargo':lista5,'ubicacion':lista6,'domicilio':lista7,'telefono':lista8,'celular':lista9});
+      }  
+    }); 
+  });
+  socket.on('Buscaruseradm',function(valor){
+    query2.get("usuarios").contains({'nombres_apellidos':valor}).execute(function(rows2){
+      if(rows2.result.length>0){
+        var nombreCompleto=[];var ci=[];
+        for(var i=0; i<rows2.result.length; i++){
+          nombreCompleto.push(rows2.result[i].nombres_apellidos);
+          ci.push(rows2.result[i].idusuario);
+        }
+        socket.emit('RespuestaBuscaruseradm',{'estado':'true','nombreCompleto':nombreCompleto,'idusuario':ci});
+      }else{
+        socket.emit('RespuestaBuscaruseradm',{'estado':'false'}); 
+      }
+    });
+  });
   socket.on("nuevaNoticia",function(usernoti){
     user.ciNoti=usernoti.ci;
     user.descripcion=usernoti.noticia;
@@ -142,17 +194,20 @@ io.on("connection",function(socket){
   });
   socket.on('ActualizarUsuarios',function(informacion){
     console.log(informacion);
-    console.log(informacion.ci);
     var using=Object();
-    using.nick=informacion.nick;  //recuperar datos a actualizar
-    using.nombres_apellidos=informacion.nombres;  //recuperar datos a actualizar
-    using.cargo=informacion.cargo;  //recuperar datos a actualizar
-    using.domicilio=informacion.domicilio;  //recuperar datos a actualizar
-    using.telefono=informacion.telefono;  //recuperar datos a actualizar
-    query2.update("usuarios",using).where({"ci":informacion.ci}).execute(function(r){
-      console.log(r.affectedRows);
+    using.nombres_apellidos=informacion.nombres;
+    using.nick=informacion.nick;
+    using.ci=informacion.ci;
+    using.domicilio=informacion.domicilio;
+    using.telefono=informacion.telefono;
+    using.celular=informacion.celular;
+    query2.update("usuarios",using).where({"idusuario":informacion.idusuario}).execute(function(r){
       if(r.affectedRows==1){
-        console.log('se actualizo');
+        query2.get("usuarios").where({'idusuario':informacion.idusuario}).execute(function(v){
+          var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];var lista6=[];var lista7=[]; var lista8=[];var lista9=[];  
+          lista1.push(v.result[0].idusuario);lista2.push(v.result[0].nombres_apellidos);lista3.push(v.result[0].nick);lista4.push(v.result[0].ci);lista5.push(v.result[0].cargo);lista6.push(v.result[0].ubicacion);lista7.push(v.result[0].domicilio);lista8.push(v.result[0].telefono);lista9.push(v.result[0].celular);
+          socket.emit('RespuestaListaUnUsuario',{"idusuario":lista1,"nombres":lista2,'nick':lista3,'ci':lista4,'cargo':lista5,'ubicacion':lista6,'domicilio':lista7,'telefono':lista8,'celular':lista9});
+        }); 
       }
     });
   });
@@ -446,6 +501,4 @@ module.exports = app;
 //           }
 //         });
 //       }
-//   });   
-
-
+//   });  

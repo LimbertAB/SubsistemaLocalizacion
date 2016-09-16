@@ -1,15 +1,82 @@
 var nombreAvatar;
 var ciAvatar;
-var trid;
 $(function(){ 
 	var socket=io();
 	
 	var miCi=sessionStorage.getItem("CI");
 	socket.emit('ConectarUsuario',miCi);
-	$(".avatarrr a").remove();var nombreAvaa=sessionStorage.getItem("Nombre")+'..';$('.avatarrr').append('<a class="dropdown-toggle avatarNombre" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="padding-left:0;padding-right:0;">'+nombreAvaa+'<span class="glyphicon glyphicon-user" aria-hidden="true"></span></a><ul class="dropdown-menu" aria-labelledby="dropdownMenu1"><li><a href="#">Salir</a></li></ul>');var confirmacion=$('.h1Success').text();
-	if(confirmacion!=''){
-		$(".ventanaModal").slideDown('slow');
-	}
+	//$(".avatarrr a").remove();var nombreAvaa=sessionStorage.getItem("Nombre")+'..';$('.avatarrr').append('<a class="dropdown-toggle avatarNombre" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="padding-left:0;padding-right:0;">'+nombreAvaa+'<span class="glyphicon glyphicon-user" aria-hidden="true"></span></a><ul class="dropdown-menu" aria-labelledby="dropdownMenu1"><li><a href="#">Salir</a></li><li><a href="#">Mi Perfil</a></li></ul>');var confirmacion=$('.h1Success').text();
+	//if(confirmacion!=''){
+		//$(".ventanaModal").slideDown('slow');
+	//}
+	$(".bann").hover(function(){
+	    $('li').removeClass('open');
+	   	$(this).addClass('open');
+	});
+	
+
+//________________ADMINISTRACION DE USUARIOS___________________
+	
+	//LISTAR TODOS LOS USUARIOS
+	socket.emit('listarUsuarios','');
+	socket.on('respuestaListarUsuarios',function(valores){
+		for(var i=0;i<valores.nombres.length;i++){
+			if(i%2==0){
+				$('.tablaV').append('<tr id="'+valores.idusuario[i]+'" data-toggle="modal" class="info" data-target="#modalUser"><td id="ciT">'+valores.ci[i]+'</td><td id="nomT">'+valores.nombres[i]+'</td><td id="cargT">'+valores.cargo[i]+'</td><td id="ubicT">'+valores.ubicacion[i]+'</td></tr>');
+			}
+			else{
+				$('.tablaV').append('<tr id="'+valores.idusuario[i]+'" data-toggle="modal" data-target="#modalUser"><td id="ciT">'+valores.ci[i]+'</td><td id="nomT">'+valores.nombres[i]+'</td><td id="cargT">'+valores.cargo[i]+'</td><td id="ubicT">'+valores.ubicacion[i]+'</td></tr>');
+			}
+		}
+
+		$('.tablaV tr').click(function(){
+			var trid = $(this).closest('tr').attr('id');
+			socket.emit('listaUnUsuario',trid);
+		});
+	});
+	var controlador=0;
+	var idusuario;
+	socket.on('RespuestaListaUnUsuario',function(valores){
+		idusuario=valores.idusuario;
+		console.log('aqui valore',valores);
+		$('.nomC').text(valores.nombres);$('.nicC').text(valores.nick);$('.ciC').text(valores.ci);
+		$('.carC').text(valores.cargo);$('.ubiC').text(valores.ubicacion);$('.domC').text(valores.domicilio);$('.telC').text(valores.telefono);
+		$('.celC').text(valores.celular);
+    	$("#resultado").slideUp('fast');
+    	$(".User input").slideUp('fast');
+    	$(".User p").slideDown('fast');
+    	$('.edit').val('Editar');
+    	$('.edit').text('Editar');
+    	$('.edit').removeClass('disabled');
+
+    	//MODIFICAR INFORMACION DE USUARIO
+		$(".edit").click(function(){var aux2=$('.edit').val();if(aux2=='Editar'){$('.n').val($('.nomC').text());$('.k').val($('.nicC').text());$('.i').val($('.ciC').text());$('.d').val($('.domC').text());$('.t').val($('.telC').text());$('.c').val($('.celC').text());$(".User input").toggle(5);$(".titModalUser").css("display", "none");$('.edit').val('Guardar Cambios');$('.edit').text('Guardar Cambios');$('.edit').addClass('disabled');}else{if(aux2=='Guardar Cambios'){if(controlador==1){var valores={"idusuario":idusuario,"nombres":$('.n').val(),"nick":$('.k').val(),"ci":$('.i').val(),"domicilio":$('.d').val(),"telefono":$('.t').val(),'celular':$('.c').val()};socket.emit('ActualizarUsuarios',valores);}}}});$(".User input").keyup(function(){if(($('.n').val()!=$('.nomC').text()) || ($('.k').val()!=$('.nicC').text()) || ($('.i').val()!=$('.ciC').text()) || ($('.d').val()!=$('.domC').text()) || ($('.t').val()!=$('.telC').text()) || ($('.c').val()!=$('.celC').text())){$('.edit').removeClass('disabled');controlador=1;}else{$('.edit').addClass('disabled');}});
+	});
+
+	
+	
+	//CLICK PARA BUSCAR USUARIOS POR RESIDENCIAS..
+	$('.navbarResidencia li').click(function(){if($(this).hasClass('active')){}else{$('.navbarResidencia li').removeClass('active');$(this).addClass('active');$('.tablaV').empty();if($(this).attr('id')!=undefined){socket.emit('listarUsuarios',$(this).attr('id'));}else{socket.emit('listarUsuarios','');}	}});
+	
+	//BUSCADOR DE USUARIOS EN LA INTERFACE USUARIOS
+	// var idd;
+	// $('.buscador').keyup(function(){var valorTeclado=$(this).val();if(valorTeclado!=''){socket.emit('Buscaruseradm',valorTeclado);}});
+	// socket.on("RespuestaBuscaruseradm",function(r){$('#resultado').empty();console.log(r);if(r.estado=='true'){for(var i=0;i<r.idusuario.length; i++) {$("#resultado").append( "<p class = "+r.idusuario[i]+" data-toggle='modal' data-target='#myModal'>"+r.nombreCompleto[i]+"</p>" );}}else{$("#resultado").append( "<p>NO SE ENCONTRARON COINCIDENCIAS</p>" );}
+	// 	$( "#resultado p" ).click(function(){
+	// 		idd=$(this).attr('class');
+	// 		socket.emit('listaUnUsuario',idd);
+	// 	});
+	// });
+	
+	//OCULTAR RESULTADOS DE BUSCADOR
+	$( ".buscador" ).focusin(function() {
+		$('#resultado').css('display','block');
+	});
+	$( ".buscador" ).focusout(function() {
+		$('#resultado').toggle('linear');
+	});
+		
+
 //___________________ REGISTRO NUEVO USUARIO_____________________
 
 	//CONTROLAR EL INGRESO DEL NOMBRE COMPLETO
@@ -65,86 +132,7 @@ $(function(){
 			}
 		}
 	}
-	$('.buscador').keyup(function(){  //algoritmo para buscar personal
-		var valorTeclado=$(this).val();$("#resultado").slideDown('fast');$("#resultado p").remove();$("#resultado img").remove();$("#resultado").removeClass('imagen');
-		if(valorTeclado.length>0){
-			for (var i = 0; i < totalCompleto.length; i++) {  //{Limbert Arando, Beto Vargas, Jimena Cruz, Lim Fee}
-				var nombresolo=totalCompleto[i]; // nombresolo=Limbert Arando[0]
-				//console.log('aqui nombress', nombresolo); //la
-				var aux=0; var aux2=0;
-				for (var k = 0; k <=nombresolo.length; k++) {  // 0 < 14   valorteclado[0]    L[0], i[1], m[2], ......
-					if (aux==0){
-						if(aux2<valorTeclado.length){  //lim   0 < 3
-							var ascciNombre=nombresolo[k].charCodeAt();   //L=766
-							var ascciTeclado=valorTeclado[aux2].charCodeAt(); //l=108  
-							//console.log(ascciTeclado-32);
-							if(ascciNombre<ascciTeclado){
-								if((ascciNombre==ascciTeclado) || (ascciNombre==ascciTeclado-32)){ //for (var j = 0; j < valorTeclado.length; j++) { //arand =5
-									aux2++;
-								}
-								else{aux=1;aux2=0;}
-							}
-							else{
-								if((ascciNombre==ascciTeclado) || (ascciNombre-32==ascciTeclado)){ //for (var j = 0; j < valorTeclado.length; j++) { //arand =5
-									aux2++;
-								}
-								else{aux=1;aux2=0;}
-							}
-						}
-						else{
-							$("#resultado").append( "<p class = "+i+" data-toggle='modal' data-target='#myModal'>"+nombresolo+"</p>" );
-							aux=3;					
-						}
-					}			
-					else{
-						if (nombresolo[k] == ' ' && aux != 3){
-							aux=0;
-						}
-					}
-				}
-			}
-		}
-		$( "#resultado p" ).click(function(){
-				console.log('click al p');
-				trid = $(this).attr('class');
-				clickTabla();
-		});
-		// $("#resultado").addClass('imagen');$("#resultado.imagen").append('<img src="../images/loading.gif">');	
-	});
-	$('.tablaV tr').click(function(){
-		trid = $(this).closest('tr').attr('id');clickTabla();
-	});
-	function clickTabla(){
-		var controlador=0;
-    	var ci=$('#'+trid+' '+'#ciT').text();var nombres=$('#'+trid+' '+'#nomT').text();var apellidos=$('#'+trid+' '+'#apeT').text();var cargos=$('#'+trid+' '+'#cargT').text();var domicilios=$('#'+trid+' '+'#domT').text();var telefonos=$('#'+trid+' '+'#telT').text();$('.nomC').text(nombres);$('.apC').text(apellidos);$('.carC').text(cargos);$('.domC').text(domicilios);$('.telC').text(telefonos);
-    	$("#resultado").slideUp('fast');$(".User input").slideUp('fast');$(".User p").slideDown('fast');$('.edit').val('Editar');$('.edit').text('Editar');	$('.edit').removeClass('disabled');
-		$(".edit").click(function(event){
-			var aux2=$('.edit').val();
-			if(aux2=='Editar'){
-				Norig=$('.nomC').text(); $('.n').val(Norig);Aorig=$('.apC').text(); $('.a').val(Aorig);Corig=$('.carC').text(); $('.c').val(Corig);Dorig=$('.domC').text(); $('.d').val(Dorig);Torig=$('.telC').text(); $('.t').val(Torig);
-				$(".User input").toggle(5);$(".titModalUser").css("display", "none");$('.edit').val('Guardar Cambios');$('.edit').text('Guardar Cambios');$('.edit').addClass('disabled');
-			}
-			else{
-				if(aux2=='Guardar Cambios'){
-					if(controlador==1){
-						console.log('entro');
-						var no=$('.n').val();var ap=$('.a').val();var ca=$('.c').val();var dom=$('.d').val();var tel=$('.t').val();
-						var valores={"ci":ci,"nick":no,"nombres":ap,"cargo":ca,"domicilio":dom,"telefono":tel};
-						socket.emit('ActualizarUsuarios',valores);
-					}
-				}
-			}
-		});
-		$(".User input").keyup(function(){
-			if(($('.n').val()!=Norig) || ($('.a').val()!=Aorig) || ($('.c').val()!=Corig) || ($('.d').val()!=Dorig) || ($('.t').val()!=Torig)){
-				$('.edit').removeClass('disabled');
-				controlador=1;
-			}
-			else{
-				$('.edit').addClass('disabled');
-			}
-		});
-	}
+	
 //___________________ NOTIFICACIONES____________________ //
 
 	var Principal=$(location).attr('href');
@@ -233,14 +221,5 @@ $(function(){
 	});
 //_______________________FIN NOTIFICACIONES______________
 
-	$('.buscador').focus(function(){
-		$('#resultado p').css('display','block');
-	});
-	$('.buscador').blur(function(){
-		$( "#resultado p" ).click(function(){
-			trid = $(this).attr('class');
-			$('#resultado p').css('display','none');
-			clickTabla();
-		});
-	});
+
 })

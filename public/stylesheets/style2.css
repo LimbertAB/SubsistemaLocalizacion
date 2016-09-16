@@ -86,11 +86,10 @@ h1{
 	padding: 10px 15px 6px 45px;
 	border-radius: 20px;
 	box-shadow: 0 1px 0 #999, 0 1px 3px #333 inset;
-	-webkit-transition: all 0.7s ease 0s;
+	-webkit-transition: all 0.5s ease 0.1s;
 	display: block;
 	margin: 0 auto;
 	margin-top: 1.5em;
-	outline: none;
 }
 .buscador:focus{
 	background: url(../images/lupa.png) no-repeat 10px 6px #fcfcfc;
@@ -116,7 +115,15 @@ tbody tr:hover{
 	background: #D0F6F7;
 }
 thead{
-	background: #FACC2E;
+	background: #3472B9;
+}
+thead td{
+	font-size:1.3em;
+	color:#fff;
+	font-weight: 500;
+}
+.tablaV tr{
+	cursor: pointer;
 }
 #resultado{
 	position: absolute;
@@ -359,7 +366,7 @@ header{
 #global-actions>li>a {
     transition: all .10s ease-in-out;
 }
-#global-actions>li:hover>a{
+#global-actions>li:hover:not(.bannerSedeca)>a{
 	border-bottom: 4px solid #A93939;
 }
 .logoSEDECA{

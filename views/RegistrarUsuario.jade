@@ -5,22 +5,21 @@ block content
         .container-fluid
           .collapse.navbar-collapse(id="bs-example-navbar-collapse-1",style="padding-left:0;")
             ul.nav.navbar-nav.col-md-12(id="global-actions",style="padding-left:0;")
-              li(class="col-md-2 col-sm-2 col-xs-12")
-                img(src="/images/logoSEDECA.png",class="logoSEDECA")
-              li(class="col-md-1")
-                a(href="MenuPrincipal")
-                  span(class="glyphicon glyphicon-home", aria-hidden="true")
-              li.active(class="dropdown col-md-1 col-sm-1",style="padding-left:0;padding-right:0;")
-                a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") USUARIOS
-                  span(class="caret")
-                    ul(class="dropdown-menu")
-                      li
-                        a(href="Usuarios") Listar Usuarios
-                      li
-                        a(href="RegistrarUsuario") Nuevo Usuario
-              li(class="col-md-1 col-sm-2",style="padding-left:0;padding-right:0;")
+              li.bannerSedeca(class="col-md-2 col-sm-2 col-xs-12")
+                a(href="MenuPrincipal",style='padding:0')
+                  img(src="/images/logoSEDECA.png",class="logoSEDECA")
+              li(class="col-md-1",style='padding:0')
+              li(class="dropdown col-md-1 col-sm-1 active bann",style="padding-left:0;padding-right:0;")
+                  a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="false", aria-expanded="true",style="padding-left:0;padding-right:0;") USUARIOS
+                    span(class="caret")
+                      ul(class="dropdown-menu")
+                        li
+                          a(href="Usuarios") Listar Usuarios
+                        li
+                          a(href="RegistrarUsuario") Nuevo Usuario
+              li(class="col-md-1 col-sm-2 bann",style="padding-left:0;padding-right:0;")
                 a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal",style="padding-left:0;padding-right:0;") MENSAJES
-              li(class="dropdown col-md-1 col-sm-1",style="padding-left:0;padding-right:0;")
+              li(class="dropdown col-md-1 col-sm-1 bann",style="padding-left:0;padding-right:0;")
                 a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") UBICACION
                   span(class="caret")
                     ul(class="dropdown-menu")
@@ -28,7 +27,14 @@ block content
                         a(href="Principal_TiempoReal") Tiempo Real
                       li
                         a(href="#") Localizacion GPS
-              li(class="dropdown col-md-1 col-sm-2 avatarrr",style="padding-left:0;padding-right:0;") 
+              li(class="dropdown col-md-1 col-sm-1 avatarrr bann",style="padding-left:0;padding-right:0;")
+                  a(href="#", class="dropdown-toggle avatarNombre", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") NameUser
+                    span(class="glyphicon glyphicon-user")
+                      ul(class="dropdown-menu")
+                        li
+                          a(href="#", data-toggle="modal", class="info", data-target="#modalUser") Mi Perfil
+                        li
+                          a(href="#") Salir
     h1.resultadoRegistro(style="display:none;") #{estado}
     #myModal.modal.fade.in.modalRegistro(role='dialog', tabindex='-1', aria-labelledby='myModalLabel', style='display: none;')
       .modal-dialog(role='document')
