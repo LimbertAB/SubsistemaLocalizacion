@@ -1,0 +1,78 @@
+extends layout2
+
+block content
+    nav(class="navbar navbar-inverse")
+        .container-fluid
+            div(class="collapse navbar-collapse" id="bs-example-navbar-collapse-1")
+                ul.nav.navbar-nav.col-md-12.menuNav
+                    li.col-md-2
+                        a(href='EQUIPOS') EQUIPOS
+                    li.col-md-2
+                        a(href='#') SAM
+                    li.col-md-2
+                        a(href='#') SALIR
+    form(class="form-horizontal", role="form")
+        .container
+            .form-group
+                h3 REGISTRAR EQUIPOS
+            .col-sm-8.col-sm-offset-2
+                .form-group
+                    label(for='') codigoEquipo
+                    input.form-control(type='text', id='codE', placeholder='codigoEquipo')
+                    .errores(id='mensaje1') Campo Requerido!
+                .form-group
+                    label(for='') TIPO
+                    input.form-control(type='text', id='nombreE', placeholder='unidad')
+                    .errores(id='mensaje2') Campo Requerido!
+                .form-group
+                    label(for='') Estado
+                    input.form-control(type='text', id='estadoE', placeholder='Estado')
+                    .errores(id='mensaje3') Campo Requerido!
+                .form-group
+                    label(for='') Observaciones
+                    input.form-control(type='text', id='observacionesE', placeholder='Observaciones')
+                    .errores(id='mensaje4') Campo Requerido!
+                .form-group
+                    label(for='') PLACA
+                    input.form-control(type='text', id='placaE', placeholder='')
+                .form-group
+                    label(for='') MODELO
+                    input.form-control(type='text', id='modeloE', placeholder='')
+                .form-group
+                    label(for='') MARCA
+                    input.form-control(type='text', id='marcaE', placeholder='')
+                .form-group
+                    label(for='') UBICACION
+                    input.form-control(type='text', id='ubicacionE', placeholder='')
+                .form-group
+                    label(for='') AÑO DE INGRESO
+                    input.form-control(type='text', id='añoingE', placeholder='')
+                .form-group
+                    label(for='') CAPACIDAD
+                    input.form-control(type='text', id='capacidadE', placeholder='')
+                .form-group
+                    label(for='') N° MOTOR
+                    input.form-control(type='text', id='nummotorE', placeholder='')
+                .form-group
+                    label(for='') N° CHASIS
+                    input.form-control(type='text', id='numchasisE', placeholder='')
+                .form-group
+                    label(for='') COLOR
+                    input.form-control(type='text', id='colorE', placeholder='')
+                .form-group
+                    label(for='') CANTIDAD DE PUERTAS
+                    input.form-control(type='text', id='cantidadpuertasE', placeholder='')
+                .form-group
+                    label(for='') N° DE NEUMATICO
+                    input.form-control(type='text', id='numdeneumaticoE', placeholder='')
+                .form-group
+                    label(for='') CANTIDAD DE NEUMATICOS
+                    input.form-control(type='text', id='cantdeneumaticosE', placeholder='')
+                .form-group
+                    label(for='') CHOFER / OPERADOR
+                    input.form-control(type='text', id='choferE', placeholder='')
+                .form-group
+                    label(for='') COMBUSTIBLE
+                    input.form-control(type='text', id='combustibleE', placeholder='')
+                .form-group
+                    button.btn.btn-primary.btnRegistroEquipo(type='button', data-toggle='modal', data-target='#myModal') Enviar

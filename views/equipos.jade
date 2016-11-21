@@ -1,0 +1,188 @@
+extends layout2
+
+block content
+    .row(style='padding-top:100px;background:#fff')
+      .col-md-2
+        ul(class="nav nav-pills nav-stacked",style='background:#fff')
+            li.active(role='presentation') 
+              a(href='#todovehiculos', aria-controls='todos', role='tab', data-toggle='tab') TODOS
+            if estadoresidencia==true
+              - for (var x=0;x<residencias.length;x++)
+                  li(role='presentation')
+                    a(href='#'+residencias[x].nombreres+'', aria-controls='acasio', role='tab', data-toggle='tab') #{residencias[x].nombreres}
+      .col-md-10
+        .tab-content
+          #todovehiculos.tab-pane.active(role='tabpanel',style="margin-bottom:20px;")
+            .col-md-12
+              .col-md-4
+                a(class="btn" href="#ContentNewCar" role="button",id='btnradioRojo',style='width:70%;text-align:center;margin: 0 auto;display:block;') CREAR VEHICULO
+              .col-md-4
+                h3(style='text-align:center') LISTA DE VEHICULOS
+              .col-md-4
+                .sectionBuscador
+                  input.buscador(type='text',size='50', placeholder="Ejemplo: PDP456",style='width:80%;margin-top: 0;')
+                  #resultado
+            
+            table.table.table-responsive.table-bordered(style="width:85%;margin:0 auto;background:#fff;padding-bottom:20px")
+                thead
+                  tr
+                    td COD INTERNO
+                    td UBICACION
+                    td(style='display:none') ENCARGADO
+                    td(style='display:none') PLACA
+                    td(style='display:none') MODELO
+                    td(style='display:none') MARCA
+                    td(style='display:none') COLOR
+                    td TIPO
+                    td(style='display:none') COMBUSTIBLE
+                    td ESTADO
+                tbody.tablabodyVehiculos
+                  if estadocar==true
+                    - for (var x=0;x<idequipos.length;x++)
+                      if x%2
+                        tr(id=idequipos[x],data-toggle="modal" class="info" data-target="#modalUnvehiculo")
+                          td(id="codv") #{codinterno[x]}
+                          if ubicacion[x]
+                            td(id="ubiv") #{ubicacion[x]}
+                          else
+                            td(id="ubiv") No Asignado
+                          td(id="plav",style='display:none') #{placa[x]}
+                          td(id="modv",style='display:none') #{modelo[x]}
+                          td(id="marv",style='display:none') #{marca[x]}
+                          td(id="colv",style='display:none') #{color[x]}
+                          td(id="tipv") #{tipo[x]}
+                          td(id="comv",style='display:none') #{combustible[x]}
+                          td(id="estv") #{perfil[x]}
+                      else
+                        tr(id=idequipos[x],data-toggle="modal" data-target="#modalUnvehiculo")
+                          td(id="codv") #{codinterno[x]}
+                          if ubicacion[x]
+                            td(id="ubiv") #{ubicacion[x]}
+                          else
+                            td(id="ubiv") No Asignado
+                          td(id="plav",style='display:none') #{placa[x]}
+                          td(id="modv",style='display:none') #{modelo[x]}
+                          td(id="marv",style='display:none') #{marca[x]}
+                          td(id="colv",style='display:none') #{color[x]}
+                          td(id="tipv") #{tipo[x]}
+                          td(id="comv",style='display:none') #{combustible[x]}
+                          td(id="estv") #{perfil[x]}
+          - for (var x=0;x<residencias.length;x++)
+            .tab-pane(role='tabpanel',id=residencias[x].nombreres)
+                table.table.table-responsive.table-bordered(style="width:85%;margin:0 auto;background:#fff;padding-bottom:20px")
+                  thead
+                    tr
+                      td COD INTERNO
+                      td UBICACION
+                      td(style='display:none') ENCARGADO
+                      td(style='display:none') PLACA
+                      td(style='display:none') MODELO
+                      td(style='display:none') MARCA
+                      td(style='display:none') COLOR
+                      td TIPO
+                      td(style='display:none') COMBUSTIBLE
+                      td ESTADO
+                  tbody.tablabodyVehiculos
+                    if estadoasignacion==true
+                      if residencias[x].idequipos.length
+                        - for (var y=0;y<residencias[x].idequipos.length;y++)
+                          if y%2
+                            tr(id=residencias[x].idequipos[y],data-toggle="modal" class="info" data-target="#modalUnvehiculo")
+                              td(id="codv") #{residencias[x].codinterno[x]}
+                              td(id="ubiv") #{residencias[x].ubicacion[x]}
+                              td(id="encv",style='display:none') #{residencias[x].encargado[x]}
+                              td(id="plav",style='display:none') #{residencias[x].placa[x]}
+                              td(id="modv",style='display:none') #{residencias[x].modelo[x]}
+                              td(id="marv",style='display:none') #{residencias[x].marca[x]}
+                              td(id="colv",style='display:none') #{residencias[x].color[x]}
+                              td(id="tipv") #{residencias[x].tipo[x]}
+                              td(id="comv",style='display:none') #{residencias[x].combustible[x]}
+                              td(id="estv") #{residencias[x].perfil[x]}
+                          else
+                            tr(id=residencias[x].idequipos[y],data-toggle="modal" data-target="#modalUnvehiculo")
+                              td(id="codv") #{residencias[x].codinterno[x]}
+                              td(id="ubiv") #{residencias[x].ubicacion[x]}
+                              td(id="plav",style='display:none') #{residencias[x].placa[x]}
+                              td(id="modv",style='display:none') #{residencias[x].modelo[x]}
+                              td(id="marv",style='display:none') #{residencias[x].marca[x]}
+                              td(id="colv",style='display:none') #{residencias[x].color[x]}
+                              td(id="tipv") #{residencias[x].tipo[x]}
+                              td(id="comv",style='display:none') #{residencias[x].combustible[x]}
+                              td(id="estv") #{residencias[x].perfil[x]}
+                      else
+                        .row(style='background:#fff')
+                          .col-md-8.col-md-offset-2
+                            .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                                  button.close(type='button', data-dismiss='alert', aria-label='Close')
+                                    span(aria-hidden='true') ×
+                                  strong NO SE ENCONTRARON RESULTADOS!
+                                  |  Aun no se Asignaron vehiculos para esta residencia.
+                    else
+                      .row(style='background:#fff')
+                        .col-md-8.col-md-offset-2
+                          .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                                button.close(type='button', data-dismiss='alert', aria-label='Close')
+                                  span(aria-hidden='true') ×
+                                strong NO SE ENCONTRARON RESULTADOS!
+                                |  Aun no se Asignaron vehiculos para esta residencia. 
+    h1.resultadoRegistroVehiculo(style='display:none') #{estadoinsertarvehiculo}
+    #ContentNewCar.row(style='background:rgba(241, 196, 15, .8);padding-bottom:50px;')
+      form.form-horizontal(method="post",style='margin-top:30px;',id='formVehiculo')
+        .form-group
+          h1(style='color:#fff;font-weight:600;margin-bottom:20px') REGISTRAR NUEVO VEHICULO
+        .form-group.group1.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.col-sm-offset-2.control-label Codigo Interno
+          .col-sm-5
+            input.form-control(type='text', placeholder='Ejemplo: PM-19',name="codinterno")
+            span(class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
+        .form-group.group2.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 Placa
+          .col-sm-5
+            input.form-control(type='text', placeholder='Ejemplo: 545-SYU',name="placa")
+            span(class="glyphicon glyphicon-remove form-control-feedback")
+        .form-group.group3.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 Modelo
+          .col-sm-5
+            input.form-control(type='text', placeholder='Ejemplo: Toyota',name="modelo")
+            span(class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
+        .form-group.group4.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 Marca
+          .col-sm-5
+            input.form-control(type='text', placeholder='Minimo 10 caracteres',name='marca')
+            span(class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
+        .form-group.group5.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 Color
+          .col-sm-5
+            input.form-control(type='text', placeholder='Ejemplo: Blanco',name='color')
+            span(class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
+        .form-group.group6.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 Tipo
+          .col-sm-5
+            select.form-control(name='tipo')
+              option Seleccione Tipo
+              option Camioneta
+              option Volvo
+              option Volqueta
+              option Flota
+              option Tractor
+        .form-group.group7.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 Combustible
+          .col-sm-5
+            select.form-control(name='combustible')
+              option Seleccione tipo de Combustible
+              option Gasolina
+              option Diesel
+        .form-group.group8.has-error.has-feedback.formulariosRegistro
+          label.col-sm-2.control-label.col-sm-offset-2 Estado
+          .col-sm-5
+            select.form-control(name='estado')
+              option Seleccione Estado
+              option Bueno
+              option Malo
+              option En Mantenimiento
+        .form-group
+          .col-sm-offset-4.col-sm-10
+            button.btn.btn-danger.disabled(type='submit' id='btnEnviarRegistroVehiculo' data-loading-text="Enviando Registro..." autocomplete="off") REGISTRAR
+    include modalEquipo
+    include modalUsuario
+    script(src="/javascripts/bootstrap.min.js")

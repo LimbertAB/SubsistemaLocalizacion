@@ -1,4 +1,4 @@
-extends layoutGeo
+extends GPS_layout
 
 block content
     .row(style="background:#75B6D4")
@@ -12,10 +12,14 @@ block content
                     else
                         button.btn.btn-default.btn-lg.add-on.disabled(type='button',id='btnfecha',style='margin:0 auto',data-toggle="tooltip" data-placement="bottom" title="NO SE ENCONTRARON UBICACIONES :(") #{fecha}
                             span.glyphicon.glyphicon-calendar(style='padding-left:5px;',aria-hidden="true") 
-        .col-md-6
-            h2.titleOneUser(style="color:#fff;margin-top:10px;text-align:center") #{nombreusuario}
+        .col-md-4
+            h2.titleOneUser(style="color:#fff;margin-top:10px;text-align:center") #{codinterno}
+                small(style="margin-left:10px") #{tipo}
         .col-md-2
             btn.btn.btn-default.btn-lg(type='button',style='margin-bottom:5px;margin-top:5px;') Principal
+                span.glyphicon.glyphicon-map-marker(style='padding-left:5px;',aria-hidden="true")
+        .col-md-2
+            btn.btn.btn-warning.btn-lg(type='button',style='margin-bottom:5px;margin-top:5px;',id="btnimportardememoria") Importar Coordenadas
                 span.glyphicon.glyphicon-map-marker(style='padding-left:5px;',aria-hidden="true") 
     .row
         #mimapa(style="height:78vh")

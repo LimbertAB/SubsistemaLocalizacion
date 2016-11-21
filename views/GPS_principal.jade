@@ -1,0 +1,44 @@
+extends GPS_layout
+
+block content
+  .row(style='padding-top:5px')
+    .col-md-2(style='padding-right:0')
+      ul(class="nav nav-pills nav-stacked",style='background:#fff')
+          li.active(role='presentation',class='tabResidencias') 
+            a(href='todos', aria-controls='acasio',role='tab',data-toggle='tab') TODOS
+          if estado==true
+            - for (var x=0;x<residencias.length;x++)
+              li(role='presentation',class='tabResidencias')
+                a(href=''+residencias[x].nombreres+'', aria-controls='acasio',role='tab',data-toggle='tab') #{residencias[x].nombreres}
+          else
+            h1 no hay nada de este año
+    .col-md-10(style='padding:0')
+      .tab-content
+        #todos.tab-pane.active(role='tabpanel',style='display:block')
+          table.table.table-bordered(id='tablaLocTRresidencias')
+            -var aux=0
+            - for (var x=0;x<residencias.length;x++)
+              - for (var y=0;y<residencias[x].carids.length;y++)
+                tr(id='fila'+aux+'')
+                  - aux++
+                  td(class="idL") #{residencias[x].carids[y]}
+                  td(class="plL") #{residencias[x].carplaca[y]}
+                  td(class="tipL") #{residencias[x].cartipo[y]}
+                  td(class="codL") #{residencias[x].carcodinterno[y]}
+                  td(class="latL") #{residencias[x].latitudes[y]}
+                  td(class="lonL") #{residencias[x].longitudes[y]}
+
+        - for (var x=0;x<residencias.length;x++)
+          .tab-pane(role='tabpanel',id=residencias[x].nombreres)
+            table.table.table-bordered(id='tablaLocTRresidencias')
+              - for (var y=0;y<residencias[x].carids.length;y++)
+                tr(id='fila'+y+'')
+                  td(class="idL") #{residencias[x].carids[y]}
+                  td(class="plL") #{residencias[x].carplaca[y]}
+                  td(class="tipL") #{residencias[x].cartipo[y]}
+                  td(class="codL") #{residencias[x].carcodinterno[y]}
+                  td(class="latL") #{residencias[x].latitudes[y]}
+                  td(class="lonL") #{residencias[x].longitudes[y]}
+        .col-md-12(style='padding-left:0')
+            #mimapa(style="height:86vh")
+    script(src="/javascripts/bootstrap.min.js")

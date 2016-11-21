@@ -1,58 +1,9 @@
 extends layout2
 
 block content
-    nav.navbar.navbar-inverse(style="margin-bottom:0px;")
-        .container-fluid
-          .collapse.navbar-collapse(id="bs-example-navbar-collapse-1",style="padding-left:0;")
-            ul.nav.navbar-nav.col-md-12(id="global-actions",style="padding-left:0;")
-              li.bannerSedeca(class="col-md-2 col-sm-2 col-xs-12")
-                a(href="MenuPrincipal",style='padding:0')
-                  img(src="/images/logoSEDECA.png",class="logoSEDECA")
-              li(class="col-md-1",style='padding:0')
-              li(class="dropdown col-md-1 col-sm-1 active bann",style="padding-left:0;padding-right:0;")
-                  a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="false", aria-expanded="true",style="padding-left:0;padding-right:0;") USUARIOS
-                    span(class="caret")
-                      ul(class="dropdown-menu")
-                        li
-                          a(href="Usuarios") Listar Usuarios
-                        li
-                          a(href="RegistrarUsuario") Nuevo Usuario
-              li(class="col-md-1 col-sm-2 bann",style="padding-left:0;padding-right:0;")
-                a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal",style="padding-left:0;padding-right:0;") MENSAJES
-              li(class="dropdown col-md-1 col-sm-1 bann",style="padding-left:0;padding-right:0;")
-                a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") UBICACION
-                  span(class="caret")
-                    ul(class="dropdown-menu")
-                      li
-                        a(href="Principal_TiempoReal") Tiempo Real
-                      li
-                        a(href="#") Localizacion GPS
-              li(class="dropdown col-md-1 col-sm-1 avatarrr bann",style="padding-left:0;padding-right:0;")
-                  a(href="#", class="dropdown-toggle avatarNombre", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") NameUser
-                    span(class="glyphicon glyphicon-user")
-                      ul(class="dropdown-menu")
-                        li
-                          a(href="#", data-toggle="modal", class="info", data-target="#modalUser") Mi Perfil
-                        li
-                          a(href="#") Salir
     h1.resultadoRegistro(style="display:none;") #{estado}
-    #myModal.modal.fade.in.modalRegistro(role='dialog', tabindex='-1', aria-labelledby='myModalLabel', style='display: none;')
-      .modal-dialog(role='document')
-        .modal-content
-          .modal-header.modalRegistroResult
-            image.imagenRegistro(style='height:130px;margin:0 auto;display:block;')
-            button.close.cerrarmodalRegistro(type='button', data-dismiss='modal', aria-label='Close')
-              span(aria-hidden='true') ×
-            h3#myModalLabel.modal-title
-          .modal-body(style='height: 200px;overflow:hidden;padding-right: 0px;padding-top: 0px;') 
-            .row
-              h1.registroEstado(style='text-align:center;margin-top:40px;')
-            .row
-              h4.registroDescripcion(style='text-align:center;')
-          .modal-footer
-            button.btn.btn-primary.cerrarmodalRegistro(type='button') ACEPTAR
 
-    form.form-horizontal(method="post")
+    form.form-horizontal(method="post",style='padding-top:80px')
         .form-group
           h1 Registrar Nuevo Usuario
         .form-group.form1.has-error.has-feedback.formulariosRegistro
@@ -89,20 +40,11 @@ block content
               option Encargado de Residencia
               option Encargado de Campamento
               option Trabajador
-        .form-group.opcionres.form7.has-error.has-feedback.formulariosRegistro(style="display:none;")
-          label.col-sm-2.control-label.col-sm-offset-2 Seleccione Residencia
-          .col-sm-5
-            select.form-control.ResidenciaR(name="residencia")
-              option Seleccione Residencia
-              option Acasio
-              option Uyuni
-              option Retiro
-              option Tupiza
-        .form-group.form8.has-error.has-feedback.formulariosRegistro
+        .form-group.form7.has-error.has-feedback.formulariosRegistro
           label.col-sm-2.control-label.col-sm-offset-2 Domicilio
           .col-sm-5
             input.form-control.domicilioR(type='text', placeholder='Ejemplo: Av.Maestro S/N',name="domicilio")
-            span(class="span8 glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
+            span(class="span7 glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
         .form-group
           label.col-sm-2.control-label.col-sm-offset-2 Telefono
           .col-sm-5
@@ -115,4 +57,3 @@ block content
           .col-sm-offset-4.col-sm-10
             button.btn.btn-primary.btnEnviarRegistro.disabled(type='submit' data-loading-text="Enviando Registro..." autocomplete="off") REGISTRAR
     script(src="/javascripts/bootstrap.min.js")
-    .closeModalfondo

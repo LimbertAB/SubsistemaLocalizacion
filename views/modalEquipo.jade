@@ -1,0 +1,75 @@
+#modalUnvehiculo.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+  .modal-dialog(role='document')
+    .modal-content
+      .modal-header(style='background:#19a4e6;')
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') ×
+        h4#myModalLabel.modal-title(style='color:#fff;text-align:center;') INFORMACION DEL EQUIPO
+      .modal-body(style='padding:0;height:100%;overflow-y: hidden;')
+        ul.nav.nav-tabs.nav-justified(role='tablist',style="padding-bottom:0;margin-top:0")
+            li.active(role='presentation',id='navresidencia') 
+              a(href='#cargeneral', aria-controls='residencias', role='tab', data-toggle='tab') GENERAL
+         .tab-content
+            #cargeneral.tab-pane.active(role='tabpanel')
+                table.table.table-hover(id='infocar')
+                    tr.active
+                        td
+                            p(style='font-weight: bold;font-size: 1.5em;') Cod. Interno
+                        td.text1.textupdatecar
+                        td.inputsupdatecar(style='display:none')
+                            input.form-control.input-lg(type='text',id='inputcarupdate1')
+                    tr
+                        td
+                            p(style='font-weight: bold;font-size: 1.5em;') Placa
+                        td.text2.textupdatecar
+                        td.inputsupdatecar(style='display:none')
+                            input.form-control.input-lg(type='text',id='inputcarupdate2')
+                    tr.active
+                        td
+                            p(style='font-weight: bold;font-size: 1.5em;') Marca 
+                        td.text3.textupdatecar
+                        td.inputsupdatecar(style='display:none')
+                            input.form-control.input-lg(type='text',id='inputcarupdate3')
+                    tr
+                        td
+                            p(style='font-weight: bold;font-size: 1.5em;') Modelo 
+                        td.text4.textupdatecar
+                        td.inputsupdatecar(style='display:none')
+                            input.form-control.input-lg(type='text',id='inputcarupdate4')
+                    tr.active
+                        td
+                            p(style='font-weight: bold;font-size: 1.5em;') Color 
+                        td.text5.textupdatecar
+                        td.inputsupdatecar(style='display:none')
+                            input.form-control.input-lg(type='text',id='inputcarupdate5')
+                    tr
+                        td
+                            p(style='font-weight: bold;font-size: 1.5em;') Tipo
+                        td.text6.textupdatecar
+                        td.inputsupdatecar(style='display:none')
+                            select.form-control.input-lg(id='inputcarupdate6')
+                                option Camioneta
+                                option Volvo
+                                option Volqueta
+                                option Flota
+                                option Tractor
+                    tr.active
+                        td
+                            p(style='font-weight: bold;font-size: 1.5em;') Combustible 
+                        td.text7.textupdatecar
+                        td.inputsupdatecar(style='display:none')
+                            select.form-control.input-lg(id='inputcarupdate7')
+                              option Gasolina
+                              option Diesel
+                    tr
+                        td
+                            p(style='font-weight: bold;font-size: 1.5em;') Estado
+                        td.text8.textupdatecar
+                        td.inputsupdatecar(style='display:none')
+                            select.form-control.input-lg(id='inputcarupdate8')
+                              option Bueno
+                              option Malo
+                              option En Mantenimiento
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') CANCELAR
+        button.btn.btn-primary(type='button',id='btnupdatecar', value='Editar' data-loading-text="Actualizando informacion.." autocomplete="off") EDITAR

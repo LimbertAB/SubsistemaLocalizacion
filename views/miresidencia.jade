@@ -1,0 +1,382 @@
+extends layout2
+
+block content
+    ul.nav.nav-tabs.nav-justified(role='tablist',style="padding-bottom:0px;padding-top:80px;background:#fff")
+        li(role='presentation') 
+          a(href='#general', aria-controls='general', role='tab', data-toggle='tab') GENERAL
+        li(role='presentation')
+          a(href='#tramos', aria-controls='tramos', role='tab', data-toggle='tab') TRAMOS
+        li(role='presentation')
+          a(href='#actividades', aria-controls='actividades', role='tab', data-toggle='tab') ACTIVIDADES
+        li(role='presentation')
+          a(href='#personal', aria-controls='personal', role='tab', data-toggle='tab') PERSONAL
+        li(role='presentation')
+          a(href='#vehiculos', aria-controls='vehiculos', role='tab', data-toggle='tab') VEHICULOS
+        li(role='presentation')
+          a(href='#materiales', aria-controls='materiales', role='tab', data-toggle='tab') MATERIALES
+        li(role='presentation')
+          a(href='#servicios', aria-controls='servicios', role='tab', data-toggle='tab') SERVICIOS
+        li(role='presentation')
+          a(href='#reportes', aria-controls='reportes', role='tab', data-toggle='tab') REPORTES
+    h1(id='latitud',style='display:none')=residencias[0].latitud
+    h1(id='longitud',style='display:none')=residencias[0].longitud
+    .tab-content
+      #general.tab-pane.active(role='tabpanel')
+        .row(id='menuResidenciasGeneral',style='background:#fff') 
+          .col-md-7
+            .row(style='background:rgba(19, 154, 79, 0.72);')
+              .col-md-4
+                img(src='/images/user.png')
+                h2 #{residencias[0].nombre}
+                p Nombre de la residencia
+              .col-md-4
+                img(src='/images/user.png')
+                h2 #{residencias[0].cantidaduser}
+                p Cantidad de personal
+              .col-md-4
+                img(src='/images/user.png')
+                h2 #{residencias[0].cantidadcar}
+                p Cantidad de vehiculos
+              .col-md-4
+                img(src='/images/user.png')
+                h2 #{residencias[0].cantidadtramos}
+                p Cantidad de tramos
+              .col-md-4
+                img(src='/images/user.png')
+                h2 #{residencias[0].costototal}
+                p Costo total (Bs)
+              .col-md-4
+                img(src='/images/user.png')
+                h2 #{residencias[0].longitudtotal}
+                p Longitud total (Km)
+            .row
+              if residencias[0].estadoR=='desabilitado'
+                if tramos[0].estado==true&&personal[0].estado==true&&vehiculos[0].respuesta==true
+                  .col-md-4.col-md-offset-1
+                    btn(class="btn btnHabilitarResidencia" role="button",id='btnradioRojo',data-toggle="tooltip",data-placement="top",title="HABILITAR",style='text-align:center;margin: 0 auto;display:block;') DESABILITADO
+                else
+                  .col-md-4.col-md-offset-1
+                    btn.disabled(class="btn btnHabilitarResidencia" role="button",id='btnradioRojo',data-toggle="tooltip",data-placement="top",title="AUN NO PUEDE HABILITAR LA RESIDENCIA",style='text-align:center;margin: 0 auto;display:block;') DESABILITADO
+              else
+                .col-md-4.col-md-offset-1
+                  btn(class="btn btnHabilitarResidencia" role="button",id='btnradioverde',data-toggle="tooltip",data-placement="top",title="DESABILITAR",style='text-align:center;margin: 0 auto;display:block;') HABILITADO
+          .col-md-5(style='background:#fff;padding-left:0')
+            #mimapa(style="height:68vh;")
+            h4(style='padding-left:10px;padding-right:10px') UBICACION:
+              small(style='padding-left:5px') Av. el maestro, tomas frias, ciudad de potosi, bolivia, america, planeta tierra
+        .row(style='background:#fff')
+      
+      #tramos.tab-pane(role='tabpanel')
+        h1.resultadoRegistroVehiculo(style='display:none') #{estado}
+        .row(style='background:#fff;padding-bottom:30px;padding-top:30px')
+          table.table.table-responsive(style="width:85%;margin:0 auto;background:#fff")
+                thead
+                  tr
+                    td N°
+                    td DESCRIPCION TRAMOS
+                    td CANTIDAD DE ACTIVIDADES
+                    td LONGITUD Km
+                    td COSTO TOTAL Bs
+                tbody
+                  if tramos[0].estado == true
+                    - for (var x=0;x<tramos.length;x++)
+                      if x%2
+                        tr(value=tramos[x].idtramo[x],class="info" )
+                          td #{x+1}
+                          td(id="descripciont") #{tramos[x].descripcion[0]}
+                          td(id="cantidadactividadest") 0
+                          td(id="longitudt") #{tramos[x].longitud[0]}
+                          td(id="costototalt") #{tramos[x].costototal[0]}
+                      else
+                        tr(value=tramos[x].idtramo[x])
+                          td #{x+1}
+                          td(id="descripciont") #{tramos[x].descripcion[0]}
+                          td(id="cantidadactividadest") 0
+                          td(id="longitudt") #{tramos[x].longitud[0]}
+                          td(id="costototalt") #{tramos[x].costototal[0]}
+                  else
+                    .row(style='background:#fff')
+                      .col-md-8.col-md-offset-2
+                        .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                          button.close(type='button', data-dismiss='alert', aria-label='Close')
+                            span(aria-hidden='true') ×
+                          strong NO SE ENCONTRARON RESULTADOS!
+                          |  Registre Tramos en las residencias para dar de alta la residencia 
+
+      #actividades.tab-pane(role='tabpanel',style='background:#fff')
+        .row
+          .col-md-2(style='padding-right: 0')
+            ul(class="nav nav-pills nav-stacked",style='background:#fff')
+              if tramos[0].estado==true
+                - for (var x=0;x<tramos.length;x++)
+                  if x!=0
+                    li(role='presentation')
+                      a(href='#tramo'+x+'', aria-controls='acasio', role='tab', data-toggle='tab') #{tramos[x].descripcion[0]}
+                  else
+                    li.active(role='presentation')
+                      a(href='#tramo'+x+'', role='tab', data-toggle='tab') #{tramos[x].descripcion[0]}
+          .col-md-10(style='padding:0')
+            .tab-content(style='padding-top:30px;padding-bottom:30px;')
+              if tramos[0].estado==true
+                - for (var z=0;z<tramos.length;z++)
+                  if z==0
+                    .tab-pane.active(role='tabpanel',id='tramo'+z+'')
+                      table.table.table-responsive(style="width:90%;margin:0 auto;background:#fff")
+                        thead
+                          tr
+                            td N°
+                            td CODIGO
+                            td DESCRIPCION ITEM
+                            td UNIDAD
+                            td CANTIDAD
+                            td PRECIO UNITARIO
+                            td TOTAL
+                        tbody
+                            if tramos[z].estadoactividad==true
+                              - for (var y=0;y<tramos[z].codsam.length;y++)
+                                if y%2
+                                  tr.info
+                                    td #{y+1}
+                                    td(id="codsama") #{tramos[z].codsam[y]}
+                                    td(id="descripciona") #{tramos[z].descripcionsam[y]}
+                                    td(id="unidada") #{tramos[z].unidadsam[y]}
+                                    td(id="cantidada") #{tramos[z].cantidad[y]}
+                                    td(id="precioa") #{tramos[z].presiounitario[y]}
+                                    td(id="totala") #{tramos[z].cantidad[y]*tramos[z].presiounitario[y]}
+                                else
+                                  tr
+                                    td #{y+1}
+                                    td(id="codsama") #{tramos[z].codsam[y]}
+                                    td(id="descripciona") #{tramos[z].descripcionsam[y]}
+                                    td(id="unidada") #{tramos[z].unidadsam[y]}
+                                    td(id="cantidada") #{tramos[z].cantidad[y]}
+                                    td(id="precioa") #{tramos[z].presiounitario[y]}
+                                    td(id="totala") #{tramos[z].cantidad[y]*tramos[z].presiounitario[y]}
+                            else
+                              .row(style='background:#fff;width:80%;margin:0 auto')
+                                .col-md-12
+                                  .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                                    button.close(type='button', data-dismiss='alert', aria-label='Close')
+                                      span(aria-hidden='true') ×
+                                    strong NO SE ENCONTRARON RESULTADOS!
+                                    |  Aun no se registro las actividades para esta residencia.. Pongase en contacto con el encargado de residencia.
+                  else
+                    .tab-pane(role='tabpanel',id='tramo'+z+'')
+                      table.table.table-responsive(style="width:90%;margin:0 auto;background:#fff")
+                        thead
+                          tr
+                            td N°
+                            td CODIGO
+                            td DESCRIPCION ITEM
+                            td UNIDAD
+                            td CANTIDAD
+                            td PRECIO UNITARIO
+                            td TOTAL
+                        tbody
+                          if tramos[z].estadoactividad==true
+                              - for (var y=0;y<tramos[z].codsam.length;y++)
+                                if y%2
+                                  tr.info
+                                    td #{y+1}
+                                    td(id="codsama") #{tramos[z].codsam[y]}
+                                    td(id="descripciona") #{tramos[z].descripcionsam[y]}
+                                    td(id="unidada") #{tramos[z].unidadsam[y]}
+                                    td(id="cantidada") #{tramos[z].cantidad[y]}
+                                    td(id="precioa") #{tramos[z].presiounitario[y]}
+                                    td(id="totala") #{tramos[z].cantidad[y]*tramos[z].presiounitario[y]}
+                                else
+                                  tr
+                                    td #{y+1}
+                                    td(id="codsama") #{tramos[z].codsam[y]}
+                                    td(id="descripciona") #{tramos[z].descripcionsam[y]}
+                                    td(id="unidada") #{tramos[z].unidadsam[y]}
+                                    td(id="cantidada") #{tramos[z].cantidad[y]}
+                                    td(id="precioa") #{tramos[z].presiounitario[y]}
+                                    td(id="totala") #{tramos[z].cantidad[y]*tramos[z].presiounitario[y]}
+                          else
+                            .row(style='background:#fff;width:80%;margin:0 auto')
+                              .col-md-12
+                                .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                                  button.close(type='button', data-dismiss='alert', aria-label='Close')
+                                    span(aria-hidden='true') ×
+                                  strong NO SE ENCONTRARON RESULTADOS!
+                                  |  Aun no se registro las actividades para esta residencia.. Pongase en contacto con el encargado de residencia.
+              else
+                .row(style='background:#fff;width:80%;margin:0 auto')
+                  .col-md-12
+                    .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                      button.close(type='button', data-dismiss='alert', aria-label='Close')
+                        span(aria-hidden='true') ×
+                      strong NO SE ENCONTRARON RESULTADOS!
+                      |  Aun no se registro las actividades para esta residencia.. Pongase en contacto con el encargado de residencia.
+      #personal.tab-pane(role='tabpanel')
+        h1.resultadoRegistroVehiculo(style='display:none') #{estado}
+        .row(style='background:#fff;padding-bottom:20px;')
+          .col-md-12(style='margin-top:20px')
+            table.table.table-responsive(style="width:95%;margin:0 auto;background:#fff")
+              thead
+                tr
+                  td N°
+                  td PERFIL
+                  td NOMBRES Y APELLIDOS
+                  td CONTRATO (meses)
+                  td SUELDO MENSUAL
+                  td SUELDO ANUAL
+                  td OBSERVACIONES
+                  td ESTADO
+              tbody
+                if personal[0].estado == true
+                  - for (var x=0;x<personal.length;x++)
+                    if x%2
+                      tr(value=personal[x].idusuario)
+                        td #{x+1}
+                        td(id="perfilp") #{personal[x].perfil}
+                        td(id="nombresp") #{personal[x].nombres}
+                        td 12
+                        td(id="sueldop")
+                        td(id="sueldoanualp")
+                        td(id="observacionesp") #{personal[x].observaciones}
+                        td(id="estadop") #{personal[x].estadouser}
+                    else
+                      tr(value=personal[x].idusuario)
+                        td #{x+1}
+                        td(id="perfilp") #{personal[x].perfil}
+                        td(id="nombresp") #{personal[x].nombres}
+                        td 12
+                        td(id="sueldop")
+                        td(id="sueldoanualp")
+                        td(id="observacionesp") #{personal[x].observaciones}
+                        td(id="estadop") #{personal[x].estadouser}
+                else
+                  .row(style='background:#fff')
+                    .col-md-8.col-md-offset-2
+                      .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                        button.close(type='button', data-dismiss='alert', aria-label='Close')
+                          span(aria-hidden='true') ×
+                        strong NO SE ENCONTRARON RESULTADOS!
+                        |  Aun no se registro Personal para esta residencia.. Pongase en contacto con el encargado de residencia. 
+      
+      #vehiculos.tab-pane(role='tabpanel')
+        h1.resultadoRegistroVehiculo(style='display:none') #{estado}
+        .row(style='background:#fff;padding-bottom:30px;padding-top:30px') 
+          table.table.table-responsive(style="width:95%;margin:0 auto;background:#fff")
+            thead
+              tr
+                td N°
+                td N° INTERNO
+                td UNIDAD
+                td CHOFER U OPERADOR
+                td ESTADO
+                td OBSERVACIONES
+            tbody
+              if vehiculos[0].respuesta == true
+                - for (var x=0;x<vehiculos.length;x++)
+                  if x%2
+                    tr(value=vehiculos[x].idequipo)
+                      td #{x+1}
+                      td(id="codinternov") #{vehiculos[x].codinterno}
+                      td(id="tipov") #{vehiculos[x].tipo}
+                      td(id="encargadov") #{vehiculos[x].encargado}
+                      td(id="estadov") #{vehiculos[x].estado}
+                      td(id="observacionesv") #{vehiculos[x].observaciones}
+                  else
+                    tr(value=vehiculos[x].idequipo)
+                      td #{x+1}
+                      td(id="codinternov") #{vehiculos[x].codinterno}
+                      td(id="tipov") #{vehiculos[x].tipo}
+                      td(id="encargadov") #{vehiculos[x].encargado}
+                      td(id="estadov") #{vehiculos[x].estado}
+                      td(id="observacionesv") #{vehiculos[x].observaciones}
+              else  
+                .row(style='background:#fff')
+                  .col-md-8.col-md-offset-2
+                    .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                      button.close(type='button', data-dismiss='alert', aria-label='Close')
+                        span(aria-hidden='true') ×
+                      strong NO SE ENCONTRARON RESULTADOS!
+                      |  Aun no se registro vehiculos para esta residencia.. Pongase en contacto con el encargado de residencia.
+      #materiales.tab-pane(role='tabpanel')
+        h1.resultadoRegistroVehiculo(style='display:none') #{estado}
+        .row(style='background:#fff;padding-bottom:30px;padding-top:30px') 
+          table.table.table-responsive(style="width:95%;margin:0 auto;background:#fff")
+                thead
+                  tr
+                    td N°
+                    td MATERIALES Y SUMINISTROS
+                    td UNIDAD DE MEDIDA
+                    td CANTIDAD
+                    td PRECIO UNITARIO
+                    td MONTO
+                    td PARTIDA PRESUP.
+                tbody
+                  if materiales[0].estado == true
+                    - for (var x=0;x<materiales[0].idmaterial.length;x++)
+                      if x%2
+                        tr(value=materiales[0].idmaterial[x])
+                          td #{x+1}
+                          td(id="descripcionm") #{materiales[0].descripcion[x]}
+                          td(id="unidadm") #{materiales[0].unidaddemedida[x]}
+                          td(id="cantidadm") #{materiales[0].cantidad[x]}
+                          td(id="presiounitariom") #{materiales[0].presiounitario[x]}
+                          td(id="montom") #{materiales[0].monto[x]}
+                          td(id="partidam") #{materiales[0].partidapresupuestaria[x]}
+                      else
+                        tr(value=materiales[0].idmaterial[x])
+                          td #{x+1}
+                          td(id="descripcionm") #{materiales[0].descripcion[x]}
+                          td(id="unidadm") #{materiales[0].unidaddemedida[x]}
+                          td(id="cantidadm") #{materiales[0].cantidad[x]}
+                          td(id="presiounitariom") #{materiales[0].presiounitario[x]}
+                          td(id="montom") #{materiales[0].monto[x]}
+                          td(id="partidam") #{materiales[0].partidapresupuestaria[x]}
+                  else
+                    .row(style='background:#fff')
+                      .col-md-8.col-md-offset-2
+                        .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                          button.close(type='button', data-dismiss='alert', aria-label='Close')
+                            span(aria-hidden='true') ×
+                          strong NO SE ENCONTRARON RESULTADOS!
+                          |  Aun no se registro materiales para esta residencia. Registre materiales para su respectivo funcionamiento. 
+      #servicios.tab-pane(role='tabpanel')
+        h1.resultadoRegistroVehiculo(style='display:none') #{estado}
+        .row(style='background:#fff;padding-bottom:30px;padding-top:30px') 
+          table.table.table-responsive(style="width:95%;margin:0 auto;background:#fff")
+                thead
+                  tr
+                    td N°
+                    td SERVICIOS NO PERSONALES
+                    td PRECIO UNITARIO
+                    td MONTO
+                    td PARTIDA PRESUP.
+                tbody
+                  if servicios[0].estado==true
+                    - for (var x=0;x<servicios[0].idservicio.length;x++)
+                      if x%2
+                        tr(value=servicios[0].idservicio[x],data-toggle="modal" class="info" data-target="#modalUser")
+                          td #{x+1}
+                          td(id="descripcions") #{servicios[0].descripcion[x]}
+                          td(id="presiounitarios") #{servicios[0].preciounitario[x]}
+                          td(id="montos") #{servicios[0].monto[x]}
+                          td(id="partidas") #{servicios[0].partidapresupuestaria[x]}
+                      else
+                        tr(value=servicios[0].idservicio[x],data-toggle="modal" data-target="#modalUser")
+                          td #{x+1}
+                          td(id="descripcions") #{servicios[0].descripcion[x]}
+                          td(id="presiounitarios") #{servicios[0].preciounitario[x]}
+                          td(id="montos") #{servicios[0].monto[x]}
+                          td(id="partidas") #{servicios[0].partidapresupuestaria[x]}
+                  else
+                    .row(style='background:#fff')
+                      .col-md-8.col-md-offset-2
+                        .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                          button.close(type='button', data-dismiss='alert', aria-label='Close')
+                            span(aria-hidden='true') ×
+                          strong NO SE ENCONTRARON RESULTADOS!
+                          |  Aun no se registro servicios para esta residencia. Registre materiales para su respectivo funcionamiento. 
+      #reportes.tab-pane(role='tabpanel')
+        h1 REPORTES
+    
+    .row(style='background:#fff')
+
+    
+    script(src="/javascripts/bootstrap.min.js")

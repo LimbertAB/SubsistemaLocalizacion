@@ -138,6 +138,33 @@ table tr:hover{
 #tablaLocTRresidencias td, #tablaLocTRresidencias th{
   text-align: center;
 }
+
+
+#page-wrapper {
+  width: 100%;
+  background: #FFF;
+  padding: 1em;
+  margin: 1em auto;
+  min-height: 300px;
+  border-top: 5px solid #ece85b;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
+
+h1 {
+  margin-top: 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+#fileDisplayArea {
+  margin-top: 2em;
+  width: 100%;
+  overflow-x: auto;
+}
+
+
 @media(min-width:768px) {
   .navbar-inverse {
     -webkit-transition: all .35s;

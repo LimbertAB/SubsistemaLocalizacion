@@ -9,19 +9,28 @@ $(function(){
 		}	
 	});
 	socket.on('LoginRespuesta',function(rows){
-		var nombre=rows.nombre;
-		var ci=rows.ci;
-		var estado=rows.estado;
-		console.log(rows.nombre,rows.estado,rows.estado);
-		if(estado==true){
-			sessionStorage.setItem('Nombre',nombre);
-			sessionStorage.setItem('CI',ci);
-			location.href="http://localhost:5000/MenuPrincipal";
-		}
-		else{
-			$('.error').text('verifique sus datos')
+
+		if(rows.estado==true){
+			if(rows.usuario[0].cargo=='Administrador'){
+				localStorage.setItem('userinfo', JSON.stringify(rows.usuario[0]));
+				location.href="MenuPrincipal";
+			}
+			else{
+				$('.error').text('No corresponde acceder al sistema');
+				$('.errorLogo').slideDown('fast');
+			}
+		}else{
+			$('.error').text('NO EXISTE EL USUARIO');
 			$('.errorLogo').slideDown('fast');
 		}
-		console.log(rows);
+		
+		// 	
+		// 	sessionStorage.setItem('CI',ci);
+		// 	
+		// }
+		// else{
+		// 	$('.error').text('verifique sus datos')
+		// 	$('.errorLogo').slideDown('fast');
+		// }
 	});
 })

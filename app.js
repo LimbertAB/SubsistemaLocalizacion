@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var db=require("mysql_orm");
+var nmea=require("node-nmea");
 var fs=require('fs');
 var app = express();
 
@@ -33,14 +34,16 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-var settings={
-  host:"190.129.24.218",
-  user:"sistemas",
-  password:"Abc123",
-  database:"SubsistemaLocalizacion",
-  port:""
-}
+//var settings={host:"190.129.24.218",user:"sistemas",password:"Abc123",database:"SubsistemaLocalizacion",port:""}
+//var query2=db.mysql(settings);
+//var settings2={host:"190.129.24.218",user:"sistemas",password:"Abc123",database:"SubsistemaProyectos",port:""}
+//var query3=db.mysql(settings2);
+
+var settings={host:"localhost",user:"root",password:"",database:"SubsistemaLocalizacion",port:""}
 var query2=db.mysql(settings);
+var settings2={host:"192.168.1.3",user:"sistemas",password:"12345",database:"SubsistemaProyectos",port:""}
+var query3=db.mysql(settings2);
+
 // error handlers
 
 // development error handler
@@ -76,6 +79,75 @@ io.on("connection",function(socket){
   socket.on('ConectarUsuario',function(ci){
     socket.join('salaChat'+ci+'');
   });
+  
+  socket.on('Login',function(data){
+    console.log(data.nombre,data.contras);
+    query2.get("usuarios").where({"nick":data.nombre,"pass":data.contras}).execute(function(v){ 
+      if(v.result.length==1){
+        var usuario=[];
+        usuario.push({"idusuario":v.result[0].idusuario,"nombres":v.result[0].nombres_apellidos,'nick':v.result[0].nick,'ci':v.result[0].ci,'cargo':v.result[0].cargo,'domicilio':v.result[0].domicilio,'telefono':v.result[0].telefono,'celular':v.result[0].celular});
+        if(v.result[0].cargo!='Administrador'){
+          var fecha = new Date();var ano = fecha.getFullYear();
+          query3.get("residencias").where({'año':ano}).execute(function(residenciaño){
+            console.log('//',residenciaño);
+            if(residenciaño.result.length>0){
+              query2.get("asignacionusuarios").where({'idusuario':v.result[0].idusuario}).execute(function(asignacion){
+                console.log('....',asignacion);
+                if(asignacion.result.length>0){
+                  var residencia=[];var contador=0;
+                  var idresidencia,nombreresidencia,estadoresidencia;
+                  for (var j=0;j<asignacion.result.length;j++){
+                    for (var i=0;i<residenciaño.result.length;i++){ //2
+                      if(residenciaño.result[i].idresidencias==asignacion.result[j].idresidencia){
+                        contador=contador+1;
+                        console.log('kk',contador);
+                        idresidencia=residenciaño.result[i].idresidencias;estadoresidencia=residenciaño.result[i].estado;nombreresidencia=residenciaño.result[i].nombre;
+                      } 
+                    }
+                  }
+                  if(contador==1){
+                    if(estadoresidencia=='habilitado'){
+                      console.log('todo okey');
+                      residencia.push({"idresidencia":idresidencia,"nombreresidencia":nombreresidencia,'estadoresidencia':true});
+                    }else{
+                      console.log('residencia desabilitada');
+                      residencia.push({"idresidencia":idresidencia,"nombreresidencia":nombreresidencia,'estadoresidencia':false});
+                    }
+                    socket.emit('LoginRespuesta',{"estado":true,"usuario":usuario,"estadoasignacion":true,"residencia":residencia});
+                  }else{
+                    console.log('no estas asignado en ninguna residencia esta gestion');
+                    socket.emit('LoginRespuesta',{"estado":true,"usuario":usuario,"estadoasignacion":false});
+                  }
+                }else{
+                  console.log('no estas asignado en ninguna residencia1');
+                  socket.emit('LoginRespuesta',{"estado":true,"usuario":usuario,"estadoasignacion":false});
+                }
+              });
+            }else{
+              console.log('no estas asignado en ninguna residencia2');
+              socket.emit('LoginRespuesta',{"estado":true,"usuario":usuario,"estadoasignacion":false});
+            }
+          });
+        }else{
+          socket.emit('LoginRespuesta',{"estado":true,"usuario":usuario});
+        }
+      }else{
+        console.log('no hay usuario');
+        socket.emit('LoginRespuesta',{"estado":false});
+      }
+    });
+  });
+  socket.on('LoginANDROID',function(data){
+    query2.get("usuarios").where({"nick":data.nombre,"pass":data.pass}).execute(function(v){ 
+      if(v.result.length==1){
+        console.log('id usuario a la aplicacion: ',v.result[0].idusuario);
+        socket.emit('respuestaLoginANDROID',{"estado":true,"idusuario":v.result[0].idusuario});
+      }else{
+        console.log('no hay usuario');
+        socket.emit('respuestaLoginANDROID',{"estado":false});
+      }
+    });
+  });
   socket.on('listarUsuarios',function(aux){
     console.log(aux);
     if(aux!=''){
@@ -102,16 +174,15 @@ io.on("connection",function(socket){
         socket.emit('respuestaListarUsuarios',{"idusuario":lista1,"ci":lista2,'nombres':lista3,'cargo':lista4,'ubicacion':lista5});
       });
     }
-    
   });
   socket.on('listaUnUsuario',function(aux){
     console.log('???',aux);
     query2.get("usuarios").where({'idusuario':aux}).execute(function(v){
       if(v.result.length==1){
         var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];var lista6=[];var lista7=[]; var lista8=[];var lista9=[];  
-        lista1.push(v.result[0].idusuario);lista2.push(v.result[0].nombres_apellidos);lista3.push(v.result[0].nick);lista4.push(v.result[0].ci);lista5.push(v.result[0].cargo);lista6.push(v.result[0].ubicacion);lista7.push(v.result[0].domicilio);lista8.push(v.result[0].telefono);lista9.push(v.result[0].celular);
-        socket.emit('RespuestaListaUnUsuario',{"idusuario":lista1,"nombres":lista2,'nick':lista3,'ci':lista4,'cargo':lista5,'ubicacion':lista6,'domicilio':lista7,'telefono':lista8,'celular':lista9});
-      }  
+        lista1.push(v.result[0].idusuario);lista2.push(v.result[0].nombres_apellidos);lista3.push(v.result[0].nick);lista4.push(v.result[0].ci);lista5.push(v.result[0].cargo);lista7.push(v.result[0].domicilio);lista8.push(v.result[0].telefono);lista9.push(v.result[0].celular);
+        socket.emit('RespuestaListaUnUsuario',{'estado':'listar',"idusuario":lista1,"nombres":lista2,'nick':lista3,'ci':lista4,'cargo':lista5,'domicilio':lista7,'telefono':lista8,'celular':lista9});
+      } 
     }); 
   });
   socket.on('Buscaruseradm',function(valor){
@@ -157,41 +228,6 @@ io.on("connection",function(socket){
       }
     }));
   });
-  socket.on('Login',function(userDatos){
-    
-    var nick=userDatos.nombre;
-    var pass=userDatos.contras;
-
-    query2.get("usuarios").where({"nick":nick,"pass":pass}).execute(function(v){ 
-      if(v.result.length==1){
-        var ci=v.result[0].idusuario;
-        var cargo=v.result[0].cargo;
-        var auxx=nick + ' id Usuario: ' + ci;
-        console.log('Ingreso a la pagina: ' , auxx);
-        var desc=v.result[0].descripcion;
-        var nombre=v.result[0].nombres_apellidos;
-        if(cargo=='ADMINISTRADOR'){
-          var estado=true;
-            socket.emit('LoginRespuesta',{"nombre":nick,"ci":ci,"estado":estado, "cargo":cargo});
-        }else{
-          if(cargo=='RESIDENTE'){
-            var estado=true;
-            socket.emit('LoginRespuesta',{"nombre":nick,"ci":ci,"estado":estado,"cargo":cargo,"descripcion":desc});
-          }
-          else{
-            if((cargo=='TRABAJADOR')||(cargo=='ENCARGADO CAMPAMENTO')){
-              var estado=true;
-              socket.emit('LoginRespuesta',{"nick":nick,"nombre":nombre,"ci":ci,"estado":estado,"cargo":cargo});
-            }
-          }
-        }
-      }
-      else{
-        var estado=false;
-        socket.emit('LoginRespuesta',{"nombre":nick,"password":pass,"estado":estado});
-      }
-    });  
-  });
   socket.on('ActualizarUsuarios',function(informacion){
     console.log(informacion);
     var using=Object();
@@ -206,8 +242,31 @@ io.on("connection",function(socket){
         query2.get("usuarios").where({'idusuario':informacion.idusuario}).execute(function(v){
           var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];var lista6=[];var lista7=[]; var lista8=[];var lista9=[];  
           lista1.push(v.result[0].idusuario);lista2.push(v.result[0].nombres_apellidos);lista3.push(v.result[0].nick);lista4.push(v.result[0].ci);lista5.push(v.result[0].cargo);lista6.push(v.result[0].ubicacion);lista7.push(v.result[0].domicilio);lista8.push(v.result[0].telefono);lista9.push(v.result[0].celular);
-          socket.emit('RespuestaListaUnUsuario',{"idusuario":lista1,"nombres":lista2,'nick':lista3,'ci':lista4,'cargo':lista5,'ubicacion':lista6,'domicilio':lista7,'telefono':lista8,'celular':lista9});
+          socket.emit('RespuestaListaUnUsuario',{'estado':'actualizado',"idusuario":lista1,"nombres":lista2,'nick':lista3,'ci':lista4,'cargo':lista5,'ubicacion':lista6,'domicilio':lista7,'telefono':lista8,'celular':lista9});
         }); 
+      }
+      else{
+        socket.emit('RespuestaListaUnUsuario',{'estado':'fallido'});
+      }
+    });
+  });
+  socket.on('ActualizarVehiculos',function(informacion){
+    console.log(informacion);
+    var carupdate=Object();
+    carupdate.codinterno=informacion.codinterno;
+    carupdate.placa=informacion.placa;
+    carupdate.modelo=informacion.modelo;
+    carupdate.marca=informacion.marca;
+    carupdate.color=informacion.color;
+    carupdate.tipo=informacion.tipo;
+    carupdate.combustible=informacion.combustible;
+    carupdate.perfil=informacion.perfil;
+    query2.update("vehiculos",carupdate).where({"idequipos":informacion.idequipos}).execute(function(r){
+      if(r.affectedRows==1){
+        socket.emit('respuestaActualizarVehiculos',true); 
+      }
+      else{
+        socket.emit('respuestaActualizarVehiculos',true);
       }
     });
   });
@@ -330,7 +389,6 @@ io.on("connection",function(socket){
     datosMensajes.mensaje=MensajesEntrada.mensaje;
     datosMensajes.fecha=date.getDate() + " " + meses[date.getMonth()] + " " + date.getFullYear();
     datosMensajes.hora=date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
-    
     query2.save("mensajes",datosMensajes,(function(r){
       if(r.affectedRows==1){
         console.log('insertados');
@@ -388,7 +446,7 @@ io.on("connection",function(socket){
     });
   });
   socket.on('buscarnombreusuario',function(valor){
-    query2.get("usuarios").where({'nick':valor}).execute(function(rows2){
+    query2.get("usuarios").contains({'nick':valor}).execute(function(rows2){
       if(rows2.result.length==0){
         socket.emit('respuestanombreusuario',true);
       }else{
@@ -396,109 +454,488 @@ io.on("connection",function(socket){
       }
     });
   });
+  socket.on('listaResidencias1',function(valor){
+    query2.get("residencias").execute(function(rows2){
+      if(rows2.result.length==0){
+        socket.emit('respuestalistaResidencias',false);
+      }else{
+        socket.emit('respuestalistaResidencias',true); 
+      }
+    });
+  });
+  socket.on('listarSam',function(){
+    var codsam=[];var descripcion=[];var unidad=[];var presunit=[];
+    query2.get("sam").execute(function(row){
+      if(row.result.length>0){
+        for(var i=0; i<row.result.length; i++){
+          codsam.push(row.result[i].codsam);
+          descripcion.push(row.result[i].descripcion);
+          unidad.push(row.result[i].unidad);
+          presunit.push(row.result[i].presunit);
+        }
+        socket.emit("RespuestalistarSam",{"estado":true,"codsam":codsam,"descripcion":descripcion,"unidad":unidad,"presunit":presunit});
+      }
+      else{
+        socket.emit("RespuestalistarSam",{"estado":false});
+      }
+    });  
+  });
+  socket.on('RegistrarSam',function(datos){
+    console.log('llegaron',datos);
+    var datosam=Object();
+    datosam.codsam=datos.codigo;
+    datosam.descripcion=datos.descripcion;
+    datosam.unidad=datos.unidad;
+    datosam.presunit=datos.preciounitario;
+    query2.save("sam",datosam,(function(r){
+      if(r.affectedRows==1){
+        socket.emit("RespuestaregistrarSam",true);
+      }
+      else{
+        socket.emit("RespuestaregistrarSam",false);
+      }
+    }));
+  });
+  socket.on('actualizarSam',function(informacion){
+    console.log(informacion);
+    var using=Object();
+    using.codsam=informacion.codsam;
+    using.descripcion=informacion.descripcion;
+    using.unidad=informacion.unidad;
+    using.presunit=informacion.presunit;
+    query2.update("sam",using).where({"codsam":informacion.codsam}).execute(function(r){
+      if(r.affectedRows==1){
+        query2.get("sam").where({"codsam":informacion.codsam}).execute(function(v){
+          var lista1=[];var lista2=[];var lista3=[];var lista4=[]; 
+          lista1.push(v.result[0].codsam);lista2.push(v.result[0].descripcion);lista3.push(v.result[0].unidad);lista4.push(v.result[0].presunit);
+          socket.emit('respuestaactualizarSam',{"estado":true,"codsam":lista1,"descripcion":lista2,'unidad':lista3,'presunit':lista4});
+        }); 
+      }else{
+        socket.emit('respuestaactualizarSam',{"estado":false});
+      }
+    });
+  });
+  socket.on('buscarcodigointerno',function(valor){
+    query2.get("vehiculos").where({'codinterno':valor}).execute(function(rows2){
+      if(rows2.result.length==0){
+        socket.emit('respuestabuscarcodigointerno',true);
+      }else{
+        socket.emit('respuestabuscarcodigointerno',false); 
+      }
+    });
+  });
+  socket.on('listarVehiculos',function(aux){
+      query2.get("vehiculos").execute(function(v){
+        if(v.result.length>0){
+          var lista1=[];var lista2=[];var lista3=[];var lista4=[];
+          for(var i=0; i<v.result.length; i++){
+            lista1.push(v.result[i].codinterno);lista2.push(v.result[i].idresidencia);lista3.push(v.result[i].tipo);lista4.push(v.result[i].estado);
+          }
+          socket.emit('respuestalistarVehiculos',{'responde':true,"codinterno":lista1,"ubicacion":lista2,'tipo':lista3,'estado':lista4});
+        }else{
+          socket.emit('respuestalistarVehiculos',{'responde':false});
+        }
+      });
+  });
+  socket.on('listaUnVehiculo',function(aux){
+    query2.get("vehiculos").where({'codinterno':aux}).execute(function(v){
+        var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];var lista6=[];var lista7=[]; var lista8=[];var lista9=[];var lista10=[];
+        lista1.push(v.result[0].codinterno);lista2.push(v.result[0].idresidencia);lista3.push(v.result[0].encargado);lista4.push(v.result[0].placa);lista5.push(v.result[0].modelo);lista6.push(v.result[0].marca);lista7.push(v.result[0].color);lista8.push(v.result[0].tipo);lista9.push(v.result[0].combustible);lista9.push(v.result[0].estado);
+        socket.emit('RespuestalistaUnVehiculo',{"codinterno":lista1,"idresidencia":lista2,'encargado':lista3,'placa':lista4,'modelo':lista5,'marca':lista6,'color':lista7,'tipo':lista8,'combustible':lista9,'estado':lista10});
+    }); 
+  });
+  socket.on('buscarquenoexistaresidencia',function(aux){
+    console.log(aux);
+    query3.get("residencias").contains({'nombre':aux}).execute(function(v){
+      console.log(v.result.length);
+      if(v.result.length==0){
+        socket.emit('respuestabuscarquenoexistaresidencia',true);
+      }
+      else{
+        socket.emit('respuestabuscarquenoexistaresidencia',false);
+      } 
+    }); 
+  });
+  socket.on('RegistrarResidencia',function(datos){
+    console.log('llegaron',datos);
+    var datoresidencia=Object();
+    datoresidencia.nombre=datos.nombre;
+    datoresidencia.latitud=datos.latitud;
+    datoresidencia.longitud=datos.longitud;
+    datoresidencia.ubicacion=datos.ubicacion;
+    datoresidencia.estado=datos.estado;
+    datoresidencia.año=2016;
+    query3.save("residencias",datoresidencia,(function(r){
+      if(r.affectedRows==1){
+        socket.emit("RespuestaRegistrarResidencia",true);
+      }
+      else{
+        socket.emit("RespuestaRegistrarResidencia",false);
+      }
+    }));
+  });
+  socket.on('asignarusuariosaresidencia',function(datos){
+    console.log('llegaron',datos);
+    var x=-1;
+    for (var i=0;i<datos.idusuarios.length;i++) {
+      var useresidencia=Object();
+      useresidencia.idusuario=datos.idusuarios[i];
+      useresidencia.idresidencia=datos.idresidencia;
+      useresidencia.perfil=datos.perfil[i];
+      useresidencia.estado='Activo';
+      query2.save("asignacionusuarios",useresidencia,(function(r){
+        if(r.affectedRows==1){
+          if(i==(datos.idusuarios.length)){
+              socket.emit('Respuestaasignarusuariosresidencia',{'estado':true});
+          }
+        }
+        else{
+          if(i==(datos.idusuarios.length)){
+              socket.emit('Respuestaasignarusuariosresidencia',{'estado':false});
+          }
+        }
+      }));
+    }
+  });
+  socket.on('asignartramosaresidencia',function(datos){
+    for (var i=0;i<datos.tramos.length;i++) {
+      var useresidencia=Object();
+      useresidencia.idresidencia=datos.idresidencia;
+      useresidencia.descripcion=datos.tramos[i];
+      query3.save("tramos",useresidencia,(function(r){
+        if(r.affectedRows==1){
+          socket.emit('Respuestaasignartramosaresidencia',true);
+        }
+        else{
+          socket.emit('Respuestaasignartramosaresidencia',false);
+        }
+      }));
+    }
+  });
+  socket.on('asignarvehiculosaresidencia',function(datos){
+    for (var i=0;i<datos.idvehiculo.length;i++) {
+      var caresidencia=Object();
+      caresidencia.idequipo=datos.idvehiculo[i];
+      caresidencia.idresidencia=datos.idresidencia;
+      caresidencia.estado='Activo';
+      query2.save("asignacionvehiculos",caresidencia,(function(r){
+        if(r.affectedRows==1){
+          socket.emit('Respuestaasignarvehiculosaresidencia',true);
+        }
+        else{
+          socket.emit('Respuestaasignarvehiculosaresidencia',false);
+        }
+      }));
+    }
+  });
+  socket.on('asignamaterialresidencia',function(datos){
+    var materiales=Object();
+    materiales.descripcion=datos.material;
+    materiales.unidaddemedida=datos.unidad;
+    materiales.cantidad=datos.cantidad;
+    materiales.preciounitario=datos.preciounitario;
+    materiales.idresidenciamateriales=datos.idresidencia;
+    query3.save("materialesaresidencia",materiales,(function(r){
+      if(r.affectedRows==1){
+        socket.emit('respuestaasignamaterialresidencia',true);
+      }
+      else{
+        socket.emit('respuestaasignamaterialresidencia',false);
+      }
+    }));
+  });
+  socket.on('asignaservicioresidencia',function(datos){
+    console.log('llegaron',datos);
+    var servicios=Object();
+    servicios.servicios=datos.servicio;
+    servicios.preciounitario=datos.preciounitario;
+    servicios.idresidenciaservicios=datos.idresidencia;
+    query3.save("serviciosnobasicos",servicios,(function(r){
+      if(r.affectedRows==1){
+        socket.emit('respuestaasignaservicioresidencia',true);
+      }
+      else{
+        socket.emit('respuestaasignaservicioresidencia',false);
+      }
+    }));
+  });
+  socket.on('cambiarEstadoResidencia',function(informacion){
+    console.log(informacion);
+    var residencia=Object();
+    residencia.estado=informacion.estado;
+    query3.update("residencias",residencia).where({"idresidencias":informacion.idresidencia}).execute(function(r){
+      if(r.affectedRows==1){
+        socket.emit('respuestacambiarEstadoResidencia',true);
+      }else{
+        socket.emit('respuestacambiarEstadoResidencia',false);
+      }
+    });
+  });
+  socket.on('damecordenadasdeusuario',function(aux){
+    query2.get("ubicaciontiemporeal").where({'idusuarios':aux.iduser,'Fecha':aux.fecha}).execute(function(ubicaciones){
+      console.log(ubicaciones);
+      if(ubicaciones.result.length>0){
+        var lista1=[],lista2=[],lista3=[],lista4=[];
+        for(var i=0; i<ubicaciones.result.length; i++){
+          lista1.push(ubicaciones.result[i].Fecha);lista2.push(ubicaciones.result[i].Hora);
+          lista3.push(ubicaciones.result[i].latitud);lista4.push(ubicaciones.result[i].longitud);
+        }
+        socket.emit('respuestadamecordenadasdeusuario',{'responde':true,"fecha":lista1,"hora":lista2,'latitud':lista3,'longitud':lista4});
+        console.log(lista1,lista2,lista3,lista4);
+      }else{
+        socket.emit('respuestadamecordenadasdeusuario',{'responde':false});
+      }
+    });
+  });
+  socket.on('insertarcoordenadasAndroid',function(datos){
+    console.log(datos);
+    var x=0;
+    for (var i=0;i<datos.idusuarios.length;i++) {
+      var coordenadas=Object();
+      coordenadas.idusuarios=datos.idusuarios[i];
+      coordenadas.latitud=parseFloat(datos.latitud[i]);
+      coordenadas.longitud=parseFloat(datos.longitud[i]);
+      coordenadas.Fecha=datos.fecha[i].toString();
+      coordenadas.Hora=datos.hora[i];
+      query2.save("ubicaciontiemporeal",coordenadas,(function(r){
+        if(r.affectedRows==1){
+          x=x+1;
+          if(x==datos.idusuarios.length){
+            socket.emit('response_android',{'estado':true});
+          }
+        }
+        else{
+          socket.emit('response_android',{'estado':false});
+        }
+      }));
+    }
+  });
+  socket.on('programacionactividadespersonal',function(aux){
+    var idproquincenal;
+    var idproquincenal2;
+    var asignartotal=[];
+    query2.get("sam").execute(function(sam){
+      query3.get("asignaciondiasquincenal").where({'idresidencia':aux.idresidencia,'mes':aux.mes}).execute(function(asignardias){
+        if(asignardias.result.length>0){
+          query3.get("asignaciontareaspersonalquincenal").execute(function(usertareas){
+            query2.get("usuarios").execute(function(users){
+              for(var i=0; i<asignardias.result.length; i++){
+                var usuarios,dias=asignardias.result[i].dia,samcod;
+                for(var j=0; j<usertareas.result.length; j++){
+                  if(asignardias.result[i].idasignaciondiasquincenal==usertareas.result[j].idasignaciondias){
+                    for(var k=0; k<users.result.length; k++){
+                      if(users.result[k].idusuario==usertareas.result[j].idusuario){
+                        usuarios=users.result[k].nombres_apellidos;
+                      }
+                    }
+                    for(var l=0; l<sam.result.length; l++){
+                      if(asignardias.result[i].idsam==sam.result[l].idsam){
+                        samcod=sam.result[i].descripcion;
+                      }
+                    }
+                  }
+                }
+                asignartotal.push({'dias':dias,'nombres':usuarios,'sam':samcod});
+              }
+              socket.emit('respondeprogramacionactividadespersonal',{'estado':true,'asignaciontotal':asignartotal});
+            });
+          });
+        }else{
+          query3.get("programacionquincenal").where({'idresidencia':aux.idresidencia,'mes':aux.mes}).execute(function(quincenal){
+            if(quincenal.result.length>0){
+              idproquincenal=quincenal.result[0].idprogramacionquincenal;
+              idproquincenal2=quincenal.result[0].idprogramacionquincenal;
+              if(quincenal.result.length>1){
+                idproquincenal2=quincenal.result[1].idprogramacionquincenal;
+                var totaltickes=[],totaltickes1=[];
+                query3.get("detalleproquincenal").where_or({'idproquincena':idproquincenal}).execute(function(detallequincenal){
+                  query3.get("detalleproquincenal").where_or({'idproquincena':idproquincenal2}).execute(function(detallequincenal2){
+                    query3.get("asignaciontareaspersonalquincenal").execute(function(usertareas){
+                      for(var i=0; i<detallequincenal.result.length; i++){
+                        var samcod,tickeo,idsam;
+                        for(var j=0; j<sam.result.length; j++){
+                          if(detallequincenal.result[i].idsam==sam.result[j].idsam){
+                            idsam=detallequincenal.result[i].idsam;
+                            tickeo=detallequincenal.result[i].tickeo;
+                            samcod=sam.result[i].descripcion;
+                          }
+                        }
+                        totaltickes.push({'idsam':idsam,'tickeo':tickeo,'sam':samcod})
+                      }
+                      for(var i=0; i<detallequincenal2.result.length; i++){
+                        var samcod1,tickeo1,idsam1;
+                        for(var j=0; j<sam.result.length; j++){
+                          if(detallequincenal2.result[i].idsam==sam.result[j].idsam){
+                            idsam1=detallequincenal2.result[i].idsam;
+                            tickeo1=detallequincenal2.result[i].tickeo;
+                            samcod1=sam.result[i].descripcion;
+                          }
+                        }
+                        totaltickes1.push({'idsam':idsam1,'tickeo':tickeo1,'sam':samcod1})
+                      }
+                      console.log('hey',totaltickes);
+                      console.log('hoy',totaltickes1);
+                      socket.emit('respondeprogramacionactividadespersonal',{'estado':false,'estadoquincena':true,'totalsemanas':true,'totalticket':totaltickes,'totalticket1':totaltickes1});
+                    });
+                  });
+                });
+              }
+              else{
+                var totaltickes=[];
+                query3.get("detalleproquincenal").where_or({'idproquincena':idproquincenal}).execute(function(detallequincenal){
+                  console.log('ñññññ',detallequincenal);
+                  query3.get("asignaciontareaspersonalquincenal").execute(function(usertareas){
+                    for(var i=0; i<detallequincenal.result.length; i++){
+                      var samcod=[],tickeo=[],idsam=[];
+                      for(var j=0; j<sam.result.length; j++){
+                        if(detallequincenal.result[i].idsam==sam.result[j].idsam){
+                          idsam.push(detallequincenal.result[i].idsam);
+                          tickeo.push(detallequincenal.result[i].tickeo);
+                          samcod.push(sam.result[i].descripcion);
+                        }
+                      }
+                      totaltickes.push({'idsam':idsam,'tickeo':tickeo,'sam':samcod})
+                    }
+                    socket.emit('respondeprogramacionactividadespersonal',{'estado':false,'estadoquincena':true,'totalsemanas':false,'totalticket':totaltickes});
+                  });
+                });
+              }
+            }
+            else{
+              socket.emit('respondeprogramacionactividadespersonal',{'estado':false,'estadoquincena':false});
+              //no hay programacion quincenal en ese mes
+            }
+          });
+        }
+      });
+    });
+  });
+  socket.on('registrarasignaciontrab',function(valor){
+    var aux=0;
+    console.log('llegoooooooooooo',valor);
+    var dato0=Object();
+    for(var i=0;i<valor.actividadd.length;i++){
+      dato0.idresidencia=valor.idresidencia;
+      dato0.mes=valor.mes;
+      dato0.dia=valor.diass[i];
+      dato0.idsam=valor.actividadd[i];
+      query3.save("asignaciondiasquincenal",dato0,(function(resultado){
+        if(resultado.affectedRows==1){
+          aux=aux+1;
+          console.log('aux',aux);
+          if(aux==i){
+            console.log('entro if',aux);
+            query3.get("asignaciondiasquincenal").execute(function(volumen){
+              console.log('asignacion de dias:',volumen);
+              var ultimo=(volumen.result.length)-(valor.diass.length);
+              console.log('ultimo:',ultimo);
+              var volid=volumen.result[ultimo].idasignaciondiasquincenal;
+              console.log('su iddd:',volid);
+              socket.emit('responderegistrarasignaciontrab',{'estado':true,'idvolumen':volid});
+            });
+          }
+        }
+      }));
+    }
+  });
+  socket.on('llenarasignacionusuarios',function(valor){
+      console.log('llegoooooooooooo',valor);
+      var dato0=Object();
+      for(var i=0;i<valor.userids.length;i++){
+        dato0.idasignaciondias=valor.volumenes[i];
+        dato0.idusuario=valor.userids[i];
+        query3.save("asignaciontareaspersonalquincenal",dato0,(function(resultado){
+          if(resultado.affectedRows==1){
+            socket.emit('respondellenarasignacionusuarios',true);
+          }else{
+            socket.emit('respondellenarasignacionusuarios',false);
+          }
+        }));
+      }
+  });
+  socket.on('usuariosparamiresidencia',function(){
+    var idresidencia=2;
+    query2.get('asignacionusuarios').where({'idresidencia':idresidencia}).execute(function(usuarioresidencia){
+      if(usuarioresidencia.result.length>0){
+        query2.get('usuarios').execute(function(usuario){
+          var nombres_apellidos=[];var idusuario=[];
+            for(var j=0;j<usuarioresidencia.result.length;j++){
+              idusuario.push(usuarioresidencia.result[j].idusuario);
+              for(var k=0;k<usuario.result.length;k++){
+                if(idusuario[j]==usuario.result[k].idusuario){
+                  nombres_apellidos.push(usuario.result[k].nombres_apellidos);
+                  //console.log('namesss', nombres_apellidos);
+                }
+              }  
+            }
+          //console.log('uno....',nombres_apellidos);
+          socket.emit('respuestausuariosparamiresidencia', {'estado':true,'nombres_apellidos':nombres_apellidos,'idusuario':idusuario});
+        });
+      }else{
+        socket.emit('respuestausuariosparamiresidencia', {'estado':false});
+      }
+    });
+  });
+  socket.on('insertarcoordenadasmemoriacard',function(value){
+    aux=0;
+    var meses = new Array ("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+    for (var i = 0; i < value.coordenadas.length; i++) {
+      var gpsdata=Object();
+      var raw = value.coordenadas[i];
+      var data = nmea.parse(raw);
+      console.log(data);
+      if(data.valid==true){
+        gpsdata.idvehiculo=value.idvehiculo;
+        gpsdata.latitud=data.loc.geojson.coordinates[1];
+        gpsdata.longitud=data.loc.geojson.coordinates[0];
+        var mes;
+        for (var j = 0; j < meses.length; j++) {
+          if(meses[j]==(data.datetime).toString().substring(4,7)){
+            if((j+1)<10){
+              mes="0"+(j+1);
+            }else{
+              mes=j+1;
+            }
+          }
+        }
+        gpsdata.fecha=(data.datetime).toString().substring(8,10)+"-"+mes+"-"+(data.datetime).toString().substring(11,15);
+        gpsdata.hora=(data.datetime).toString().substring(16,24);
+        gpsdata.velocidad=data.speed.kmh;
+        query2.save("ubicaciongps",gpsdata,(function(resultado){
+          if(resultado.affectedRows==1){
+            aux=aux+1;
+            if(aux==i){
+              socket.emit('respuestainsertarcoordenadasmemoriacard',true);
+            }
+          }else{
+            aux=aux+1;
+            if(aux==i){
+              socket.emit('respuestainsertarcoordenadasmemoriacard',false);
+            }
+          }
+        }));
+      }else{
+        aux=aux+1;
+        if(i==value.coordenadas.length-1){
+          socket.emit('respuestainsertarcoordenadasmemoriacard',null);
+        }
+      }
+    }
+  });
+  socket.on('damecordenadasdeunvehiculo',function(aux){
+    query2.get("ubicaciongps").where({'idvehiculo':aux.idcar,'fecha':aux.fecha}).execute(function(ubicaciones){
+      console.log(ubicaciones);
+      if(ubicaciones.result.length>0){
+        var lista1=[],lista2=[],lista3=[],lista4=[],lista5=[];
+        for(var i=0; i<ubicaciones.result.length; i++){
+          lista1.push(ubicaciones.result[i].fecha);lista2.push(ubicaciones.result[i].hora);
+          lista3.push(ubicaciones.result[i].latitud);lista4.push(ubicaciones.result[i].longitud);lista5.push(ubicaciones.result[i].velocidad);
+        }
+        socket.emit('respuestadamecordenadasdeunvehiculo',{'responde':true,"fecha":lista1,"hora":lista2,'latitud':lista3,'longitud':lista4,'velocidad':lista5});
+      }else{
+        socket.emit('respuestadamecordenadasdeunvehiculo',{'responde':false});
+      }
+    });
+  });
 });
 module.exports = app;
-
-
-// socket.on('insertarInformeSemanal',function(datos){
-//     console.log('llegaron',datos);
-//     var inforsemanal=Object();
-//     inforsemanal.idresidencia=datos.idresidencia;
-//     inforsemanal.idusuario=datos.idusuario;
-//     inforsemanal.ruta=datos.ruta;
-//     inforsemanal.semanadel=datos.semanadel;
-//     inforsemanal.semanaal=datos.semanaal;
-//     inforsemanal.mes=datos.mes;
-//     inforsemanal.año=datos.año;
-//     inforsemanal.distrito=datos.distrito;
-//     query2.save("informesemanal",inforsemanal,(function(r){
-//       if(r.affectedRows==1){
-//         query2.get("informesemanal").where({'idusuario':datos.idusuario}).execute(function(a){
-//           var ultimoInforme=a.result[a.result.length-1].idInformeSemanal;
-//           var detalleInforme=Object();
-//           for(var i=1;i<=datos.dia.length;i++){
-//             detalleInforme.idinformesemanal=ultimoInforme;
-//             detalleInforme.dia=datos.dia[i];
-//             detalleInforme.ruta=datos.ruta[i];
-//             detalleInforme.seccion=datos.seccion[i];
-//             detalleInforme.kilometroinicial=datos.kilometroinicial[i];
-//             detalleInforme.kilometrofinal=datos.kilometrofinal[i];
-//             detalleInforme.idactividad=datos.idactividad[i];
-//             detalleInforme.personalclase=datos.personalclase[i];
-//             detalleInforme.personalhorasregulares=datos.personalhorasregulares[i];
-//             detalleInforme.materialesclase=datos.materialesclase[i];
-//             detalleInforme.materialescantidad=datos.materialescantidad[i];
-//             detalleInforme.equiposnumerointerno=datos.equiposnumerointerno[i];
-//             detalleInforme.equiposhorasutilizadas=datos.equiposhorasutilizadas[i];
-//             detalleInforme.observaciones=datos.observaciones[i];
-//             query2.save("detalleinformesemanal",datos,(function(resultado){
-//               if(resultado.affectedRows==1){
-//                 console.log('insertado!!!');
-//               }
-//             }));
-//           }
-//         });
-//       }
-//     }));
-//   });
-//   socket.on('listarInformeSemanal',function(valor){//?año=2016&mes=marzo&semana=1
-//     console.log('entro a la lista');
-//       var fecha=valor.mes;
-//       var ci=valor.ci;
-//       var idresidencia;var idusuario; var ruta;var semanadel; var semanaal;var mes; var año; var distrito;
-//       var dia=[];var ruta=[];var seccion=[];var kilometroinicial=[];var kilometrofinal=[];var idactividad=[];
-//       var personalclase=[];var personalhorasregulares=[];var materialesclase=[];var materialescantidad=[];
-//       var equiposnumerointerno=[];var equiposhorasutilizadas=[];var observaciones=[];
-//       if(fecha==undefined){
-//         query2.get("informesemanal").where({"IdUsuario":ci}).execute(function(v){
-//           if(v.result.length>0){
-//             var estado='true';
-//             var ultimo=v.result.length-1;
-//             var ultimoInforme=v.result[ultimo].idInformeSemanal;
-//             idresidencia=v.result[ultimo].idresidencia;idusuario=v.result[ultimo].idusuario;ruta=v.result[ultimo].ruta;semanadel=v.result[ultimo].semanadel;
-//             semanaal=v.result[ultimo].semanaal;mes=v.result[ultimo].mes;año=v.result[ultimo].año;distrito=v.result[ultimo].distrito;
-//             query2.get("detalleinformesemanal").where({'idinformesemanal':ultimoInforme}).execute(function(a){
-//               for(var i=0;i<a.result.length;i++){
-//                 dia.push(a.result[i].dia);
-//                 ruta.push(a.result[i].ruta);
-//                 seccion.push(a.result[i].seccion);
-//                 kilometroinicial.push(a.result[i].kilometroinicial);
-//                 kilometrofinal.push(a.result[i].kilometrofinal);
-//                 idactividad.push(a.result[i].idactividad);
-//                 personalclase.push(a.result[i].personalclase);
-//                 personalhorasregulares.push(a.result[i].personalhorasregulares);
-//                 materialesclase.push(a.result[i].materialesclase);
-//                 materialescantidad.push(a.result[i].materialescantidad);
-//                 equiposnumerointerno.push(a.result[i].equiposnumerointerno);
-//                 equiposhorasutilizadas.push(a.result[i].equiposhorasutilizadas);
-//                 observaciones.push(a.result[i].observaciones);
-//               }
-//               socket.emit('respuestalistainformesemanal', {estado:estado,idresidencia:idresidencia,idusuario:idusuario,ruta:ruta,semanadel:semanadel,semanaal:semanaal,mes:mes,año:año,distrito:distrito,dia:dia,ruta:ruta,seccion:seccion,kilometroinicial:kilometroinicial,kilometrofinal:kilometrofinal,idactividad:idactividad,personalclase:personalclase,personalhorasregulares:personalhorasregulares,materialesclase:materialesclase,materialescantidad:materialescantidad,equiposnumerointerno:equiposnumerointerno,equiposhorasutilizadas:equiposhorasutilizadas,observaciones:observaciones});
-//             });
-//           }
-            
-//         });
-//       }else{
-//         query2.get("informesemanal").where({"IdUsuario":ci,"Fecha":fecha}).execute(function(v){
-//           if(v.result.length>0){
-//             var estado='true';
-//             var idd=v.result[0].idPartesDiarios;
-//             mañanaIngreso=v.result[0].MañanaIngreso;mañanaSalida=v.result[0].MañanaSalida;TardeIngreso=v.result[0].TardeIngreso;TardeSalida=v.result[0].TardeSalida;
-//             ocupacion=v.result[0].Ocupacion;NroInterno=v.result[0].NroInterno;idResidencia=v.result[0].idResidencia;Tramo=v.result[0].Tramo;
-//             InicioHorometro=v.result[0].InicioHorometro;FinHorometro=v.result[0].FinHorometro;CantidadCombus=v.result[0].CantidadCombus;tipoCombu=v.result[0].TipoCombus;
-//             query2.get("detallestrabajo").where({'idParteDiario':idd}).execute(function(a){
-//               console.log('________',a);
-//               for(var i=0;i<a.result.length;i++){
-//                 horaInicioActividad.push(a.result[i].horaInicioActividad);horaFinActividad.push(a.result[i].horaFinActividad);Descripcion.push(a.result[i].Descripcion);
-//               }
-//               console.log(horaInicioActividad,horaFinActividad,Descripcion);
-//               socket.emit('respuestadatosParteDiario', {estado:estado,mañanaIngreso:mañanaIngreso,mañanaSalida:mañanaSalida,tardeingreso:TardeIngreso,tardesalida:TardeSalida,ocupacion:ocupacion,tramo:Tramo,nrointerno:NroInterno,iniciohorometro:InicioHorometro,finhorometro:FinHorometro,cantidad:CantidadCombus,tipo:tipoCombu,horaInicioActividad:horaInicioActividad,horaFinActividad:horaFinActividad,Descripcion:Descripcion});
-//             });
-//           }
-//           else{
-//             var estado='false';
-//             socket.emit('respuestadatosParteDiario', {estado:estado});
-//           }
-//         });
-//       }
-//   });  

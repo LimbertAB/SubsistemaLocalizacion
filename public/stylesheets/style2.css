@@ -1,15 +1,20 @@
 * {
 	box-sizing: border-box;
 }
+html{
+	height: 100%;
+	display: block;
+}
 body {
-	position: relative;
-  	font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
-  	min-height: 100vh;
-  	width: 100%;
-  	font-family: sans-serif;
-  	margin: 0;
-  	overflow-x:hidden;
-}	
+  background: url(../images/banner.jpg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  font-family: sans-serif;
+  overflow-x: hidden;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
 p{
 	margin: 0;
 	border:0;
@@ -100,11 +105,7 @@ h1{
 	outline: none;
 	font: bold 1.4rem arial,helvetica,sans-serif;
 }
-table{
-	margin: 0 auto;
-	margin-top: 1.5em;
-	border: 1px black solid;
-}
+
 table tr td{
 	margin:0;
 	border: 1px #D8D8D8 solid;
@@ -370,8 +371,260 @@ header{
 	border-bottom: 4px solid #A93939;
 }
 .logoSEDECA{
-	width: 100%;
-	height: 50px;
-	border:0;
-
+	width: 50%;
 }
+.filaimagenPrincipal{
+	background:rgba(9,151,199,.6);
+}
+.filaimagenPrincipal h1{
+	text-align: center;
+	color: #fff;
+	margin-top: 4.5em;
+	font-weight: 600;
+}
+.filaimagenPrincipal h3{
+	color: #187295;
+	margin-top: 5px;
+	margin-bottom: 50px;
+	text-align: center;
+}
+.menuPrincipalImg{
+	max-width: 100%;
+	z-index: -1;
+}
+.filaNotificaciones {
+	background:rgba(255,255,255,.8);
+}
+.userResidencia {
+	background:rgba(000,000,000,.4);
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+.userResidencia img{
+	max-width: 35%;
+	margin: 0 auto;
+	display: block;
+	border: 3px solid #fff;
+}
+.userResidencia h3{
+	color: rgba(255,255,255,.7);
+	text-align: center;
+	margin-top: 20px;
+	margin-bottom: 0px;
+	font-weight: 100;
+}
+.hovereffect {
+  width: 100%;
+  height: 100%;
+  float: left;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  cursor: default;
+  background: -webkit-linear-gradient(45deg, #24B543 0%, #087946 100%);
+  background: linear-gradient(45deg, #74FF02 0%,#087946 100%);
+}
+
+.hovereffect .overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  padding: 3em;
+  text-align: left;
+}
+
+.hovereffect img {
+  display: block;
+  position: relative;
+  max-width: none;
+  width: calc(100% + 60px);
+  height: 200px;
+  object-fit: cover;
+  overflow: hidden; 
+  -webkit-transition: opacity 0.35s, -webkit-transform 0.45s;
+  transition: opacity 0.35s, transform 0.45s;
+  -webkit-transform: translate3d(-40px,0,0);
+  transform: translate3d(-40px,0,0);
+}
+
+.hovereffect h2 {
+  text-transform: uppercase;
+  color: #fff;
+  position: relative;
+  font-size: 17px;
+  background-color: transparent;
+  padding: 15% 0 10px 0;
+  text-align: left;
+  font-weight: 600;
+}
+
+.hovereffect .overlay:before {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  bottom: 20px;
+  left: 20px;
+  border: 1px solid #fff;
+  content: '';
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -webkit-transition: opacity 0.35s, -webkit-transform 0.45s;
+  transition: opacity 0.35s, transform 0.45s;
+  -webkit-transform: translate3d(-20px,0,0);
+  transform: translate3d(-20px,0,0);
+}
+
+.hovereffect a, .hovereffect p {
+  color: #FFF;
+  font-size: 0.9em;
+  font-weight: 200;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -webkit-transition: opacity 0.35s, -webkit-transform 0.45s;
+  transition: opacity 0.35s, transform 0.45s;
+  -webkit-transform: translate3d(-10px,0,0);
+  transform: translate3d(-10px,0,0);
+}
+
+.hovereffect:hover img {
+  opacity: 0.6;
+  filter: alpha(opacity=60);
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+
+.hovereffect:hover .overlay:before,
+.hovereffect:hover a, .hovereffect:hover p {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+  color: #fff;
+  text-decoration: none;
+}
+.userResidencia>.col-md-2{
+	padding-top: 2.5em;
+	padding-bottom: 2.5em;
+}
+.userResidencia>.col-md-2:hover{
+	cursor: pointer;
+	background: rgba(000,000,000,.5);
+}
+#btnradioRojo{
+    padding: .7em;
+    color: #D82F2F;
+    font-family: "brandon-grotesque","proxima","Proxima Nova","Helvetica Neue","Helvetica","Arial",sans-serif;
+    font-size: .9em;
+    letter-spacing: 1px;
+    background: rgba(255,255,255,.1);
+    border-radius: 44px;
+    -webkit-transition: 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+    -moz-transition: 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+    margin: 0 auto;
+    display: block;
+    border:3px solid #D82F2F;
+}
+#btnradioRojo:hover {
+    color:rgba(255,255,255,.8);
+	background: #D82F2F;
+ }
+ #btnradioverde{
+    padding: .7em;
+    color: rgba(19, 154, 79, 0.72);
+    font-family: "brandon-grotesque","proxima","Proxima Nova","Helvetica Neue","Helvetica","Arial",sans-serif;
+    font-size: .9em;
+    letter-spacing: 1px;
+    border-radius: 44px;
+    -webkit-transition: 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+    -moz-transition: 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+    margin: 0 auto;
+    display: block;
+    border:3px solid rgba(19, 154, 79, 0.42);
+}
+#btnradioverde:hover {
+    color:rgba(255, 255, 255, 0.72);
+    font-weight: 700;
+	background: rgba(19, 154, 79, 0.72)
+ }
+ #mimapa {
+  width: 97%;
+  margin:0 auto;
+}
+#tablaSam>thead>tr>th{
+	color: #fff;
+	font-size: 1.3em;
+	text-align: center;
+}
+#tablaSam>tbody>tr:hover{
+	cursor: pointer;
+}
+#tablaSam>tbody>tr>td{
+	text-align: center;
+}
+#modalSam h4{
+	margin-top: 25px;
+	color:#6d6a6a;
+}
+#modalSam input{
+	width: 100%;
+}
+#contentRegistroVehiculo label{
+	color:#fff;
+	font-weight: 600;
+}
+#formVehiculo label,#formMateriales label,#formServicios label{
+	font-family: "brandon-grotesque","proxima","Proxima Nova","Helvetica Neue","Helvetica","Arial",sans-serif;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	color:#f0e7ca;
+	font-weight: 200;
+}
+#menuResidenciasGeneral .col-md-4{
+	padding: 30px;
+}
+#menuResidenciasGeneral img{
+	width: 30%;
+	margin:0 auto;
+	display: block;
+}
+#menuResidenciasGeneral h2{
+	text-align: center;
+	color: #fff;
+}
+#menuResidenciasGeneral p{
+	font-family: "brandon-grotesque","proxima","Proxima Nova","Helvetica Neue","Helvetica","Arial",sans-serif;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: center;
+	font-weight: 200;
+	color: #fff;
+}
+@media(min-width:768px) {
+  .navbar-inverse {
+    -webkit-transition: all .35s;
+    -moz-transition: all .35s;
+    transition: all .35s;
+    padding: 15px 0;
+  }
+  .navbar-inverse.affix {
+    padding: 0;
+  }
+}
+/*NOTIFICACIONES
+@media screen and (min-width: 1200px){
+	body {
+		background: url(../images/banner.jpg);
+    	background-size: cover;
+	} 
+}
+@media (min-width: 200px) and (max-width: 767px){
+	body {
+		background: url(../images/banner.jpg);
+    	background-size: cover;
+	}	
+}*/

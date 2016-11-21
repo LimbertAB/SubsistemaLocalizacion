@@ -4,9 +4,12 @@ $(function(){
                              MENSAJERIA                       
 _____________________________________________________________________*/
 	//CLICK BOTON MENSAJES...............
+	var aux=JSON.parse(localStorage.getItem('userinfo'));
+	var MiCi=aux.idusuario;
+
 	$('#btnMensajes').click(function(){
 		$("#myModal .modal-header").remove();$("#myModal .modal-body").remove();$("#myModal .modal-header h4").remove();$("#myModal .btnNuevoMensaje").remove();$(".listasMensajes").remove();$("#myModal .modal-header a").remove();$("#myModal .modal-header h3").remove();$(".modal-header button").remove();$(".modal-header input").remove();$("#myModal").remove();$("#myModal .modal-dialog").remove();$("#myModal .modal-content").remove();
-		var MiCi=sessionStorage.getItem("CI");
+		
 		$('body').append('<div id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade"><div role="document" class="modal-dialog"><div class="modal-content"><div class="modal-header"></div><div class="modal-body PrincipalMensajes"><table class="table"></table></div><div class="modal-footer"></div></div></div></div>');
 		$('#myModal .modal-header').append('<button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button><h4 class="modal-title col-md-5">Mensajes Directos</h4><button type="button" class="btn btn-primary col-md-3 col-md-offset-1 btnNuevoMensaje">Nuevo Mensaje</button></div>');
 		socket.emit('ListaMisMensajes',MiCi);
@@ -54,14 +57,13 @@ _____________________________________________________________________*/
 				$("#myModal .modal-header h3").remove();
 				$("#myModal .modal-header button").remove();
 				$("#myModal .modal-header input").remove();
-				var MiCi=sessionStorage.getItem("CI");
 				$('#myModal .modal-header').append('<button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button><h4 class="modal-title col-md-5">Mensajes Directos</h4><button type="button" class="btn btn-primary col-md-3 col-md-offset-1 btnNuevoMensaje">Nuevo Mensaje</button></div>');	
 				socket.emit('ListaMisMensajes',MiCi);
 			});
 		});
 		$('.filaMensajes.row.col-md-12').click(function(){
-			var ciUsuario=$(this).attr('id');var MiCi=sessionStorage.getItem("CI");var datos={mici:MiCi,suci:ciUsuario}
-			console.log($(this).attr('p'));
+			var ciUsuario=$(this).attr('id');var datos={mici:MiCi,suci:ciUsuario}
+			console.log(datos);
 			socket.emit('listaMensajesUnUsuario',datos);
 		});	
 	});
@@ -72,7 +74,6 @@ _____________________________________________________________________*/
 		$('#myModal .modal-body').append('<div class="col-md-12 unUsuarioMensajes"></div>');
 		$('#myModal .modal-footer').append('<div class="col-md-12 footer"><textarea class="col-md-10 col-sm-12" rows="2" id="inputHelpBlock" aria-describedby="helpBlock" placeholder="Escribe un mensaje.."></textarea><div class="col-md-2"><button type="button" class="btn btn-primary col-md-11 col-md-offset-1 btnEnviarMensaje disabled">Enviar</button></div></div>')
 		for( var k=0;k<mensajes.mensaje.length;k++){
-			var MiCi=sessionStorage.getItem("CI");
 			if(MiCi==mensajes.origen[k]){
 				$('.unUsuarioMensajes').append('<div class="row col-md-10 col-md-offset-2"><div class="row col-md-12 filaorigen"><h5>'+mensajes.mensaje[k]+'</h5></div><div class="row col-md-12"><h6>'+mensajes.fecha[k]+'</h6></div></div>');
 			}else{
@@ -100,8 +101,7 @@ _____________________________________________________________________*/
 			$('.unUsuarioMensajes').append('<div class="row col-md-10 col-md-offset-2"><div class="row col-md-12 filaorigen"><h5>'+Unmensaje+'</h5></div><div class="row col-md-12"><h6>'+outStr+'</h6></div></div>');
 			$('.modal-footer textarea').val('');
 			var suCi=mensajes.ciDestino;
-			var miCi=sessionStorage.getItem("CI");
-			var MensajeSolo={"origen":miCi,"destino":suCi,"mensaje":Unmensaje};
+			var MensajeSolo={"origen":MiCi,"destino":suCi,"mensaje":Unmensaje};
 			socket.emit("enviandoUnMensaje",MensajeSolo);			
 		});
 	});
@@ -115,12 +115,10 @@ _____________________________________________________________________*/
 		}
 		$('.tableB tr').click(function(){
 			var ciUsuario=$(this).attr('class');
-			var MiCi=sessionStorage.getItem("CI");
 			var datos={mici:MiCi,suci:ciUsuario}
 			$(".tableB").remove();
 			$("#myModal .modal-header input").remove();
 			socket.emit('listaMensajesUnUsuario',datos);
-
 		});
 	});
 	socket.on('RespuestaMensajeSolo',function(DataMensaje){

@@ -1,43 +1,78 @@
 extends layout2
 
 block content
-    .row
-        nav.navbar.navbar-inverse
-            .container-fluid
-                .collapse.navbar-collapse(id="bs-example-navbar-collapse-1",style="padding-left:0;")
-                    ul.nav.navbar-nav.col-md-12(id="global-actions",style="padding-left:0;")
-                        li.bannerSedeca(class="col-md-2 col-sm-2 col-xs-12")
-                          a(href="MenuPrincipal",style='padding:0')
-                            img(src="/images/logoSEDECA.png",class="logoSEDECA")
-                        li(class="col-md-1",style='padding:0')
-                        li(class="dropdown col-md-1 col-sm-1 active bann",style="padding-left:0;padding-right:0;")
-                            a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="false", aria-expanded="true",style="padding-left:0;padding-right:0;") USUARIOS
-                              span(class="caret")
-                                ul(class="dropdown-menu")
-                                  li
-                                    a(href="Usuarios") Listar Usuarios
-                                  li
-                                    a(href="RegistrarUsuario") Nuevo Usuario
-                        li(class="col-md-1 col-sm-2 bann",style="padding-left:0;padding-right:0;")
-                          a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal",style="padding-left:0;padding-right:0;") MENSAJES
-                        li(class="dropdown col-md-1 col-sm-1 bann",style="padding-left:0;padding-right:0;")
-                          a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") UBICACION
-                            span(class="caret")
-                              ul(class="dropdown-menu")
-                                li
-                                  a(href="Principal_TiempoReal") Tiempo Real
-                                li
-                                  a(href="#") Localizacion GPS
-                        li(class="dropdown col-md-1 col-sm-1 avatarrr bann",style="padding-left:0;padding-right:0;")
-                            a(href="#", class="dropdown-toggle avatarNombre", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") NameUser
-                              span(class="glyphicon glyphicon-user")
-                                ul(class="dropdown-menu")
-                                  li
-                                    a(href="#", data-toggle="modal", class="info", data-target="#modalUser") Mi Perfil
-                                  li
-                                    a(href="#") Salir
-    .row   
-        .bodyNoticias
+    .row.filaimagenPrincipal
+        h1 SERVICIO DEPARTAMENTAL DE CAMINOS POTOSÍ
+        h3 Subsistema Administrador
+        .row.userResidencia
+            .col-md-2.col-md-offset-1
+                a(href="Residencias")
+                    img(src="/images/home.jpg",class="img-circle")
+                    h3 RESIDENCIAS
+            .col-md-2
+                a(href="Usuarios")
+                    img(src="/images/user.jpg",class="img-circle")
+                    h3 USUARIOS
+            .col-md-2
+                a(href="equipos")
+                    img(src="/images/car.jpg",class="img-circle")
+                    h3 VEHICULOS
+            .col-md-2
+                a(class="arrow",href="#Notificaciones")
+                    img(src="/images/reportes.jpg",class="img-circle")
+                    h3 REPORTES
+            .col-md-2(data-toggle="modal" data-target="#myModal")
+                img(src="/images/mensajes.jpg",class="img-circle")
+                h3 MENSAJES
+        .row.col-md-12(style='margin-top:80px;margin-bottom:40px;')
+            a(class="arrow",href="#Notificaciones",style='text-align:center;display:block;')
+                img(src='/images/arrow.png',style='width:70px;')
+    .row.filaNotificaciones#Notificaciones
+        h1(style='margin-top:80px;') REPORTES
+        .row(style='padding:40px;')
+            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
+              .hovereffect
+                img.img-responsive(src='/images/maestranza.jpg', alt='')
+                .overlay
+                    h2 RESIDENCIA ACASIO
+                    p
+                        a(href='#') VER REPORTES
+            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
+              .hovereffect
+                img.img-responsive(src='/images/fondoo.jpg', alt='')
+                .overlay
+                    h2 RESIDENCIA UNCIA
+                    p
+                        a(href='#') VER REPORTES
+            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
+              .hovereffect
+                img.img-responsive(src='/images/banner.jpg', alt='')
+                .overlay
+                    h2 RESIDENCIA UYUNI
+                    p
+                        a(href='#') VER REPORTES
+            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
+              .hovereffect
+                img.img-responsive(src='/images/residencias.jpe', alt='')
+                .overlay
+                    h2 RESIDENCIA VILLA MAR
+                    p
+                        a(href='#') VER REPORTES
+            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
+              .hovereffect
+                img.img-responsive(src='/images/residen.jpg', alt='')
+                .overlay
+                    h2 RESIDENCIA RETIRO
+                    p
+                        a(href='#') VER REPORTES
+            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
+              .hovereffect
+                img.img-responsive(src='/images/fondoo.jpg', alt='')
+                .overlay
+                    h2 RESIDENCIA TUPIZA
+                    p
+                        a(href='#') VER REPORTES
+        .bodyNoticias(style='margin-top:60px;')
             .row
                 .formNoticia
                     .navii.col-md-12
@@ -65,6 +100,21 @@ block content
                                 span.fechaNoti
                                 p
                                 img.imagenNoti
+    
+        #modalResidentes.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+          .modal-dialog(role='document')
+            .modal-content
+              .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                  span(aria-hidden='true') ×
+                h4#myModalLabel.modal-title ENCARGADOS DE RESIDENCIAS
+              .modal-body
+                
+              .modal-footer
+                button.btn.btn-primary(type='button') GUARDAR CAMBIOS
+                button.btn.btn-default(type='button', data-dismiss='modal') CANCELAR
+                
     .footer
         #mimapa
+    include modalUsuario
     script(src="/javascripts/bootstrap.min.js")

@@ -1,24 +1,26 @@
 doctype html
 html
   head
-    title= title
-    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title Localizacion en Tiempo Real SEDECA
     link(rel='stylesheet', href='/stylesheets/leaflet.css')
-    link(rel='stylesheet', href='/stylesheets/style2.css')
+    link(rel='stylesheet', href='/stylesheets/styleGPS.css')
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap-datetimepicker.min.css')
     link(rel='stylesheet', href='/stylesheets/sweetalert.css')
     script(src="/javascripts/jquery.js")
     script(src="/socket.io/socket.io.js")
     script(src="/javascripts/leaflet.js")
     script(src="/javascripts/AccuratePosition.js")
-    script(src="/javascripts/principal.js")
-    script(src="/javascripts/residencias.js")
     script(src="/javascripts/puntos.js")
+    script(src="/javascripts/GPS_location.js")
     script(src="/javascripts/Mensajes.js")
+    script(src='/javascripts/bootstrap-datetimepicker.min.js')
+    script(src="/javascripts/pickerr.js")
+    script(src="/javascripts/carlocationOne.js")
     script(src="/javascripts/sweetalert.min.js")
   body
     .row
-        nav#mainNav.navbar.navbar-inverse.navbar-fixed-top
+        nav#mainNav.navbar.navbar-inverse(style='margin-bottom:0')
           .container
             .navbar-header
               button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
@@ -53,11 +55,11 @@ html
                 li
                   a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal") Mensajes
                 li
-                  a(href="#", class="dropdown-toggle avatarNombre", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Mi Perfil
+                  a(href="#", class="dropdown-toggle avatarNombre", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") NameUser
                                   span(class="glyphicon glyphicon-user")
                                     ul(class="dropdown-menu")
                                       li
-                                        a(id='miperfil', data-toggle="modal", class="info", data-target="#modalUser",style='cursor:pointer') Mis Datos
+                                        a(href="#", data-toggle="modal", class="info", data-target="#modalUser") Mi Perfil
                                       li
                                         a(href="#") Salir
     block content

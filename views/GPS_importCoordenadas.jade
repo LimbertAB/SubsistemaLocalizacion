@@ -1,0 +1,12 @@
+extends GPS_layout
+
+block content
+    .row
+        .col-md-6.col-md-offset-3
+            #page-wrapper
+                h1(style="text-align:center") IMPORTE EL ARCHIVO DE TIPO TEXTO
+                div
+                    | Seleccione el archivo: 
+                    input#fileInput(type='file')
+                pre#fileDisplayArea
+            button.btn.btn-warning.btn-lg.disabled(type='button',id="btnenviarcorrdenadasmemoria") GUARDAR COORDENADAS

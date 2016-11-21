@@ -1,0 +1,38 @@
+#modalUser.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+  .modal-dialog
+    .modal-content(style='margin-top: 80px;')
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') ×
+        h4#myModalLabel.modal-title DATOS PERSONALES
+      .modal-body.User(style='height: 400px;')
+        .row.col-md-12
+          p.col-md-4(style='font-weight: bold;font-size: 1.5em;') Nombres:
+          p.nomC.col-md-8.titModalUser(style='font-weight: 100;font-size: 1.4em;color:#969494')
+          input.n.col-md-8(type='text', size='50', name='editApe', style='display:none')
+        .row.col-md-12
+          p.col-md-4(style='font-weight: bold;font-size: 1.5em;') Nick:
+          p.col-md-8.nicC.titModalUser(style='font-weight: 100;font-size: 1.4em;color:#969494')
+          input.k.col-md-8(type='text', size='50', name='editNom', style='display:none')
+        .row.col-md-12
+          p.col-md-4(style='font-weight: bold;font-size: 1.5em;') Ci:
+          p.ciC.col-md-8.titModalUser(style='font-weight: 100;font-size: 1.4em;color:#969494')
+          input.i.col-md-8(type='text', size='50', name='editTel', style='display:none')
+        .row.col-md-12
+          p.col-md-4(style='font-weight: bold;font-size: 1.5em;') Cargo:
+          p.carC.col-md-8(style='font-weight: 100;font-size: 1.4em;color:#969494')
+        .row.col-md-12
+          p.col-md-4(style='font-weight: bold;font-size: 1.5em;') Domicilio:
+          p.domC.col-md-8.titModalUser(style='font-weight: 100;font-size: 1.4em;color:#969494')
+          input.d.col-md-8(type='text', size='50', name='editDom', style='display:none')
+        .row.col-md-12
+          p.col-md-4(style='font-weight: bold;font-size: 1.5em;') Telefono:
+          p.telC.col-md-8.titModalUser(style='font-weight: 100;font-size: 1.4em;color:#969494')
+          input.t.col-md-8(type='text', size='50', name='editDom', style='display:none')
+        .row.col-md-12
+          p.col-md-4(style='font-weight: bold;font-size: 1.5em;') Celular:
+          p.celC.col-md-8.titModalUser(style='font-weight: 100;font-size: 1.4em;color:#969494')
+          input.c.col-md-8(type='text', size='50', name='editDom', style='display:none')
+      .modal-footer
+        button.btn.btn-primary.edit(type='button', value='Editar') EDITAR
+        button.btn.btn-default.acept(type='button', data-dismiss='modal', value='Aceptar') CANCELAR

@@ -1,0 +1,83 @@
+extends layout2
+
+block content
+    .row(style='margin-top:70px;background:#fff')
+        .col-md-12
+            h3(style='text-align:center;') ACTIVIDADES DE MANTENIMIENTO
+        .col-md-12(style='padding-bottom:20px;')
+          table.table.table-bordered.table-hover.table-responsive(id='tablaSam',style='width:90vw;margin:0 auto')
+            thead
+              tr
+                th NRO
+                th ACTIVIDAD
+                th DESCRIPCION
+                th UNIDAD
+                th PRECIO UNITARIO
+            tbody.tablaSambody
+    .row(style='background:#fff')
+      .col-md-8.col-md-offset-2
+        .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;display:none')
+              button.close(type='button', data-dismiss='alert', aria-label='Close')
+                span(aria-hidden='true') ×
+              strong NO SE ENCONTRARON RESULTADOS!
+              |  Registre acticidades de mantenimiento para evitar problemas en los diferentes sistemas
+    .row(style='background:rgba(146, 139, 52, 0.61);width:vw;margin-left: 0px;padding-top: 30px;')        
+        .form-group
+            h2(style='text-align:center;color:#fff;') REGISTRAR ACTIVIDADES SAM
+            .col-sm-6.col-sm-offset-3
+                .form-group
+                    label(for='disabledTextInput') CODIGO SAM
+                    input.form-control.input-lg(type='number', id="codS", placeholder='codigoSam')
+                .form-group
+                    label(for='') DESCRIPCIÓN
+                    input.form-control.input-lg(type='text', id='actividadS', placeholder='actividad',disabled)
+                .form-group
+                    label(for='') UNIDAD
+                    select.form-control.input-lg(type='text', id='unidadS', placeholder='unidad',disabled)
+                      option Seleccione Unidad
+                      option H-H
+                      option m2
+                      option Km-Berma
+                      option m3
+                      option Moto-Km
+                      option ml
+                .form-group
+                    label(for='') PRECIO UNITARIO
+                    input.form-control.input-lg(type='number', id='preciounitarioS', placeholder='Precio unitario',disabled)
+                .form-group(style='margin-bottom:120px;margin-top:45px')
+                    button.btn.btn-warning.btnRegistroSam.btn-lg(type='button',data-loading-text="Enviando..." disabled) REGISTRAR CODIGO
+    #modalSam.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+            h3#myModalLabel.modal-title Actividad de Mantenimiento
+          .modal-body(style="height: 100%;")
+              .row
+                .col-md-4
+                  h3 Actividad
+                .col-md-8
+                  h4.actsam
+              .row
+                .col-md-4
+                  h3 Unidad
+                .col-md-8
+                  h4.unisam.desaparecersam
+                  input.inun(type='text',style='margin-top: 20px;display:none')
+              .row
+                .col-md-4
+                  h3 Descripcion
+                .col-md-8
+                  h4.dessam.desaparecersam
+                  input.inde(type='text',style='margin-top: 20px;display:none')
+              .row
+                .col-md-4
+                  h3 Precio Unitario
+                .col-md-8
+                  h4.presam.desaparecersam
+                  input.inpr(type='number',style='margin-top: 20px;display:none')
+          .modal-footer
+            button.btn.btn-primary(type='button',id='btnmodificarSam') Modificar
+            button.btn.btn-default(type='button', data-dismiss='modal',id='btncancelarSam') cancelar
+    script(src="/javascripts/bootstrap.min.js")

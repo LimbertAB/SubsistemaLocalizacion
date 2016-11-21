@@ -1,68 +1,90 @@
 extends layout2
 
 block content
-  nav.navbar.navbar-inverse(style="margin-bottom:0;")
-    .container-fluid
-      .collapse.navbar-collapse(id="bs-example-navbar-collapse-1",style="padding-left:0;")
-          ul.nav.navbar-nav.col-md-12(id="global-actions",style="padding-left:0;")
-            li.bannerSedeca(class="col-md-2 col-sm-2 col-xs-12")
-              a(href="MenuPrincipal",style='padding:0')
-                img(src="/images/logoSEDECA.png",class="logoSEDECA")
-            li(class="col-md-1",style='padding:0')
-            li(class="dropdown col-md-1 col-sm-1 active bann",style="padding-left:0;padding-right:0;")
-                a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="false", aria-expanded="true",style="padding-left:0;padding-right:0;") USUARIOS
-                  span(class="caret")
-                    ul(class="dropdown-menu")
-                      li
-                        a(href="Usuarios") Listar Usuarios
-                      li
-                        a(href="RegistrarUsuario") Nuevo Usuario
-            li(class="col-md-1 col-sm-2 bann",style="padding-left:0;padding-right:0;")
-              a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal",style="padding-left:0;padding-right:0;") MENSAJES
-            li(class="dropdown col-md-1 col-sm-1 bann",style="padding-left:0;padding-right:0;")
-              a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") UBICACION
-                span(class="caret")
-                  ul(class="dropdown-menu")
-                    li
-                      a(href="Principal_TiempoReal") Tiempo Real
-                    li
-                      a(href="#") Localizacion GPS
-            li(class="dropdown col-md-1 col-sm-1 avatarrr bann",style="padding-left:0;padding-right:0;")
-                a(href="#", class="dropdown-toggle avatarNombre", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") NameUser
-                  span(class="glyphicon glyphicon-user")
-                    ul(class="dropdown-menu")
-                      li
-                        a(href="#", data-toggle="modal", class="info", data-target="#modalUser") Mi Perfil
-                      li
-                        a(href="#") Salir
-  ul.navbarResidencia(class="nav nav-tabs nav-justified")
-      li(role="presentation" class="active bann") 
-        a(href="#") Todos
-      li(role="presentation" class='bann' id='ACASIO') 
-        a(href="#") ACASIO
-      li(role="presentation" class='bann' id='RETIRO') 
-        a(href="#") RETIRO
-      li(role="presentation" class='bann' id='TUPIZA') 
-        a(href="#") TUPIZA
-      li(role="presentation" class='bann' id='UNCIA') 
-        a(href="#") UNCIA
-      li(role="presentation" class='bann' id='UYUNI') 
-        a(href="#") UYUNI
-      li(role="presentation" class='bann' id='VILLAMAR') 
-        a(href="#") VILLA MAR
-      li(role="presentation" class='bann' id='DISTRITO') 
-        a(href="#") ADMINISTRACION
-  .sectionBuscador
-      input.buscador(type='text',size='50', placeholder="Buscar Personal ...")
-      #resultado
-  li.app(id='variables')=nombres
-  .table-responsive(style="width:85%;margin:0 auto;border-top:20px solid rgba(255,255,255,.0);")
-    table.table
-      thead
-        tr
-          td CI
-          td NOMBRE COMPLETO
-          td CARGO
-          td UBICACION
-      tbody.tablaV
+  .row(style='padding-top:100px')
+    .col-md-2
+      ul(class="nav nav-pills nav-stacked",style='background:#fff')
+          li.active(role='presentation') 
+            a(href='#todos', aria-controls='todos', role='tab', data-toggle='tab') TODOS
+          if estadoresidencia==true
+            - for (var x=0;x<residencias.length;x++)
+                li(role='presentation')
+                  a(href='#'+residencias[x].nombreres+'', aria-controls='acasio', role='tab', data-toggle='tab') #{residencias[x].nombreres}
+    .col-md-10(style='padding:0')
+      .tab-content(style='padding-top:30px;padding-bottom:30px')
+        #todos.tab-pane.active(role='tabpanel')
+          .sectionBuscador(style='background:#fff;padding:10px;margin-top:0')
+              input.buscador(type='text',size='50', placeholder="Buscar Personal ...")
+              #resultado
+          li.app(id='variables')=nombres
+          table.table.table-responsive(style="width:85%;margin:0 auto;background:#fff")
+              thead
+                tr
+                  td CI
+                  td NOMBRE COMPLETO
+                  td CARGO
+                  td UBICACION
+              tbody.tablaV
+                if estadouser==true
+                  - for (var x=0;x<ci.length;x++)
+                    if x%2
+                      tr(value=idusuario[x],data-toggle="modal" class="info" data-target="#modalUser")
+                        td(id="ciT") #{ci[x]}
+                        td(id="nomT") #{nombres[x]}
+                        td(id="cargT") #{cargo[x]}
+                        if ubicacion[x]
+                          td(id="ubicT") #{ubicacion[x]}
+                        else
+                          td(id="ubicT") No Asignado
+                    else
+                      tr(value=idusuario[x],data-toggle="modal" data-target="#modalUser")
+                        td(id="ciT") #{ci[x]}
+                        td(id="nomT") #{nombres[x]}
+                        td(id="cargT") #{cargo[x]}
+                        if ubicacion[x]
+                          td(id="ubicT") #{ubicacion[x]}
+                        else
+                          td(id="ubicT") No Asignado
+        - for (var x=0;x<residencias.length;x++)
+            .tab-pane(role='tabpanel',id=residencias[x].nombreres)
+              table.table.table-responsive(style="width:80%;margin:0 auto;background:#fff")
+                  thead
+                    tr
+                      td CI
+                      td NOMBRE COMPLETO
+                      td CARGO
+                      td UBICACION
+                  tbody.tablaV
+                    if estadoasignacion==true
+                      if residencias[x].idusuario.length
+                        - for (var y=0;y<residencias[x].idusuario.length;y++)
+                          if y%2
+                            tr(value=residencias[x].idusuario[y],data-toggle="modal" class="info" data-target="#modalUser")
+                              td(id="ciT") #{residencias[x].ci[y]}
+                              td(id="nomT") #{residencias[x].nombres[y]}
+                              td(id="cargT") #{residencias[x].cargo[y]}
+                              td(id="ubicT") #{residencias[x].nombreres}
+                          else
+                            tr(value=residencias[x].idusuario[y],data-toggle="modal" data-target="#modalUser")
+                              td(id="ciT") #{residencias[x].ci[y]}
+                              td(id="nomT") #{residencias[x].nombres[y]}
+                              td(id="cargT") #{residencias[x].cargo[y]}
+                              td(id="ubicT") #{residencias[x].nombreres}   
+                      else
+                        .row(style='background:#fff')
+                            .col-md-8.col-md-offset-2
+                              .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                                    button.close(type='button', data-dismiss='alert', aria-label='Close')
+                                      span(aria-hidden='true') ×
+                                    strong NO SE ENCONTRARON RESULTADOS!
+                                    |  Aun no se asigno personal para esta residencia.
+                    else
+                      .row(style='background:#fff;width:80%;margin:0 auto')
+                        .col-md-12
+                          .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                                button.close(type='button', data-dismiss='alert', aria-label='Close')
+                                  span(aria-hidden='true') ×
+                                strong NO SE ENCONTRARON RESULTADOS!
+                                |  Aun no se asigno personal para esta residencia.     
+  include modalUsuario
   script(src="/javascripts/bootstrap.min.js")

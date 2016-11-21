@@ -1,54 +1,41 @@
 extends layoutGeo
 
 block content
-    nav.navbar.navbar-inverse(style="margin-bottom:0;")
-            .container-fluid
-                .collapse.navbar-collapse(id="bs-example-navbar-collapse-1",style="padding-left:0;")
-                    ul.nav.navbar-nav.col-md-12(id="global-actions",style="padding-left:0;")
-                        li.bannerSedeca(class="col-md-2 col-sm-2 col-xs-12")
-                            a(href="MenuPrincipal",style='padding:0')
-                                img(src="/images/logoSEDECA.png",class="logoSEDECA")
-                        li(class="col-md-1",style='padding:0')
-                        li(class="dropdown col-md-1 col-sm-1 bann",style="padding-left:0;padding-right:0;")
-                            a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="false", aria-expanded="true",style="padding-left:0;padding-right:0;") USUARIOS
-                              span(class="caret")
-                                ul(class="dropdown-menu")
-                                  li
-                                    a(href="Usuarios") Listar Usuarios
-                                  li
-                                    a(href="RegistrarUsuario") Nuevo Usuario
-                        li(class="col-md-1 col-sm-2 bann",style="padding-left:0;padding-right:0;")
-                          a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal",style="padding-left:0;padding-right:0;") MENSAJES
-                        li(class="dropdown col-md-1 col-sm-1 active bann",style="padding-left:0;padding-right:0;")
-                          a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") UBICACION
-                            span(class="caret")
-                              ul(class="dropdown-menu")
-                                li
-                                  a(href="Principal_TiempoReal") Tiempo Real
-                                li
-                                  a(href="#") Localizacion GPS
-                        li(class="dropdown col-md-1 col-sm-1 avatarrr bann",style="padding-left:0;padding-right:0;")
-                            a(href="#", class="dropdown-toggle avatarNombre", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false",style="padding-left:0;padding-right:0;") NameUser
-                              span(class="glyphicon glyphicon-user")
-                                ul(class="dropdown-menu")
-                                  li
-                                    a(href="#", data-toggle="modal", class="info", data-target="#modalUser") Mi Perfil
-                                  li
-                                    a(href="#") Salir
-    ul.navbarResidencia(class="nav nav-tabs nav-justified")
-      li(role="presentation" class="active bann") 
-        a(href="#") TODOS
-      li(role="presentation" class='bann' id='ACASIO') 
-        a(href="#") ACASIO
-      li(role="presentation" class='bann' id='RETIRO') 
-        a(href="#") RETIRO
-      li(role="presentation" class='bann' id='TUPIZA') 
-        a(href="#") TUPIZA
-      li(role="presentation" class='bann' id='UNCIA') 
-        a(href="#") UNCIA
-      li(role="presentation" class='bann' id='UYUNI') 
-        a(href="#") UYUNI
-      li(role="presentation" class='bann' id='VILLAMAR') 
-        a(href="#") VILLA MAR
-    #mimapa(class="mapclass leaflet-container leaflet-fade-anim leaflet-grab leaflet-touch-drag" style="height:85vh;" tabindex="0")
+  .row(style='padding-top:5px')
+    .col-md-2(style='padding-right:0')
+      ul(class="nav nav-pills nav-stacked",style='background:#fff')
+          li.active(role='presentation',class='tabResidencias') 
+            a(href='todos',role='tab', data-toggle='tab') TODOS
+          if estado==true
+            - for (var x=0;x<residencias.length;x++)
+                li(role='presentation',class='tabResidencias')
+                  a(href=''+residencias[x].nombreres+'',role='tab',data-toggle='tab') #{residencias[x].nombreres}
+          else
+            h1 no hay nada de este año
+    .col-md-10(style='padding:0')
+      .tab-content
+        #todos.tab-pane.active(role='tabpanel',style='display:none')
+          table.table.table-bordered(id='tablaLocTRresidencias')
+            -var aux=0
+            - for (var x=0;x<residencias.length;x++)
+              - for (var y=0;y<residencias[x].userids.length;y++)
+                tr(id='fila'+aux+'')
+                  - aux++
+                  td(class="idL") #{residencias[x].userids[y]}
+                  td(class="ciL") #{residencias[x].usercis[y]}
+                  td(class="nomL") #{residencias[x].usernombres[y]}
+                  td(class="latL") #{residencias[x].latitudes[y]}
+                  td(class="lonL") #{residencias[x].longitudes[y]}
+        - for (var x=0;x<residencias.length;x++)
+          .tab-pane(role='tabpanel',id=residencias[x].nombreres,style='display:none')
+            table(id='tablaLocTRresidencias')
+              - for (var y=0;y<residencias[x].userids.length;y++)
+                tr(id='fila'+y+'')
+                  td(class="idL") #{residencias[x].userids[y]}
+                  td(class="ciL") #{residencias[x].usercis[y]}
+                  td(class="nomL") #{residencias[x].usernombres[y]}
+                  td(class="latL") #{residencias[x].latitudes[y]}
+                  td(class="lonL") #{residencias[x].longitudes[y]}
+        .col-md-12(style='padding-left:0')
+            #mimapa(style="height:86vh")
     script(src="/javascripts/bootstrap.min.js")

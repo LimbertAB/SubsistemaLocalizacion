@@ -1,39 +1,45 @@
-function onDocumentReady() {
+$(function(){ 
 	var socket=io();
 	var mbAttr = 'Edit For © <a href="http://mapbox.com">Limbert AB</a>';
 	//mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibGltYmVydGFiIiwiYSI6ImNpcG9mMnV3ZDAxcHZmdG0zOWc1NjV2aGwifQ.89smGLtgJWmUKgd7B0cV1Q';
 	// var deafult=L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 	//     attribution: mbAttr
 	// });
-	var gglr = new L.Google('ROADMAP', {
-	    attribution: mbAttr
-	});
-	var gglh = new L.Google('HYBRID', {
-	    attribution: mbAttr
-	});
-	var gglt = new L.Google('TERRAIN', {
-	    attribution: mbAttr
-	});
+	//LOCALIAZAR
+	// script(type='text/javascript').
+ //        function onDocumentReady() {
+ //            var map = L.map('mimapa');
+ //            map.locate({  //mas presicion pero un poco mas lento al obtener presicion
+ //                enableHighAccuracy:false,
+ //            });
+ //            map.on('locationfound',onLocationFound);
+ //            function onLocationFound(position){
+ //                console.log(position);
+ //            }
+ //            map.on('locationfound', onLocationFound);
+ //            function onLocationError(e) {
+ //                alert(e.message);
+ //            }
+ //            map.on('locationerror', onLocationError);
+ //        }
+ //        $(document).on('ready', onDocumentReady);
+	var gglr = new L.Google('ROADMAP', {attribution: mbAttr});
+	var gglh = new L.Google('HYBRID', {attribution: mbAttr});
+	var gglt = new L.Google('TERRAIN', {attribution: mbAttr});
+
 	var map = L.map('mimapa', {
 	    center: [-20.550508894195627, -66.62109375],
 	    zoom:7,
 	    maxZoom: 20,
 	    layers:gglr,
 	});
-	var polyline = L.polyline(functionPuntos(), {color: 'red',border:50}).addTo(map);//DIBUJO DEL MAPA DE POTOSI
-	
-			
+	var polyline = L.polyline(functionPuntos(), {color: 'red',border:50}).addTo(map);//DIBUJO DEL MAPA DE POTOSI		
 	var baseMaps = {
 		"CARRETERAS": gglr,
 		"SATELITE": gglh,
 		"TERRENOS": gglt,
 	};
 	L.control.layers(baseMaps).addTo(map);
-	$.getJSON("http://nominatim.openstreetmap.org/reverse?format=json&addressdetails=0&zoom=18&lat=" + -18.469744 + "&lon=" + -66.562618 + "&json_callback=?",
-        function (response) {
-            console.log(response.display_name); 
-        }
-    );
 	// var map = L.map('mimapa', {
 	//     center: [-20.550508894195627, -66.62109375],
 	//     zoom:7,
@@ -46,9 +52,8 @@ function onDocumentReady() {
 	// 	dos = L.tileLayer(mbUrl, {id: 'mapbox.mapbox-terrain-v2', attribution: mbAttr});
 	// var baseMaps = {"DEFAULT": deafult,"SATELITE":satellite,"OBSCURIDAD":Dark,"OPCION 1": uno,"OPCION 2":dos };//Titulos Mapas
 	// L.control.layers(baseMaps).addTo(map);
-	var DirURL=$(location).attr('href'); //DIRECCION URL DE LA PAGINA ACTUAL
-
-	if(DirURL=='http://localhost:5000/Principal_TiempoReal'){
+	var DirURL = window.location.pathname; //DIRECCION URL DE LA PAGINA ACTUAL
+	if(DirURL=='/Principal_TiempoReal'){
 		var markMaestranza = L.marker([-19.560032769192688, -65.76850533485413]);
 		map.addLayer(markMaestranza);
 		markMaestranza.bindPopup('<b>MAESTRANZA SEDECA</b><p>Zona Baja de la coudad de Potosi</p><div><img style="width:100%" src="../images/maestranza.jpg" alt="image"/></div>',{minWidth:200});
@@ -73,14 +78,10 @@ function onDocumentReady() {
 		map.addLayer(markResidenciaAcasio);
 		markResidenciaAcasio.bindPopup('<b>RESIDENCIA TUPIZA</b><p>Municipio de Acasio</p><div><img style="width:100%" src="../images/residencias.jpe" alt="image"/></div>',{minWidth:250});
 	}
-	var animation={
-		animate:true,
-		duration:3.0,
-		noMoveStart:true,
-	};
-	var zoom={
-		animate:true,
-	};
+	
+	var animation={animate:true,duration:3.0,noMoveStart:true,};
+	var zoom={animate:true,};
+
 	$('.navbarResidencia li').click(function(){
 		if($(this).hasClass('active')){
 
@@ -106,7 +107,12 @@ function onDocumentReady() {
 			}
 		}
 	});
-
+	$.getJSON("http://nominatim.openstreetmap.org/reverse?format=json&addressdetails=0&zoom=18&lat=" + -18.469744 + "&lon=" + -66.562618 + "&json_callback=?",
+        function (response) {
+            console.log(response.display_name); 
+            console.log(response); 
+        }
+    );
 	if(DirURL=='http://localhost:5000/Localizacion_All_TR'){
 
 		function onAccuratePositionProgress (e) {
@@ -179,8 +185,7 @@ function onDocumentReady() {
 			}
 		}
 	});
-}
-$(document).on('ready', onDocumentReady);
+})
 	/*var socket=io();
 	$("#enviar_btn").click(function(event){
 		var valor = $('#msn_numero').val();
