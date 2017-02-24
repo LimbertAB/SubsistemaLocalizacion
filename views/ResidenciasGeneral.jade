@@ -16,8 +16,6 @@ block content
           a(href='#materiales', aria-controls='materiales', role='tab', data-toggle='tab') MATERIALES
         li(role='presentation')
           a(href='#servicios', aria-controls='servicios', role='tab', data-toggle='tab') SERVICIOS
-        li(role='presentation')
-          a(href='#reportes', aria-controls='reportes', role='tab', data-toggle='tab') REPORTES
     h1(id='latitud',style='display:none')=residencias[0].latitud
     h1(id='longitud',style='display:none')=residencias[0].longitud
     .tab-content
@@ -26,47 +24,55 @@ block content
           .col-md-7
             .row(style='background:rgba(19, 154, 79, 0.72);')
               .col-md-4
-                img(src='/images/user.png')
-                h2 #{residencias[0].nombre}
+                img(src='/images/home.png')
+                .form-group.has-success.has-feedback(style='padding-bottom:10px;padding-top:15px;margin:0 auto;display:none',id='formRegistroResidencia')
+                  input#inputSuccess3.form-control(type='text',placeholder='Ejemplo: Acasio', aria-describedby='inputSuccess3Status',value=residencias[0].nombre)
+                  span.glyphicon.glyphicon-ok.form-control-feedback(aria-hidden='true',style='padding-top:15px')
+                  .list-group.col-sm-12.col-xl-12(style='display:none',id='listaresidencianuevo')
+
+                h2.nombreresidencia #{residencias[0].nombre}
                 p Nombre de la residencia
               .col-md-4
                 img(src='/images/user.png')
                 h2 #{residencias[0].cantidaduser}
                 p Cantidad de personal
               .col-md-4
-                img(src='/images/user.png')
+                img(src='/images/mobile.png')
                 h2 #{residencias[0].cantidadcar}
                 p Cantidad de vehiculos
               .col-md-4
-                img(src='/images/user.png')
+                img(src='/images/route.png')
                 h2 #{residencias[0].cantidadtramos}
                 p Cantidad de tramos
               .col-md-4
-                img(src='/images/user.png')
+                img(src='/images/money.png')
                 h2 #{residencias[0].costototal}
                 p Costo total (Bs)
               .col-md-4
-                img(src='/images/user.png')
+                img(src='/images/long.png')
                 h2 #{residencias[0].longitudtotal}
                 p Longitud total (Km)
             .row
               if residencias[0].estadoR=='desabilitado'
                 if tramos[0].estado==true&&personal[0].estado==true&&vehiculos[0].respuesta==true
                   .col-md-4.col-md-offset-1
-                    btn(class="btn btnHabilitarResidencia" role="button",id='btnradioRojo',data-toggle="tooltip",data-placement="top",title="HABILITAR",style='text-align:center;margin: 0 auto;display:block;') DESABILITADO
+                    button.btn.btn-danger.btn-lg(class="btn btnHabilitarResidencia" role="button",data-toggle="tooltip",data-placement="top",title="HABILITAR",style='text-align:center;margin: 0 auto;display:block;' disabled) DESABILITADO
                 else
                   .col-md-4.col-md-offset-1
-                    btn.disabled(class="btn btnHabilitarResidencia" role="button",id='btnradioRojo',data-toggle="tooltip",data-placement="top",title="AUN NO PUEDE HABILITAR LA RESIDENCIA",style='text-align:center;margin: 0 auto;display:block;') DESABILITADO
+                    button.btn.btn-danger.btn-lg(class="btn btnHabilitarResidencia" role="button",data-toggle="tooltip",data-placement="top",title="AUN NO PUEDE HABILITAR LA RESIDENCIA",style='text-align:center;margin: 0 auto;display:block;' disabled) DESABILITADO
               else
                 .col-md-4.col-md-offset-1
-                  btn(class="btn btnHabilitarResidencia" role="button",id='btnradioverde',data-toggle="tooltip",data-placement="top",title="DESABILITAR",style='text-align:center;margin: 0 auto;display:block;') HABILITADO
+                  button.btn.btn-success.btn-lg(class="btn btnHabilitarResidencia" role="button",data-toggle="tooltip",data-placement="top",title="DESABILITAR",style='text-align:center;margin: 0 auto;display:block;') HABILITADO
               .col-md-4.col-md-offset-2
-                btn(class="btn" role="button",id='btnradioverde',style='text-align:center;margin: 0 auto;display:block;') MODIFICAR
+                .btn-group.dropup#btngrupomodificar
+                  button.btn.btn-warning.btn-lg(type='button' class="btn btnmodificarresidencia" role="button" style='text-align:center;margin: 0 auto;display:block;') MODIFICAR
+                  
+                //button(class="btn btnmodificarresidencia" role="button",id='btnradioverde',style='text-align:center;margin: 0 auto;display:block;') MODIFICAR
 
           .col-md-5(style='background:#fff;padding-left:0')
             #mimapa(style="height:68vh;")
             h4(style='padding-left:10px;padding-right:10px') UBICACION:
-              small(style='padding-left:5px') Av. el maestro, tomas frias, ciudad de potosi, bolivia, america, planeta tierra
+              small(style='padding-left:5px') #{residencias[0].ubicacion}
         .row(style='background:#fff')
       
       #tramos.tab-pane(role='tabpanel')
@@ -80,23 +86,30 @@ block content
                     td CANTIDAD DE ACTIVIDADES
                     td LONGITUD Km
                     td COSTO TOTAL Bs
+                    td EDITAR
                 tbody
                   if tramos[0].estado == true
                     - for (var x=0;x<tramos.length;x++)
                       if x%2
-                        tr(value=tramos[x].idtramo[x],class="info" )
+                        tr(class='filatramo'+tramos[x].idtramo[x]+' info' )
                           td #{x+1}
-                          td(id="descripciont") #{tramos[x].descripcion[0]}
+                          td(class="descripciont") #{tramos[x].descripcion[0]}
                           td(id="cantidadactividadest") 0
                           td(id="longitudt") #{tramos[x].longitud[0]}
                           td(id="costototalt") #{tramos[x].costototal[0]}
+                          td
+                            button.btn.btn-warning.btneditartramo(type='button', aria-label='Left Align' data-toggle='modal', data-target='#modalinfotramo',value= tramos[x].idtramo[x])
+                              span.glyphicon.glyphicon-pencil(aria-hidden='true')
                       else
-                        tr(value=tramos[x].idtramo[x])
+                        tr(class='filatramo'+tramos[x].idtramo[x]+'')
                           td #{x+1}
-                          td(id="descripciont") #{tramos[x].descripcion[0]}
+                          td(class="descripciont") #{tramos[x].descripcion[0]}
                           td(id="cantidadactividadest") 0
                           td(id="longitudt") #{tramos[x].longitud[0]}
                           td(id="costototalt") #{tramos[x].costototal[0]}
+                          td
+                            button.btn.btn-warning.btneditartramo(type='button', aria-label='Left Align' data-toggle='modal', data-target='#modalinfotramo' value= tramos[x].idtramo[x])
+                              span.glyphicon.glyphicon-pencil(aria-hidden='true')
                   else
                     .row(style='background:#fff')
                       .col-md-8.col-md-offset-2
@@ -126,6 +139,21 @@ block content
               .form-group
                 .col-sm-offset-4.col-sm-10
                   button.btn.btn-danger.disabled.btn-lg(type='button' id='btnRegistroTramo' data-loading-text="Enviando Registro..." autocomplete="off") REGISTRAR TRAMO
+        #modalinfotramo.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+          .modal-dialog(role='document')
+            .modal-content
+              .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                  span(aria-hidden='true') ×
+                h4#myModalLabel.modal-title Modificar Tramos de Residencia
+              .modal-body(style='height:100%')
+                label.col-sm-3.control-label(style='padding:0') Descripción del tramo
+                .col-sm-9(style='padding:0')
+                    input.form-control.descripcionT.input-lg(type='text', placeholder='Escriba el nombre del tramo')
+                    span(class="glyphicon glyphicon-remove form-control-feedback spantramo")
+              .modal-footer
+                button.btn.btn-primary.btnguardareditartramo(type='button' disabled) GUARDAR CAMBIOS
+                button.btn.btn-danger.btneliminareditartramo(type='button') ELIMINAR
       #actividades.tab-pane(role='tabpanel',style='background:#fff')
         .row
           .col-md-2(style='padding-right: 0')
@@ -247,27 +275,27 @@ block content
                   td SUELDO ANUAL
                   td OBSERVACIONES
                   td ESTADO
-              tbody
+              tbody#tablaasignacionpersonal
                 if personal[0].estado == true
                   - for (var x=0;x<personal.length;x++)
                     if x%2
                       tr(value=personal[x].idusuario,data-toggle="modal" class="info" data-target="#ModalReasignarUser")
                         td #{x+1}
-                        td(id="perfilp") #{personal[x].perfil}
+                        td(id="perfilp",value=personal[x].codigoperfil) #{personal[x].perfil}
                         td(id="nombresp") #{personal[x].nombres}
                         td 12
-                        td(id="sueldop")
-                        td(id="sueldoanualp")
+                        td(id="sueldop") #{personal[x].sueldo}
+                        td(id="sueldoanualp") #{personal[x].sueldo*12}
                         td(id="observacionesp") #{personal[x].observaciones}
                         td(id="estadop") #{personal[x].estadouser}
                     else
                       tr(value=personal[x].idusuario,data-toggle="modal" data-target="#ModalReasignarUser")
                         td #{x+1}
-                        td(id="perfilp") #{personal[x].perfil}
+                        td(id="perfilp",value=personal[x].codigoperfil) #{personal[x].perfil}
                         td(id="nombresp") #{personal[x].nombres}
                         td 12
-                        td(id="sueldop")
-                        td(id="sueldoanualp")
+                        td(id="sueldop") #{personal[x].sueldo}
+                        td(id="sueldoanualp") #{personal[x].sueldo*12}
                         td(id="observacionesp") #{personal[x].observaciones}
                         td(id="estadop") #{personal[x].estadouser}
                 else
@@ -284,7 +312,6 @@ block content
               a(class="btn" href="#ContentAsignarUser" role="button",id='btnradioRojo',style='width:70%;text-align:center;margin: 0 auto;display:block;') ASIGNAR PERSONAL
             .col-md-4
               a(class="btn" href="#nuevaResidenciaMapa" role="button",id='btnradioRojo',style='width:70%;text-align:center;margin: 0 auto;display:block;') MODIFICAR ASIGNACION
-        
         .row(style='background:rgba(58, 148, 240, 0.8);padding-bottom:50px;',id='ContentAsignarUser')
           .col-md-12
             .form-horizontal(style='margin-top:30px;',id='formAsignarUser')
@@ -302,11 +329,9 @@ block content
                                 .col-sm-12
                                   select.form-control.input-lg(type='text', name='unidad',value=i)
                                     option Seleccione Perfil
-                                    option Encargado de Residencia
-                                    option Encargado de Campamento
-                                    option Sereno
-                                    option Operador B
-                                    option Chofer
+                                    if codigospersonal[0].estado==true
+                                      - for (var y=0;y<codigospersonal[0].codigo.length;y++)
+                                        option(value=codigospersonal[0].codigo[y]) #{codigospersonal[0].descripcion[y]}
                             td
                               .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnanombre'+i+'')
                                 .col-sm-12
@@ -323,11 +348,9 @@ block content
                                 .col-sm-12
                                   select.form-control.input-lg(type='text', name='unidad',value=i)
                                     option Seleccione Perfil
-                                    option Encargado de Residencia
-                                    option Encargado de Campamento
-                                    option Sereno
-                                    option Operador B
-                                    option Chofer
+                                    if codigospersonal[0].estado==true
+                                      - for (var y=0;y<codigospersonal[0].codigo.length;y++)
+                                        option(value=codigospersonal[0].codigo[y]) #{codigospersonal[0].descripcion[y]}
                             td
                               .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnanombre'+i+'')
                                 .col-sm-12
@@ -345,12 +368,27 @@ block content
               .modal-header
                 button.close(type='button', data-dismiss='modal', aria-label='Close')
                   span(aria-hidden='true') ×
-                h4#myModalLabel.modal-title MODIFICAR ESTADO DE USUARIO
-              .modal-body
-                .list-group
-                    
+                h4#myModalLabel.modal-title.titulomodalpersonal
+              .modal-body(style='height:100%')
+                label.col-sm-3.control-label(style='padding-left:0;padding-right:0;padding-top:20px') Perfil
+                .col-sm-9(style='padding-left:0;padding-right:0;padding-top:10px')
+                  select.form-control.input-lg(type='text', id='perfilpp')
+                    if codigospersonal[0].estado==true
+                      - for (var y=0;y<codigospersonal[0].codigo.length;y++)
+                        option(value=codigospersonal[0].codigo[y]) #{codigospersonal[0].descripcion[y]}
+                label.col-sm-3.control-label(style='padding-left:0;padding-right:0;padding-top:20px') Estado
+                .col-sm-9(style='padding-left:0;padding-right:0;padding-top:10px;padding-bottom:10px')
+                  select.form-control.input-lg(type='text', id='estadopp')
+                    option Activo
+                    option Vacación
+                    option De Baja
+                label.col-sm-3.control-label(style='padding-left:0;padding-right:0;padding-top:20px') Observaciones
+                .col-sm-9(style='padding:0')
+                    input.form-control.observacionP.input-lg(type='text', placeholder='Escriba las observaciones en cuanto a este usuario')
               .modal-footer
-                button.btn.btn-default(type='button', data-dismiss='modal') Cancelar
+                button.btn.btn-primary.btnguardareditarperson(type='button' disabled) Guardar cambios
+                button.btn.btn-danger.btneliminareditarperson(type='button') Eliminar
+
         #ModalAsignarUser.modal.fade.bs-example-modal-sm(tabindex='-1', role='dialog', aria-labelledby='mySmallModalLabel')
           .modal-dialog.modal-sm(role='document')
             .modal-content
@@ -381,13 +419,13 @@ block content
                 td N° INTERNO
                 td UNIDAD
                 td CHOFER U OPERADOR
-                td ESTADO
+                td PERFIL
                 td OBSERVACIONES
-            tbody
+            tbody#tablaasignacionvehiculo
               if vehiculos[0].respuesta == true
                 - for (var x=0;x<vehiculos.length;x++)
                   if x%2
-                    tr(value=vehiculos[x].idequipo,data-toggle="modal" class="info" data-target="#modalUser")
+                    tr(value=vehiculos[x].idequipo,data-toggle="modal" class="info" data-target="#ModalReasignarCar")
                       td #{x+1}
                       td(id="codinternov") #{vehiculos[x].codinterno}
                       td(id="tipov") #{vehiculos[x].tipo}
@@ -395,13 +433,13 @@ block content
                       td(id="estadov") #{vehiculos[x].estado}
                       td(id="observacionesv") #{vehiculos[x].observaciones}
                   else
-                    tr(value=vehiculos[x].idequipo,data-toggle="modal" data-target="#modalUser")
+                    tr(value=vehiculos[x].idequipo,data-toggle="modal" data-target="#ModalReasignarCar")
                       td #{x+1}
                       td(id="codinternov") #{vehiculos[x].codinterno}
                       td(id="tipov") #{vehiculos[x].tipo}
                       td(id="encargadov") #{vehiculos[x].encargado}
                       td(id="estadov") #{vehiculos[x].estado}
-                      td(id="observacionesv") #{vehiculos[x].observaciones}
+                      td(id="observacionv") #{vehiculos[x].observaciones}
               else  
                 .row(style='background:#fff')
                   .col-md-8.col-md-offset-2
@@ -471,7 +509,26 @@ block content
                           |  No existe vehiculos disponibles para asignar a esta residencia...
               .modal-footer
                 button.btn.btn-default(type='button', data-dismiss='modal') Cancelar
-      
+        #ModalReasignarCar.modal.fade(tabindex='-1',role='dialog',aria-labelledby='myModalLabel')
+          .modal-dialog(role='document')
+            .modal-content
+              .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                  span(aria-hidden='true') ×
+                h4#myModalLabel.modal-title.titulomodalvehiculo
+              .modal-body(style='height:100%')
+                label.col-sm-3.control-label(style='padding-left:0;padding-right:0;padding-top:20px') Estado
+                .col-sm-9(style='padding-left:0;padding-right:0;padding-top:10px;padding-bottom:10px')
+                  select.form-control.input-lg(type='text', id='estadovv')
+                    option Activo
+                    option De Baja
+                label.col-sm-3.control-label(style='padding-left:0;padding-right:0;padding-top:20px') Observaciones
+                .col-sm-9(style='padding:0')
+                    input.form-control.observacionvv.input-lg(type='text', placeholder='Escriba observaciones de este vehiculo')
+              .modal-footer
+                button.btn.btn-primary.btnguardareditarcar(type='button' disabled) Guardar cambios
+                button.btn.btn-danger.btneliminareditarcar(type='button') Eliminar
+
       #materiales.tab-pane(role='tabpanel')
         h1.resultadoRegistroVehiculo(style='display:none') #{estado}
         .row(style='background:#fff;padding-bottom:30px;padding-top:30px') 
@@ -484,28 +541,25 @@ block content
                     td CANTIDAD
                     td PRECIO UNITARIO
                     td MONTO
-                    td PARTIDA PRESUP.
-                tbody
+                tbody#tablaasignacionmaterial
                   if materiales[0].estado == true
                     - for (var x=0;x<materiales[0].idmaterial.length;x++)
                       if x%2
-                        tr(value=materiales[0].idmaterial[x])
+                        tr(value=materiales[0].idmaterial[x],data-toggle="modal" class="info" data-target="#ModalReasignarMaterial")
                           td #{x+1}
                           td(id="descripcionm") #{materiales[0].descripcion[x]}
                           td(id="unidadm") #{materiales[0].unidaddemedida[x]}
                           td(id="cantidadm") #{materiales[0].cantidad[x]}
-                          td(id="presiounitariom") #{materiales[0].presiounitario[x]}
+                          td(id="preciounitariom") #{materiales[0].presiounitario[x]}
                           td(id="montom") #{materiales[0].monto[x]}
-                          td(id="partidam") #{materiales[0].partidapresupuestaria[x]}
                       else
-                        tr(value=materiales[0].idmaterial[x])
+                        tr(value=materiales[0].idmaterial[x],data-toggle="modal" data-target="#ModalReasignarMaterial")
                           td #{x+1}
                           td(id="descripcionm") #{materiales[0].descripcion[x]}
                           td(id="unidadm") #{materiales[0].unidaddemedida[x]}
                           td(id="cantidadm") #{materiales[0].cantidad[x]}
-                          td(id="presiounitariom") #{materiales[0].presiounitario[x]}
+                          td(id="preciounitariom") #{materiales[0].presiounitario[x]}
                           td(id="montom") #{materiales[0].monto[x]}
-                          td(id="partidam") #{materiales[0].partidapresupuestaria[x]}
                   else
                     .row(style='background:#fff')
                       .col-md-8.col-md-offset-2
@@ -522,12 +576,15 @@ block content
               .form-group.material1.has-error.has-feedback.formulariomateriales
                 label.col-sm-2.col-sm-offset-2.control-label materiales - suminitros
                 .col-sm-5
-                  input.form-control.input-lg(type='text', placeholder='Ejemplo: Alimentos y bebidas para personas',name="nombrematerial")
-                  span(class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
-              .form-group.material2.has-er2ror.has-feedback.formulariomateriales
+                  select.form-control.input-lg(type='text', name='nombrematerial')
+                    option Seleccione Material
+                    if codigosmaterial[0].estado==true
+                      - for (var y=0;y<codigosmaterial[0].codigo.length;y++)
+                        option(value=codigosmaterial[0].codigo[y]) #{codigosmaterial[0].descripcion[y]}  
+              .form-group.material2.has-error.has-feedback.formulariomateriales
                     label.col-sm-2.col-sm-offset-2.control-label UNIDAD
                     .col-sm-5
-                      select.form-control.input-lg(type='text', name='unidad', placeholder='unidad')
+                      select.form-control.input-lg(type='text', name='unidad')
                         option Seleccione Unidad
                         option Raciones
                         option Global
@@ -551,6 +608,35 @@ block content
               .form-group
                 .col-sm-offset-4.col-sm-10
                   button.btn.btn-warning.disabled.btn-lg(type='button' id='btnRegistromaterial' data-loading-text="Enviando Registro..." autocomplete="off",style='margin-top:30px;margin-bottom:30px') REGISTRAR MATERIAL
+        #ModalReasignarMaterial.modal.fade(tabindex='-1',role='dialog',aria-labelledby='myModalLabel')
+          .modal-dialog(role='document')
+            .modal-content
+              .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                  span(aria-hidden='true') ×
+                h4#myModalLabel.modal-title.titulomodalmaterial
+              .modal-body(style='height:100%')
+                label.col-sm-3.control-label(style='padding-left:0;padding-right:0;padding-top:20px') Unidad
+                .col-sm-9(style='padding-left:0;padding-right:0;padding-top:10px;padding-bottom:10px')
+                  select.form-control.input-lg(type='text', id='unidadmm')
+                    option Raciones
+                    option Global
+                    option Unidad
+                    option Piezas
+                    option Pares
+                    option Litros
+                    option P
+                    option Unidad/Pares
+                    option Caja
+                label.col-sm-3.control-label(style='padding-left:0;padding-right:0;padding-top:20px') Cantidad
+                .col-sm-9(style='padding-left:0;padding-right:0;padding-top:10px;padding-bottom:10px')
+                    input.form-control.cantidadmm.input-lg(type='number', placeholder='Solo se admite numeros')
+                label.col-sm-3.control-label(style='padding-left:0;padding-right:0;padding-top:20px') Precio Unitario
+                .col-sm-9(style='padding-left:0;padding-right:0;padding-top:10px;padding-bottom:10px')
+                    input.form-control.preciomm.input-lg(type='number', placeholder='Solo se admite numeros')
+              .modal-footer
+                button.btn.btn-primary.btnguardareditarM(type='button' disabled) Guardar cambios
+                button.btn.btn-danger.btneliminareditarM(type='button') Eliminar
       #servicios.tab-pane(role='tabpanel')
         h1.resultadoRegistroVehiculo(style='display:none') #{estado}
         .row(style='background:#fff;padding-bottom:30px;padding-top:30px') 
@@ -561,7 +647,6 @@ block content
                     td SERVICIOS NO PERSONALES
                     td PRECIO UNITARIO
                     td MONTO
-                    td PARTIDA PRESUP.
                 tbody
                   if servicios[0].estado==true
                     - for (var x=0;x<servicios[0].idservicio.length;x++)
@@ -571,14 +656,12 @@ block content
                           td(id="descripcions") #{servicios[0].descripcion[x]}
                           td(id="presiounitarios") #{servicios[0].preciounitario[x]}
                           td(id="montos") #{servicios[0].monto[x]}
-                          td(id="partidas") #{servicios[0].partidapresupuestaria[x]}
                       else
                         tr(value=servicios[0].idservicio[x],data-toggle="modal" data-target="#modalUser")
                           td #{x+1}
                           td(id="descripcions") #{servicios[0].descripcion[x]}
                           td(id="presiounitarios") #{servicios[0].preciounitario[x]}
                           td(id="montos") #{servicios[0].monto[x]}
-                          td(id="partidas") #{servicios[0].partidapresupuestaria[x]}
                   else
                     .row(style='background:#fff')
                       .col-md-8.col-md-offset-2
@@ -609,6 +692,4 @@ block content
         h1 REPORTES
     
     .row(style='background:#fff')
-
-    
     script(src="/javascripts/bootstrap.min.js")

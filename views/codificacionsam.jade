@@ -1,0 +1,532 @@
+extends layout2
+
+block content
+    ul.nav.nav-tabs.nav-justified(role='tablist',style="padding-bottom:0px;padding-top:80px;background:#fff")
+        li.active(role='presentation') 
+          a(href='#actividadessam', aria-controls='sam', role='tab', data-toggle='tab') ACTIVIDADES
+        li(role='presentation')
+          a(href='#codpersonal', aria-controls='personal', role='tab', data-toggle='tab') PERSONAL
+        li(role='presentation')
+          a(href='#codvehiculo', aria-controls='vehiculo', role='tab', data-toggle='tab') VEHICULOS
+        li(role='presentation')
+          a(href='#codmateriales', aria-controls='materiales', role='tab', data-toggle='tab') MATERIALES
+        li(role='presentation')
+          a(href='#salarios', aria-controls='salarios', role='tab', data-toggle='tab') SALARIOS
+
+    .tab-content
+      #actividadessam.tab-pane.active(role='tabpanel')
+        .row(style='background:#fff;padding-top:15px;padding-bottom:15px') 
+          .col-md-12
+            .col-md-4.col-md-offset-4
+              a(class="btn" href="#ContentAsignarUser" role="button",id='btnradioRojo',style='width:70%;text-align:center;margin: 0 auto;display:block;') NUEVA CODIFICACION
+        .row(style='background:#fff;padding-bottom:0px;')
+          .col-md-12
+            table.table.table-responsive(style="width:95%;margin:0 auto;background:#fff")
+              thead
+                tr
+                  td N°
+                  td ACTIVIDAD
+                  td UNIDAD
+                  td DESCRIPCION
+              tbody#tablacodactividades
+                if sam[0].estado == true
+                  -var aux=sam[0].codsam.length
+                  if aux>10
+                    - aux=10
+                  - for (var x=0;x<aux;x++)
+                    if x%2
+                      tr.info
+                        td #{x+1}
+                        td #{sam[0].codsam[x]}
+                        td #{sam[0].unidad[x]}
+                        td #{sam[0].descripcion[x]}
+                    else
+                      tr
+                        td #{x+1}
+                        td #{sam[0].codsam[x]}
+                        td #{sam[0].unidad[x]}
+                        td #{sam[0].descripcion[x]}
+                else
+                  .row(style='background:#fff')
+                    .col-md-8.col-md-offset-2
+                      .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                        button.close(type='button', data-dismiss='alert', aria-label='Close')
+                          span(aria-hidden='true') ×
+                        strong NO SE ENCONTRARON RESULTADOS!
+                        |  Aun no se registro Ningun Codigo .. Registre actividades para evitar problemas en el sistema.
+        .row(style=('background:#fff'))
+          .col-md-12
+            #page-codactividades
+
+        .row(style='background:rgba(58, 148, 240, 0.8);padding-bottom:50px;',id='ContentAsignarUser')
+          .col-md-12
+            .form-horizontal(style='margin-top:30px;',id='formAsignarUser')
+              .form-group
+                h1(style='color:#fff;font-weight:600;margin-bottom:20px') REGISTRO DE NUEVA ACTIVIDAD SAM
+              - for(var i=0;i<13;i++)
+                    if i==0
+                      table.table(style='width:70%;margin:0 auto;background:#fff',id='asignaractividades')
+                        thead(style='background: #000')
+                          td ACTIVIDAD
+                          td UNIDAD
+                          td DESCRIPCION
+                        tbody
+                          td
+                            .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaactividad'+i+'')
+                              .col-sm-12
+                                input.form-control.input-lg.grupo1(type='number', placeholder='Ejemplo: 2010' id="d"+i+"")
+                                span(class="glyphicon glyphicon-remove form-control-feedback")
+                          td
+                            .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaunidad'+i+'')
+                              .col-sm-12
+                                input.form-control.input-lg.grupo2(type='text', placeholder='Ejemplo: H-H' id="d"+i+"")
+                                span(class="glyphicon glyphicon-remove form-control-feedback")
+                          td
+                            .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnadescripciond'+i+'')
+                              .col-sm-12
+                                input.form-control.input-lg.grupo3(type='text', placeholder='Ejemplo: Reposicion de Ripio' id="d"+i+"")
+                                span(class="glyphicon glyphicon-remove form-control-feedback")
+                    else
+                      table.table(style='width:70%;margin:0 auto;background:#fff;display:none',class='tabla'+i+'',id='asignaractividades')
+                        thead(style='background: #000')
+                          td ACTIVIDAD
+                          td UNIDAD
+                          td DESCRIPCION
+                        tbody
+                          td
+                            .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaactividad'+i+'')
+                              .col-sm-12
+                                input.form-control.input-lg.grupo1(type='number', placeholder='Ejemplo: 2010' id="d"+i+"")
+                                span(class="glyphicon glyphicon-remove form-control-feedback")
+                          td
+                            .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaunidad'+i+'')
+                              .col-sm-12
+                                input.form-control.input-lg.grupo2(type='text', placeholder='Ejemplo: H-H' id="d"+i+"")
+                                span(class="glyphicon glyphicon-remove form-control-feedback")
+                          td
+                            .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnadescripciond'+i+'')
+                              .col-sm-12
+                                input.form-control.input-lg.grupo3(type='text', placeholder='Ejemplo: Reposicion de Ripio' id="d"+i+"")
+                                span(class="glyphicon glyphicon-remove form-control-feedback")
+                    .row(style='margin:5px')
+                        .col.md-12
+              .form-group(style='margin-top:20px')
+                .col-sm-offset-5.col-sm-10
+                  button.btn.btn-danger.disabled.btn-lg(type='button' id='btnAsignarActividad' data-loading-text="Enviando Registro..." autocomplete="off") GUARDAR CODIFICACION
+
+      #codpersonal.tab-pane(role='tabpanel')
+        .row(style='background:#fff;padding-top:15px;padding-bottom:15px') 
+          .col-md-12
+            .col-md-4.col-md-offset-4
+              a(class="btn" href="#ContentCodPersonal" role="button",id='btnradioRojo',style='width:70%;text-align:center;margin: 0 auto;display:block;') NUEVA CODIFICACION
+        .row(style='background:#fff;padding-bottom:20px;')
+          .col-md-12
+            table.table.table-responsive(style="width:95%;margin:0 auto;background:#fff")
+              thead
+                tr
+                  td N°
+                  td CLASE
+                  td DESCRIPCION
+                  td UNIDAD
+              tbody#tablacodpersonal
+                if codpersonal[0].estado == true
+                  -var aux=codpersonal[0].clave.length
+                  if aux>10
+                    - aux=10
+                  - for (var x=0;x<aux;x++)
+                    if x%2
+                      tr.info
+                        td #{x+1}
+                        td #{codpersonal[0].clave[x]}
+                        td #{codpersonal[0].descripcion[x]}
+                        td #{codpersonal[0].unidad[x]}
+                    else
+                      tr
+                        td #{x+1}
+                        td #{codpersonal[0].clave[x]}
+                        td #{codpersonal[0].descripcion[x]}
+                        td #{codpersonal[0].unidad[x]}
+                else
+                  .row(style='background:#fff')
+                    .col-md-8.col-md-offset-2
+                      .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                        button.close(type='button', data-dismiss='alert', aria-label='Close')
+                          span(aria-hidden='true') ×
+                        strong NO SE ENCONTRARON RESULTADOS!
+                        |  Aun no se registro Ningun Codigo Para el personal.. Pongase en contacto con el encargado de residencia. 
+        .row(style=('background:#fff'))
+          .col-md-12
+            #page-codpersonal
+        .row(style='background:rgba(58, 148, 240, 0.8);padding-bottom:50px;',id='ContentCodPersonal')
+          .col-md-12
+            .form-horizontal(style='margin-top:30px;',id='formCodPersonal')
+              .form-group
+                h1(style='color:#fff;font-weight:600;margin-bottom:20px') CODIFICACION PERSONAL
+              - for(var i=0;i<13;i++)
+                    if i==0
+                        table.table(style='width:70%;margin:0 auto;background:#fff',id='asignarcodperson')
+                          thead(style='background: #000')
+                            td CLASE
+                            td DESCRIPCION
+                          tbody
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaclased'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo1(type='number', placeholder='Ejemplo: Limbert Arando Benavides',id='d'+i+'')
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnadescrid'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo2(type='text', placeholder='Ejemplo: Limbert Arando Benavides',id='d'+i+'')
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                    else
+                        table.table(style='width:70%;margin:0 auto;background:#fff;display:none',class='tablap'+i+'',id='asignarcodperson')
+                          thead(style='background: #000')
+                            td CLASE
+                            td DESCRIPCION
+                          tbody
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaclased'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo1(type='number', placeholder='Ejemplo: Limbert Arando Benavides',id='d'+i+'')
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnadescrid'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo2(type='text', placeholder='Ejemplo: Limbert Arando Benavides',id='d'+i+'')
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                    .row(style='margin:5px')
+                        .col.md-12
+              .form-group(style='margin-top:20px')
+                .col-sm-offset-5.col-sm-10
+                  button.btn.btn-danger.disabled.btn-lg(type='button' id='btnCodPersonal' data-loading-text="Enviando Registro..." autocomplete="off") GUARDAR CODIFICACION
+      
+      #codvehiculo.tab-pane(role='tabpanel')
+        .row(style='background:#fff;padding-top:15px;padding-bottom:15px') 
+          .col-md-12
+            .col-md-4.col-md-offset-4
+              a(class="btn" href="#ContentCodVehiculo" role="button",id='btnradioRojo',style='width:70%;text-align:center;margin: 0 auto;display:block;') NUEVA CODIFICACION
+        .row(style='background:#fff;padding-bottom:20px;')
+          .col-md-12
+            table.table.table-responsive(style="width:95%;margin:0 auto;background:#fff")
+              thead
+                tr
+                  td N°
+                  td CLASE
+                  td DESCRIPCION
+                  td UNIDAD
+              tbody#tablacodvehiculo
+                if codvehiculo[0].estado == true
+                  -var aux=codvehiculo[0].clave.length
+                  if aux>10
+                    - aux=10
+                  - for (var x=0;x<aux;x++)
+                    if x%2
+                      tr.info
+                        td #{x+1}
+                        td #{codvehiculo[0].clave[x]}
+                        td #{codvehiculo[0].descripcion[x]}
+                        td Hora
+                    else
+                      tr
+                        td #{x+1}
+                        td #{codvehiculo[0].clave[x]}
+                        td #{codvehiculo[0].descripcion[x]}
+                        td Hora
+                else
+                  .row(style='background:#fff')
+                    .col-md-8.col-md-offset-2
+                      .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                        button.close(type='button', data-dismiss='alert', aria-label='Close')
+                          span(aria-hidden='true') ×
+                        strong NO SE ENCONTRARON RESULTADOS!
+                        |  Aun no se registro Ningun Codigo Para Los Vehiculos.. Registre codigos para evitar problemas en el sistema. 
+        .row(style=('background:#fff'))
+          .col-md-12
+            #page-codvehiculo
+        .row(style='background:rgba(58, 148, 240, 0.8);padding-bottom:50px;',id='ContentCodVehiculo')
+          .col-md-12
+            .form-horizontal(style='margin-top:30px;',id='formAsignarUser')
+              .form-group
+                h1(style='color:#fff;font-weight:600;margin-bottom:20px') REGISTRO - CODIFICACION DE VEHICULOS
+              - for(var i=0;i<13;i++)
+                    if i==0
+                        table.table(style='width:70%;margin:0 auto;background:#fff',id='asignarcodvehiculo')
+                          thead(style='background: #000')
+                            td CLASE
+                            td DESCRIPCION
+                          tbody
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaclasev'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo1(type='number', placeholder='Ejemplo: 28',id='v'+i+'')
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnadescriv'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo2(type='text', placeholder='Ejemplo: PW-34',id='v'+i+'')
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                    else
+                        table.table(style='width:70%;margin:0 auto;background:#fff;display:none',class='tablav'+i+'',id='asignarcodvehiculo')
+                          thead(style='background: #000')
+                            td CLASE
+                            td DESCRIPCION
+                          tbody
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaclasev'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo1(type='number', placeholder='Ejemplo: 28',id='v'+i+'')
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnadescriv'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo2(type='text', placeholder='Ejemplo: PW-34',id='v'+i+'')
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                    .row(style='margin:5px')
+                        .col.md-12
+              .form-group(style='margin-top:20px')
+                .col-sm-offset-5.col-sm-10
+                  button.btn.btn-danger.disabled.btn-lg(type='button' id='btncodvehiculo' data-loading-text="Enviando Registro..." autocomplete="off") GUARDAR CODIFICACION
+      
+      #codmateriales.tab-pane(role='tabpanel')
+        .row(style='background:#fff;padding-top:15px;padding-bottom:15px') 
+          .col-md-12
+            .col-md-4.col-md-offset-4
+              a(class="btn" href="#ContentAsignarMateriales" role="button",id='btnradioRojo',style='width:70%;text-align:center;margin: 0 auto;display:block;') NUEVA CODIFICACION
+        .row(style='background:#fff;padding-bottom:20px;')
+          .col-md-12
+            table.table.table-responsive(style="width:95%;margin:0 auto;background:#fff")
+              thead
+                tr
+                  td N°
+                  td CLASE
+                  td DESCRIPCION
+                  td UNIDAD
+              tbody#tablacodmaterial
+                if codmaterial[0].estado == true
+                  -var aux=codmaterial[0].clave.length
+                  if aux>10
+                    - aux=10
+                  - for (var x=0;x<aux;x++)
+                    if x%2
+                      tr.info
+                        td #{x+1}
+                        td #{codmaterial[0].clave[x]}
+                        td #{codmaterial[0].descripcion[x]}
+                        td #{codmaterial[0].unidad[x]}
+                    else
+                      tr
+                        td #{x+1}
+                        td #{codmaterial[0].clave[x]}
+                        td #{codmaterial[0].descripcion[x]}
+                        td #{codmaterial[0].unidad[x]}
+                else
+                  .row(style='background:#fff')
+                    .col-md-8.col-md-offset-2
+                      .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                        button.close(type='button', data-dismiss='alert', aria-label='Close')
+                          span(aria-hidden='true') ×
+                        strong NO SE ENCONTRARON RESULTADOS!
+                        |  Aun no se registro Ningun Codigo Para Los Materiales.. Registre codigos para evitar problemas en el sistema.
+        .row(style=('background:#fff'))
+          .col-md-12
+            #page-codmaterial
+        .row(style='background:rgba(58, 148, 240, 0.8);padding-bottom:50px;',id='ContentAsignarMateriales')
+          .col-md-12
+            .form-horizontal(style='margin-top:30px;')
+              .form-group
+                h1(style='color:#fff;font-weight:600;margin-bottom:20px') REGISTRO - CODIFICACION DE MATERIALES
+              - for(var i=0;i<13;i++)
+                    if i==0
+                        table.table(style='width:70%;margin:0 auto;background:#fff',id='asignarcodmaterial')
+                          thead(style='background: #000')
+                            td CLASE
+                            td DESCRIPCION
+                            td UNIDAD
+                          tbody
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaclasem'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo1(type='number', placeholder='Ejemplo: 2010' id="m"+i+"")
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnadescripcionm'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo2(type='text', placeholder='Ejemplo: H-H' id="m"+i+"")
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaunidadm'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo3(type='text', placeholder='Ejemplo: Reposicion de Ripio' id="m"+i+"")
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                    else
+                        table.table(style='width:70%;margin:0 auto;background:#fff;display:none',class='tablam'+i+'',id='asignarcodmaterial')
+                          thead(style='background: #000')
+                            td CLASE
+                            td DESCRIPCION
+                            td UNIDAD
+                          tbody
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaclasem'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo1(type='number', placeholder='Ejemplo: 2010' id="m"+i+"")
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnadescripcionm'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo2(type='text', placeholder='Ejemplo: H-H' id="m"+i+"")
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                            td
+                              .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaunidadm'+i+'')
+                                .col-sm-12
+                                  input.form-control.input-lg.grupo3(type='text', placeholder='Ejemplo: Reposicion de Ripio' id="m"+i+"")
+                                  span(class="glyphicon glyphicon-remove form-control-feedback")
+                    .row(style='margin:5px')
+                        .col.md-12
+              .form-group(style='margin-top:20px')
+                .col-sm-offset-5.col-sm-10
+                  button.btn.btn-danger.disabled.btn-lg(type='button' id='btnAsignarmaterial' data-loading-text="Enviando Registro..." autocomplete="off") GUARDAR CODIFICACION
+
+      #salarios.tab-pane(role='tabpanel')
+        .row(style='background:#fff;padding-top:15px;padding-bottom:15px') 
+          .col-md-12
+            .col-md-4.col-md-offset-2
+              a(class="btn" href="#Contentsueldos" role="button",id='btnradioRojo',style='width:70%;text-align:center;margin: 0 auto;display:block;') REGISTRAR PLANILLA
+            .col-md-4
+              .form-group
+                #datetimepicker12.input-append.date
+                  input(data-format="yyyy" type="text",id='valorr',style='display:none')
+                  button.btn.btn-default.btn-lg.add-on(type='button',id='btnfecha',style='margin:0 auto;display:block',data-toggle="tooltip" data-placement="bottom" title="Ver Salarios por gestiones") #{salarios[0].year}
+                      span.glyphicon.glyphicon-calendar(style='padding-left:5px;',aria-hidden="true")
+        .row(style='background:#fff;padding-bottom:20px;',class='filaerrorsalario')
+          .col-md-12
+            table.table.table-responsive(style="width:95%;margin:0 auto;background:#fff")
+              thead
+                tr
+                  td N°
+                  td DESCRIPCION DEL CARGO
+                  td N° DE ITEMES
+                  td SUELDO MENSUAL
+                  td MONTO ANUAL
+ 
+              tbody#tablasalarios
+                if salarios[0].estado == true
+                  - for (var x=0;x<salarios[0].descripcion.length;x++)
+                    if x%2
+                      tr.info
+                        td #{x+1}
+                        td #{salarios[0].descripcion[x]}
+                        td #{salarios[0].nroitem[x]}
+                        td #{salarios[0].sueldomensual[x]}
+                        td #{(salarios[0].sueldomensual[x]*salarios[0].nroitem[x])*12}
+                    else
+                      tr
+                        td #{x+1}
+                        td #{salarios[0].descripcion[x]}
+                        td #{salarios[0].nroitem[x]}
+                        td #{salarios[0].sueldomensual[x]}
+                        td #{(salarios[0].sueldomensual[x]*salarios[0].nroitem[x])*12}
+                else
+                  .row(style='background:#fff',id='alerterror')
+                    .col-md-8.col-md-offset-2
+                      .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                        button.close(type='button', data-dismiss='alert', aria-label='Close')
+                          span(aria-hidden='true') ×
+                        strong NO SE ENCONTRARON RESULTADOS!
+                        |  Aun no se registro la Planilla salarial.. registre planilla para evitar problemas con el sistema. 
+        .row(style='background:rgba(58, 148, 240, 0.8);padding-bottom:50px;',id='Contentsueldos')
+          .col-md-12
+            .form-horizontal(style='margin-top:30px;')
+              .form-group
+                h1(style='color:#fff;font-weight:600;margin-bottom:20px') REGISTRO DE NUEVOS SALARIOS
+              - for(var i=0;i<13;i++)
+                if i==0
+                  table.table(style='width:70%;margin:0 auto;background:#fff',id='asignarsalarios')
+                    thead(style='background: #000')
+                      td CARGO
+                      td CANTIDAD DE ITEMES
+                      td SUELDO MENSUAL
+                    tbody
+                      td
+                        .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnacargos'+i+'')
+                          .col-sm-12
+                            select.form-control.input-lg.grupo1(type='text', id="s"+i+"")
+                              if codpersonal[0].estado == true
+                                option Seleccione Cargo
+                                - for (var x=0;x<codpersonal[0].clave.length;x++)
+                                  option(value=codpersonal[0].codigo[x]) #{codpersonal[0].descripcion[x]}
+                              else
+                                option Seleccione Cargo
+                      td
+                        .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaitems'+i+'')
+                          .col-sm-12
+                            input.form-control.input-lg.grupo2(type='number', placeholder='Ejemplo: 10' id="s"+i+"")
+                            span(class="glyphicon glyphicon-remove form-control-feedback")
+                      td
+                        .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnasueldos'+i+'')
+                          .col-sm-12
+                            input.form-control.input-lg.grupo3(type='number', placeholder='Ejemplo: 3000.50' id="s"+i+"")
+                            span(class="glyphicon glyphicon-remove form-control-feedback")
+                else
+                  table.table(style='width:70%;margin:0 auto;background:#fff;display:none',class='tablas'+i+'',id='asignarsalarios')
+                    thead(style='background: #000')
+                      td CARGO
+                      td CANTIDAD DE ITEMES
+                      td SUELDO MENSUAL
+                    tbody
+                      td
+                        .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnacargos'+i+'')
+                          .col-sm-12
+                            select.form-control.input-lg.grupo1(type='text', id="s"+i+"")
+                              if codpersonal[0].estado == true
+                                option Seleccione Cargo
+                                - for (var x=0;x<codpersonal[0].codigo.length;x++)
+                                  option(value=codpersonal[0].codigo[x]) #{codpersonal[0].descripcion[x]}
+                              else
+                                option Seleccione Cargo
+                      td
+                        .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnaitems'+i+'')
+                          .col-sm-12
+                            input.form-control.input-lg.grupo2(type='number', placeholder='Ejemplo: 10' id="s"+i+"")
+                            span(class="glyphicon glyphicon-remove form-control-feedback")
+                      td
+                        .form-group.has-error.has-feedback(style='margin-bottom: 0',id='columnasueldos'+i+'')
+                          .col-sm-12
+                            input.form-control.input-lg.grupo3(type='number', placeholder='Ejemplo: 3000.50' id="s"+i+"")
+                            span(class="glyphicon glyphicon-remove form-control-feedback")
+                .row(style='margin:5px')
+                    .col.md-12
+              .form-group(style='margin-top:20px')
+                .col-sm-offset-5.col-sm-10
+                  button.btn.btn-danger.disabled.btn-lg(type='button' id='btnasignarsueldos' data-loading-text="Enviando Registro..." autocomplete="off") GUARDAR PLANILLA
+        #ModalAsignarsueldo.modal.fade.bs-example-modal-sm(tabindex='-1', role='dialog', aria-labelledby='mySmallModalLabel')
+          .modal-dialog.modal-sm(role='document')
+            .modal-content
+              .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                  span(aria-hidden='true') ×
+                h4#myModalLabel.modal-title SELECCIONE UN CARGO
+              .modal-body
+
+              .modal-footer
+                button.btn.btn-default(type='button', data-dismiss='modal') Cancelar
+    .row(style='background:#fff')
+    script(type="text/javascript").
+      var activida1=[],activida2=[],activida3=[],codifip1=[],codifip2=[],codifip3=[],codifiv1=[],codifiv2=[],materia1=[],materia2=[],materia3=[]
+      activida1=!{JSON.stringify(sam[0].codsam)}
+      activida2=!{JSON.stringify(sam[0].unidad)}
+      activida3=!{JSON.stringify(sam[0].descripcion)}
+      codifip1=!{JSON.stringify(codpersonal[0].clave)}
+      codifip2=!{JSON.stringify(codpersonal[0].descripcion)}
+      codifip3=!{JSON.stringify(codpersonal[0].unidad)}
+      codifiv1=!{JSON.stringify(codvehiculo[0].clave)}
+      codifiv2=!{JSON.stringify(codvehiculo[0].descripcion)}
+      materia1=!{JSON.stringify(codmaterial[0].clave)}
+      materia2=!{JSON.stringify(codmaterial[0].descripcion)}
+      materia3=!{JSON.stringify(codmaterial[0].unidad)}
+      
+      console.log(codifip1)
+      
+    script(src="/javascripts/bootstrap.min.js")
+    
+      

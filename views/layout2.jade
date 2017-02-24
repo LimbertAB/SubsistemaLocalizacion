@@ -6,6 +6,7 @@ html
     link(rel='stylesheet', href='/stylesheets/leaflet.css')
     link(rel='stylesheet', href='/stylesheets/style2.css')
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap-datetimepicker.min.css')
     link(rel='stylesheet', href='/stylesheets/sweetalert.css')
     script(src="/javascripts/jquery.js")
     script(src="/socket.io/socket.io.js")
@@ -16,48 +17,54 @@ html
     script(src="/javascripts/puntos.js")
     script(src="/javascripts/Mensajes.js")
     script(src="/javascripts/sweetalert.min.js")
+    script(src='/javascripts/bootstrap-datetimepicker.min.js')
+    script(src='/javascripts/jquery.bootpag.min.js')  
   body
     .row
         nav#mainNav.navbar.navbar-inverse.navbar-fixed-top
-          .container
+          .container(style='padding-right:30px;width:100vw')
             .navbar-header
               button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
                 span.sr-only Toggle navigation
                 span.icon-bar
                 span.icon-bar
                 span.icon-bar
-              a(href="MenuPrincipal",style='padding:0')
-                img(src="/images/logoSEDECA.png",class="logoSEDECA")
+              a.navbar-brand(href="MenuPrincipal",style='padding:0')
+                img(src="/images/logoSEDECA.png",class="logoSEDECA" alt="Dispute Bills")
             #bs-example-navbar-collapse-1.collapse.navbar-collapse
               ul.nav.navbar-nav.navbar-right
                 li
                   a(href='Residencias') Residencias
                 li
                   a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="false", aria-expanded="true") Usuarios
-                            ul(class="dropdown-menu")
-                                li
-                                    a(href="Usuarios") Listar Usuarios
-                                li
-                                    a(href="RegistrarUsuario") Nuevo Usuario
+                    span.caret
+                    ul(class="dropdown-menu")
+                        li
+                          a(href="Usuarios") Listar Usuarios
+                        li
+                          a(href="RegistrarUsuario") Nuevo Usuario
+                        li
+                          a(href="Principal_TiempoReal") Localización Usuarios
                 li
-                  a(href='equipos') Vehiculos
+                  a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="false", aria-expanded="true") Vehiculos
+                    span.caret
+                    ul(class="dropdown-menu")
+                      li
+                        a(href="equipos") Listar Vehiculos
+                      li
+                        a(href="Location_GPS_principal") Localizacion Vehiculos
                 li
-                  a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Ubicacion
-                                  ul(class="dropdown-menu")
-                                    li
-                                      a(href="Principal_TiempoReal") Localización Usuarios
-                                    li
-                                      a(href="#") Localizacion Vehiculos
-                li
-                  a(href='sam') SAM
+                  a(href='Codificacion_Sam') SAM
                 li
                   a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal") Mensajes
                 li
                   a(href="#", class="dropdown-toggle avatarNombre", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Mi Perfil
-                                  span(class="glyphicon glyphicon-user")
-                                    ul(class="dropdown-menu")
-                                      li
-                                        a(id='miperfil', data-toggle="modal", class="info", data-target="#modalUser",style='cursor:pointer') Mis Datos
-                                      li
-                                        a(href="#") Salir
+                    span.caret
+                    span(class="glyphicon glyphicon-user")
+                      ul(class="dropdown-menu")
+                        li
+                          a(id='miperfil', data-toggle="modal", class="info", data-target="#modalUser",style='cursor:pointer') Mis Datos
+                        li
+                          a(href="#") Salir
     block content
+    footer Pagina hecha por: Limbert AB

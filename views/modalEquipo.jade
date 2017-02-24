@@ -6,70 +6,78 @@
           span(aria-hidden='true') ×
         h4#myModalLabel.modal-title(style='color:#fff;text-align:center;') INFORMACION DEL EQUIPO
       .modal-body(style='padding:0;height:100%;overflow-y: hidden;')
-        ul.nav.nav-tabs.nav-justified(role='tablist',style="padding-bottom:0;margin-top:0")
-            li.active(role='presentation',id='navresidencia') 
-              a(href='#cargeneral', aria-controls='residencias', role='tab', data-toggle='tab') GENERAL
-         .tab-content
+        .tab-content
             #cargeneral.tab-pane.active(role='tabpanel')
                 table.table.table-hover(id='infocar')
-                    tr.active
-                        td
-                            p(style='font-weight: bold;font-size: 1.5em;') Cod. Interno
-                        td.text1.textupdatecar
-                        td.inputsupdatecar(style='display:none')
-                            input.form-control.input-lg(type='text',id='inputcarupdate1')
                     tr
-                        td
-                            p(style='font-weight: bold;font-size: 1.5em;') Placa
-                        td.text2.textupdatecar
-                        td.inputsupdatecar(style='display:none')
-                            input.form-control.input-lg(type='text',id='inputcarupdate2')
-                    tr.active
-                        td
-                            p(style='font-weight: bold;font-size: 1.5em;') Marca 
-                        td.text3.textupdatecar
-                        td.inputsupdatecar(style='display:none')
-                            input.form-control.input-lg(type='text',id='inputcarupdate3')
+                      td
+                        p Cod. Interno
+                      td.text1.textupdatecar
+                      td.inputsupdatecar
+                        .form-group.groupo1.has-error.has-feedback.formulariosRegistro
+                          input.form-control(type='text', placeholder='Ejemplo: PM-19',id='inputcarupdate1')
+                          span(class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
                     tr
-                        td
-                            p(style='font-weight: bold;font-size: 1.5em;') Modelo 
-                        td.text4.textupdatecar
-                        td.inputsupdatecar(style='display:none')
-                            input.form-control.input-lg(type='text',id='inputcarupdate4')
-                    tr.active
-                        td
-                            p(style='font-weight: bold;font-size: 1.5em;') Color 
-                        td.text5.textupdatecar
-                        td.inputsupdatecar(style='display:none')
-                            input.form-control.input-lg(type='text',id='inputcarupdate5')
+                      td
+                        p Placa
+                      td.text2.textupdatecar
+                      td.inputsupdatecar
+                        .form-group.groupo2.has-error.has-feedback.formulariosRegistro
+                          input.form-control(type='text', placeholder='Ejemplo: 545-SYU',id='inputcarupdate2')
+                          span(class="glyphicon glyphicon-remove form-control-feedback")
                     tr
-                        td
-                            p(style='font-weight: bold;font-size: 1.5em;') Tipo
-                        td.text6.textupdatecar
-                        td.inputsupdatecar(style='display:none')
-                            select.form-control.input-lg(id='inputcarupdate6')
-                                option Camioneta
-                                option Volvo
-                                option Volqueta
-                                option Flota
-                                option Tractor
-                    tr.active
-                        td
-                            p(style='font-weight: bold;font-size: 1.5em;') Combustible 
-                        td.text7.textupdatecar
-                        td.inputsupdatecar(style='display:none')
-                            select.form-control.input-lg(id='inputcarupdate7')
-                              option Gasolina
-                              option Diesel
+                      td
+                        p Marca 
+                      td.text3.textupdatecar
+                      td.inputsupdatecar
+                        .form-group.groupo4.has-error.has-feedback.formulariosRegistro
+                          input.form-control(type='text', placeholder='Minimo 10 caracteres',id='inputcarupdate3')
+                          span(class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
                     tr
-                        td
-                            p(style='font-weight: bold;font-size: 1.5em;') Estado
-                        td.text8.textupdatecar
-                        td.inputsupdatecar(style='display:none')
-                            select.form-control.input-lg(id='inputcarupdate8')
-                              option Bueno
-                              option Malo
-                              option En Mantenimiento
+                      td
+                        p Modelo 
+                      td.text4.textupdatecar
+                      td.inputsupdatecar
+                        .form-group.groupo3.has-error.has-feedback.formulariosRegistro
+                          input.form-control(type='text', placeholder='Ejemplo: Toyota',id='inputcarupdate4')
+                          span(class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true")
+                    tr
+                      td
+                        p Color 
+                      td.text5.textupdatecar
+                      td.inputsupdatecar
+                        .form-group.groupo5.has-error.has-feedback.formulariosRegistro
+                          input.form-control(type='text', placeholder='Ejemplo: Blanco',id='inputcarupdate5')
+                          span(class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true") 
+                    tr
+                      td
+                        p Tipo
+                      td.text6.textupdatecar
+                      td.inputsupdatecar
+                        .form-group.groupo6.has-error.has-feedback.formulariosRegistro
+                          select.form-control(id='inputcarupdate6')
+                            if estadocodificaciones==true
+                              - for (var y=0;y<codificaciones[0].idcodificacion.length;y++)
+                                option(value=codificaciones[0].idcodificacion[y],id="codigoscar") #{codificaciones[0].descripcion[y]}
+                    tr
+                      td
+                        p Combustible 
+                      td.text7.textupdatecar
+                      td.inputsupdatecar
+                        .form-group.groupo7.has-error.has-feedback.formulariosRegistro
+                          select.form-control(id='inputcarupdate7')
+                            option Gasolina
+                            option Diesel
+                    tr
+                      td
+                        p Estado
+                      td.text8.textupdatecar
+                      td.inputsupdatecar
+                        .form-group.groupo8.has-error.has-feedback.formulariosRegistro
+                          select.form-control(id='inputcarupdate8')
+                            option Bueno
+                            option Malo
+                            option En Mantenimiento            
       .modal-footer
         button.btn.btn-default(type='button', data-dismiss='modal') CANCELAR
         button.btn.btn-primary(type='button',id='btnupdatecar', value='Editar' data-loading-text="Actualizando informacion.." autocomplete="off") EDITAR

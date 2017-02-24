@@ -2,12 +2,16 @@ extends layout2
 
 block content
   .row(style='background:#fff;padding-top:100px') 
-    .col-md-4
-      a(class="btn" href="#nuevaResidenciaMapa" role="button",id='btnradioRojo',style='width:70%;text-align:center;margin: 0 auto;display:block;') CREAR NUEVA RESIDENCIA
-    .col-md-4
-      h3(style='text-align:center;') RECIDENCIAS GESTION 2016
-    .col-md-4
-      a(class="btn" href="#nuevaResidenciaMapa" role="button",id='btnradioRojo',style='width:70%;text-align:center;margin: 0 auto;display:block;') NUEVA GESTION
+    .col-md-3
+      a(class="btn" href="#nuevaResidenciaMapa" role="button",id='btnradioRojo',style='width:70%;text-align:center;margin: 0 auto;display:block;') NUEVA RESIDENCIA
+    .col-md-6
+      h3(style='text-align:center') RECIDENCIAS GESTION #{gestion}
+    .col-md-3
+      .form-group
+        #datetimepicker11.input-append.date
+          input(data-format="yyyy" type="text",id='valorr',style='display:none')
+          button.btn.btn-default.btn-lg.add-on(type='button',id='btnfecha',style='margin:0 auto;display:block',data-toggle="tooltip" data-placement="bottom" title="Ver mas ubicaciones :)") #{gestion}
+            span.glyphicon.glyphicon-calendar(style='padding-left:5px;',aria-hidden="true") 
     .col-md-12(style='padding-bottom:20px;')
       table.table.table-bordered.table-hover.table-responsive(id='tablaSam',style='width:90vw;margin:0 auto')
         thead
@@ -16,7 +20,7 @@ block content
             th UBICACION
             th ESTADO
         tbody.tablaResidenciasbody
-          if nombre
+          if estado
             - for (var x=0;x<nombre.length;x++)
                 tr(value=idresidencia[x])
                   td #{nombre[x]}
@@ -27,23 +31,26 @@ block content
                   else
                     td #{estado[x]}
                       span.label.label-success(style='margin-left:3px') BUEN ESTADO
-  .row(style='background:#fff')
-    .col-md-8.col-md-offset-2
-      .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;display:none')
-        button.close(type='button', data-dismiss='alert', aria-label='Close')
-          span(aria-hidden='true') ×
-        strong NO SE ENCONTRARON RESULTADOS!
-                  |  Registre acticidades de mantenimiento para evitar problemas en los diferentes sistemas
+          else
+            .row(style='background:#fff')
+              .col-md-8.col-md-offset-2
+                .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px')
+                  button.close(type='button', data-dismiss='alert', aria-label='Close')
+                    span(aria-hidden='true') ×
+                  strong SIN RESULTADOS PARA MOSTRAR!
+                            |  No se registraron residencias en esta gestión, registre una nueva residencia.
   .row(style='background:#fff')
           h2.respuestaFail(style='text-align:center')
 
   .row(id='nuevaResidenciaMapa',style='padding-bottom:15px;padding-top:30px;background:rgba(46, 204, 206, 0.58);')
-    .form-horizontal.col-md-4.col-md-offset-2
+    .form-horizontal.col-md-6.col-md-offset-1
       .form-group.has-error.has-feedback(style='padding-bottom:20px;margin:0 auto',id='formRegistroResidencia')
-        label.control-label.col-sm-6(for='inputSuccess3',style='font-weight:200;color:#fff;text-shadow:0 0 3px #000;') NOMBRE DE RESIDENCIA
-        .col-sm-6
+        label.control-label.col-sm-4(for='inputSuccess3',style='font-weight:200;color:#fff;text-shadow:0 0 3px #000;') NOMBRE DE RESIDENCIA
+        .col-sm-8
           input#inputSuccess3.form-control(type='text',placeholder='Ejemplo: Acasio', aria-describedby='inputSuccess3Status')
           span.glyphicon.glyphicon-remove.form-control-feedback(aria-hidden='true')
+          .list-group.col-sm-12.col-xl-12(style='display:none',id='listaresidencianuevo')
+              
     .col-md-4
       button(type="button", data-loading-text="Registrando...", class="btn btn-warning", autocomplete="off",style='margin:0 auto;display:block',disabled) Registrar Residencia
     #mimapa(style="height:78vh;")

@@ -7,6 +7,11 @@ _____________________________________________________________________*/
 	var aux=JSON.parse(localStorage.getItem('userinfo'));
 	var MiCi=aux.idusuario;
 
+	socket.emit('nuevousuario',MiCi);//enviar mi id para tener usuario en el socket
+	socket.on('usernames',function(data){
+		console.log('join',data);
+	});
+
 	$('#btnMensajes').click(function(){
 		$("#myModal .modal-header").remove();$("#myModal .modal-body").remove();$("#myModal .modal-header h4").remove();$("#myModal .btnNuevoMensaje").remove();$(".listasMensajes").remove();$("#myModal .modal-header a").remove();$("#myModal .modal-header h3").remove();$(".modal-header button").remove();$(".modal-header input").remove();$("#myModal").remove();$("#myModal .modal-dialog").remove();$("#myModal .modal-content").remove();
 		
@@ -121,7 +126,13 @@ _____________________________________________________________________*/
 			socket.emit('listaMensajesUnUsuario',datos);
 		});
 	});
-	socket.on('RespuestaMensajeSolo',function(DataMensaje){
-
+	socket.on('respuestaMensajeSolo',function(mensajes){
+		console.log('llego el otro realtime',mensajes);
+		if($('.unUsuarioMensajes')){
+			$('.unUsuarioMensajes').append('<div class="row col-md-10"><div class="row col-md-12 filadestino"><h5>'+mensajes.msn+'</h5></div><div class="row col-md-12"><h6>'+mensajes.fecha+'</h6></div></div>');
+		}else{
+			console.log('no existe la etiqueta');
+			//colocar un alerta de nuevo mensaje
+		}
 	});
 })

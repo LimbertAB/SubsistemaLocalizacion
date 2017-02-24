@@ -1,5 +1,7 @@
 $(function(){ 
 	var socket=io();
+	var fechaActual='';
+	var idusuariotiemporeal;
 	var mbAttr = 'Edit For © <a href="http://mapbox.com">Limbert AB</a>';
 	mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibGltYmVydGFiIiwiYSI6ImNpcG9mMnV3ZDAxcHZmdG0zOWc1NjV2aGwifQ.89smGLtgJWmUKgd7B0cV1Q';
 	var deafult=L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -161,7 +163,7 @@ $(function(){
 		socket.emit('ListaCordenadasUnUser',cilocalizado);
 	}
 	socket.on("RespuestaListaCordenadasUnUser",function(datos){
-		console.log(datos);
+		console.log('aqui la RespuestaListaCordenadasUnUser',datos);
 		var tam=datos.latitud.length;
 		$('.titleOneUser').text(datos.nombres);
 		$('.titleOneUser').append('<small style="margin-left:40px;">'+datos.fecha[tam-1]+'</small>');
@@ -176,7 +178,7 @@ $(function(){
 			}
 		}
 	});
-
+	
 	$('#datetimepicker').datetimepicker({
 		pickTime: false,
 		format: 'dd-MM-yyyy',
@@ -229,14 +231,17 @@ $(function(){
 		var markers=[];markers.push(mark1);
 		layerGroup=L.layerGroup(markers).addTo(map);
 		if($('#estadoLocationuser').text()=='true'){
+			idusuariotiemporeal=$.urlParam('idUser');
 			socket.emit('damecordenadasdeusuario',{iduser:$.urlParam('idUser'),fecha:$('#btnfecha').text()});
 		}	
 	}
 	socket.on('respuestadamecordenadasdeusuario',function(valores){
+		console.log('aqui respuestadamecordenadasdeusuario ', valores)
 		var markers=[];
 		map.removeLayer(layerGroup);
 		$('#btnfecha').removeClass('disabled');
 		if(valores.responde==true){
+			fechaActual=valores.fecha[0];
 			for(var i=0;i<valores.latitud.length;i++){
 				var lat=valores.latitud[i];
 				var lon=valores.longitud[i];
@@ -244,7 +249,22 @@ $(function(){
 				markers.push(mark1);
 			}
 			layerGroup=L.layerGroup(markers).addTo(map);
+		}else{
+			console.log('no hay ubicaciones');
 		}
-		console.log('no hay ubicaciones');
+		
+	});
+	socket.on("coordenadas_android",function(datos){
+		console.log('aqui coordenadas de android',datos);
+		var markers=[];
+		for (var i = 0; i < datos.idusuarios.length; i++) {
+			if (fechaActual==datos.fechas[i] && idusuariotiemporeal==datos.idusuarios[i]){
+				var lat=datos.latitudes[i];
+				var lon=datos.longitudes[i];
+				var mark1=L.marker([lat, lon]).bindPopup('<b> Fecha: </b>'+datos.fechas[i]+'<br><b> Hora: </b>'+datos.horas[i]+'').openPopup();    
+				markers.push(mark1);
+			}
+			layerGroup=L.layerGroup(markers).addTo(map);
+		}
 	});
 })

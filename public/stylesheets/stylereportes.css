@@ -1,0 +1,43 @@
+* {
+	box-sizing: border-box;
+}
+html{
+	height: 100%;
+	display: block;
+}
+body {
+  background: #fff;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  font-family: sans-serif;
+  overflow-x: hidden;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+.logoSEDECA{
+  width: 50%;
+}
+table th{
+  text-align: center;
+}
+table>thead>tr{
+  background: #7f9ed6;
+}
+.table.table-responsive.table-bordered>tbody>tr>td{
+  padding: 2px;
+  cursor: pointer;
+}
+.pdfobject-container { height: 98%;}
+.pdfobject { border: 1px solid #666; }
+@media(min-width:768px) {
+  .navbar-inverse {
+    -webkit-transition: all .35s;
+    -moz-transition: all .35s;
+    transition: all .35s;
+    padding: 15px 0;
+  }
+  .navbar-inverse.affix {
+    padding: 0;
+  }
+}

@@ -1,0 +1,117 @@
+extends layout_reportes
+
+block content
+  ul.nav.nav-tabs.nav-justified(role='tablist',style="padding-bottom:0px;padding-top:80px;background:#fff")
+    li(role='presentation') 
+      a(href='#avanceobra', aria-controls='general', role='tab', data-toggle='tab') AVANCE DE OBRA
+    li(role='presentation')
+      a(href='#programacionquincena', aria-controls='tramos', role='tab', data-toggle='tab') QUINCENAL
+    li(role='presentation')
+      a(href='#informesemanal', aria-controls='actividades', role='tab', data-toggle='tab') SEMANAL
+    li(role='presentation')
+      a(href='#partesdiarios', aria-controls='personal', role='tab', data-toggle='tab') PARTES DIARIOS
+    li(role='presentation')
+      a(href='#ejecucionactividades', aria-controls='vehiculos', role='tab', data-toggle='tab') EJECUCION ACTIVIDADES
+    li(role='presentation')
+      a(href='#combustibles', aria-controls='materiales', role='tab', data-toggle='tab') COMBUSTIBLES
+  .tab-content
+      #avanceobra.tab-pane.active(role='tabpanel')
+        .row(style='padding-bottom:30px;padding-top:30px')
+          table.table.table-responsive.table-bordered(style="width:85%;margin:0 auto" cellspacing="0" cellpadding="0")
+            thead
+              tr
+                th N°
+                th CATEGORIA
+                th USUARIO
+                th FECHA
+            tbody
+              tr(type='button', data-toggle='modal', data-target='.bs-example-modal-lg')
+                td 1
+                td Programación Quincenal
+                td Limbert Arando Benavides
+                td 2016-03-12
+      #programacionquincena.tab-pane(role='tabpanel')
+        .row(style='padding-bottom:30px;padding-top:30px')
+          table.table.table-responsive.table-bordered(style="width:85%;margin:0 auto")
+            thead
+              tr
+                th N°
+                th CATEGORIA
+                th USUARIO
+                th FECHA
+            tbody
+              tr(type='button', data-toggle='modal', data-target='.bs-example-modal-lg')
+                td 1
+                td Programación Quincenal
+                td Limbert Arando Benavides
+                td 2016-03-12
+      #informesemanal.tab-pane(role='tabpanel')
+        .row(style='padding-bottom:30px;padding-top:30px')
+          table.table.table-responsive.table-bordered(style="width:85%;margin:0 auto")
+            thead
+              tr
+                th N°
+                th CATEGORIA
+                th USUARIO
+                th FECHA
+            tbody
+              tr(type='button', data-toggle='modal', data-target='.bs-example-modal-lg')
+                td 1
+                td Programación Quincenal
+                td Limbert Arando Benavides
+                td 2016-03-12
+      #partesdiarios.tab-pane(role='tabpanel')
+        .row(style='padding-bottom:30px;padding-top:30px')
+          table.table.table-responsive.table-bordered(style="width:85%;margin:0 auto")
+            thead
+              tr
+                th N°
+                th CATEGORIA
+                th USUARIO
+                th FECHA
+            tbody
+              tr(type='button', data-toggle='modal', data-target='.bs-example-modal-lg')
+                td 1
+                td Programación Quincenal
+                td Limbert Arando Benavides
+                td 2016-03-12
+      #ejecucionactividades.tab-pane(role='tabpanel')
+        .row(style='padding-bottom:30px;padding-top:30px')
+          table.table.table-responsive.table-bordered(style="width:85%;margin:0 auto")
+            thead
+              tr
+                th N°
+                th CATEGORIA
+                th USUARIO
+                th FECHA
+            tbody#contentReports
+              tr(type='button', data-toggle='modal', data-target='.bs-example-modal-lg',value="patronesArquitectura")
+                td 1
+                td Programación Quincenal
+                td Limbert Arando Benavides
+                td 2016-03-12
+      #combustibles.tab-pane(role='tabpanel')
+        .row(style='padding-bottom:30px;padding-top:30px')
+          table.table.table-responsive.table-bordered(style="width:85%;margin:0 auto")
+            thead
+              tr
+                th N°
+                th CATEGORIA
+                th USUARIO
+                th FECHA
+            tbody#contentReports
+              tr(type='button', data-toggle='modal', data-target='.bs-example-modal-lg',value="DEFINICIONESDEDISENO")
+                td 1
+                td Programación Quincenal
+                td Limbert Arando Benavides
+                td 2016-03-12   
+  .modal.fade.bs-example-modal-lg(tabindex='-1', role='dialog', aria-labelledby='myLargeModalLabel')
+    .modal-dialog.modal-lg(role='document',style="margin-top:5px;margin-bottom:5px")
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+          h4#myModalLabel.modal-title REPORTES RECIBIDOS
+        .modal-body(style='height:90vh;padding:0')
+          #example1
+  script(src="/javascripts/bootstrap.min.js")

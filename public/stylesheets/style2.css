@@ -123,6 +123,15 @@ thead td{
 	color:#fff;
 	font-weight: 500;
 }
+ul{
+	-webkit-padding-start: 0px;	
+}
+.table-condensed thead{
+	background: #e2e2e2;
+}
+.table-condensed tbody tr:hover{
+	background: #fff;
+}
 .tablaV tr{
 	cursor: pointer;
 }
@@ -339,7 +348,7 @@ header{
 	border-radius: 10px;
 }
 .row.col-md-12.filaorigen h5{
-	color:white;
+	color:#fff;
 }
 .row.col-md-12.filadestino{
 	background: #e1e8ed;
@@ -370,8 +379,10 @@ header{
 #global-actions>li:hover:not(.bannerSedeca)>a{
 	border-bottom: 4px solid #A93939;
 }
-.logoSEDECA{
-	width: 50%;
+.navbar-brand>img {
+  height: 100%;
+  padding-left: 5px;
+  width: auto;
 }
 .filaimagenPrincipal{
 	background:rgba(9,151,199,.6);
@@ -420,7 +431,7 @@ header{
   overflow: hidden;
   position: relative;
   text-align: center;
-  cursor: default;
+  cursor: pointer;
   background: -webkit-linear-gradient(45deg, #24B543 0%, #087946 100%);
   background: linear-gradient(45deg, #74FF02 0%,#087946 100%);
 }
@@ -577,7 +588,7 @@ header{
 	color:#fff;
 	font-weight: 600;
 }
-#formVehiculo label,#formMateriales label,#formServicios label{
+#formVehiculo label,#formMateriales label,#formServicios label,#formTramo label{
 	font-family: "brandon-grotesque","proxima","Proxima Nova","Helvetica Neue","Helvetica","Arial",sans-serif;
 	letter-spacing: 2px;
 	text-transform: uppercase;
@@ -604,6 +615,53 @@ header{
 	font-weight: 200;
 	color: #fff;
 }
+.bs-example{
+    margin: 100px 50px;
+}
+/* Custom styles for popover */
+.custom-title, #infocar .formulariosRegistro{
+    margin: 0;
+}
+.custom-title .glyphicon{
+    vertical-align: top;
+}
+#infocar p{
+	font-weight: bold;
+	font-size: 1.5em;
+	margin:0;
+}
+.inputsupdatecar{
+	display: none;
+}
+#page-selection, #page-codactividades, #page-codpersonal,#page-codvehiculo,#page-codmaterial{
+	text-align: center;
+	margin:0 auto;
+	display: block;
+}
+footer {
+    /* just for demo */
+    background-color: #313131;
+    color:#fff;
+    border-top: 1px solid #E7E7E7;
+    text-align:center;
+    padding:20px;
+    left: 0;
+    bottom: 0;
+    height: 60px;
+    width: 100%;
+}
+#formRegistroResidencia .list-group{
+	position: absolute;
+	padding-right: 30px;
+	z-index: 100;
+}
+#formRegistroResidencia .list-group:hover{
+	cursor: pointer;
+}
+#listaresidencianuevo p{
+	color:#555;
+}
+
 @media(min-width:768px) {
   .navbar-inverse {
     -webkit-transition: all .35s;

@@ -1,0 +1,15 @@
+extends layout_print
+
+block content
+  iframe(src='/pdf/patronesArquitectura.pdf#page=2', width='100%', height='100%')
+    | This browser does not support PDFs. Please download the PDF to view it: 
+  a(href='/pdf/sample-3pp.pdf') Download PDF
+  #print(style='height:100vh;width:100vw')
+  script(src="/javascripts/bootstrap.min.js")
+  script(type="text/javascript").
+    //- var idusuario1=[],ci1=[],nombres1=[],cargo1=[],ubicacion1=[]
+    //- idusuario1=!{JSON.stringify(idusuario)}
+    //- ci1=!{JSON.stringify(ci)}
+    //- nombres1=!{JSON.stringify(nombres)}
+    //- cargo1=!{JSON.stringify(cargo)}
+    //- ubicacion1=!{JSON.stringify(ubicacion)}

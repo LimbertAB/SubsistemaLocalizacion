@@ -1,0 +1,9 @@
+
+body {
+	position: relative;
+  	font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  	width: 100%;
+  	font-family: sans-serif;
+  	overflow-x: hidden;
+  	overflow-y: hidden;
+}

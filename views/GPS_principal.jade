@@ -14,8 +14,8 @@ block content
             h1 no hay nada de este año
     .col-md-10(style='padding:0')
       .tab-content
-        #todos.tab-pane.active(role='tabpanel',style='display:block')
-          table.table.table-bordered(id='tablaLocTRresidencias')
+        #todos.tab-pane.active(role='tabpanel')
+          table.table.table-bordered(id='tablaLocTRresidencias',style='display:none')
             -var aux=0
             - for (var x=0;x<residencias.length;x++)
               - for (var y=0;y<residencias[x].carids.length;y++)

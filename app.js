@@ -34,18 +34,15 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-//var settings={host:"190.129.24.218",user:"sistemas",password:"Abc123",database:"SubsistemaLocalizacion",port:""}
-//var query2=db.mysql(settings);
-//var settings2={host:"190.129.24.218",user:"sistemas",password:"Abc123",database:"SubsistemaProyectos",port:""}
-//var query3=db.mysql(settings2);
-
-var settings={host:"localhost",user:"root",password:"",database:"SubsistemaLocalizacion",port:""}
-var query2=db.mysql(settings);
-var settings2={host:"192.168.1.3",user:"sistemas",password:"12345",database:"SubsistemaProyectos",port:""}
-var query3=db.mysql(settings2);
+var settings={host:"localhost",user:"root",password:"",database:"sistemasedecauatf",port:""}
+var query=db.mysql(settings);
+// var settings2={host:"192.168.43.201",user:"sistemas",password:"12345",database:"subsistemaproyectos",port:""}
+// var query3=db.mysql(settings2);
+// var settings2={host:"localhost",user:"root",password:"",database:"subsistemaproyectos",port:""}
+// var query3=db.mysql(settings2);
 
 // error handlers
-
+var nicknamesx=[];
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
@@ -67,31 +64,31 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
 var PORT =5000;
 var http=app.listen(PORT,function(){
   console.log("servidor corriendo en el puerto: "+PORT);
 });
 var io= socket(http);
 io.on("connection",function(socket){
+  //console.log('conectados',socket);
   var estado='false';
   var stado='true';
   var user=Object();
-  socket.on('ConectarUsuario',function(ci){
-    socket.join('salaChat'+ci+'');
-  });
-  
+
+   
   socket.on('Login',function(data){
     console.log(data.nombre,data.contras);
-    query2.get("usuarios").where({"nick":data.nombre,"pass":data.contras}).execute(function(v){ 
+    query.get("usuarios").where({"nick":data.nombre,"pass":data.contras}).execute(function(v){ 
       if(v.result.length==1){
         var usuario=[];
         usuario.push({"idusuario":v.result[0].idusuario,"nombres":v.result[0].nombres_apellidos,'nick':v.result[0].nick,'ci':v.result[0].ci,'cargo':v.result[0].cargo,'domicilio':v.result[0].domicilio,'telefono':v.result[0].telefono,'celular':v.result[0].celular});
         if(v.result[0].cargo!='Administrador'){
           var fecha = new Date();var ano = fecha.getFullYear();
-          query3.get("residencias").where({'año':ano}).execute(function(residenciaño){
+          query.get("residencias").where({'año':ano}).execute(function(residenciaño){
             console.log('//',residenciaño);
             if(residenciaño.result.length>0){
-              query2.get("asignacionusuarios").where({'idusuario':v.result[0].idusuario}).execute(function(asignacion){
+              query.get("asignacionusuarios").where({'idusuario':v.result[0].idusuario}).execute(function(asignacion){
                 console.log('....',asignacion);
                 if(asignacion.result.length>0){
                   var residencia=[];var contador=0;
@@ -138,7 +135,7 @@ io.on("connection",function(socket){
     });
   });
   socket.on('LoginANDROID',function(data){
-    query2.get("usuarios").where({"nick":data.nombre,"pass":data.pass}).execute(function(v){ 
+    query.get("usuarios").where({"nick":data.nombre,"pass":data.pass}).execute(function(v){ 
       if(v.result.length==1){
         console.log('id usuario a la aplicacion: ',v.result[0].idusuario);
         socket.emit('respuestaLoginANDROID',{"estado":true,"idusuario":v.result[0].idusuario});
@@ -151,7 +148,7 @@ io.on("connection",function(socket){
   socket.on('listarUsuarios',function(aux){
     console.log(aux);
     if(aux!=''){
-      query2.get("usuarios").where({'ubicacion':aux}).execute(function(v){
+      query.get("usuarios").where({'ubicacion':aux}).execute(function(v){
         if(v.result.length>0){
           var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];  
           for(var i=0; i<v.result.length; i++){
@@ -166,7 +163,7 @@ io.on("connection",function(socket){
       });
     }
     else{
-      query2.get("usuarios").execute(function(v){
+      query.get("usuarios").execute(function(v){
         var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];  
         for(var i=0; i<v.result.length; i++){
           lista1.push(v.result[i].idusuario);lista2.push(v.result[i].ci);lista3.push(v.result[i].nombres_apellidos);lista4.push(v.result[i].cargo);lista5.push(v.result[i].ubicacion);
@@ -177,7 +174,7 @@ io.on("connection",function(socket){
   });
   socket.on('listaUnUsuario',function(aux){
     console.log('???',aux);
-    query2.get("usuarios").where({'idusuario':aux}).execute(function(v){
+    query.get("usuarios").where({'idusuario':aux}).execute(function(v){
       if(v.result.length==1){
         var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];var lista6=[];var lista7=[]; var lista8=[];var lista9=[];  
         lista1.push(v.result[0].idusuario);lista2.push(v.result[0].nombres_apellidos);lista3.push(v.result[0].nick);lista4.push(v.result[0].ci);lista5.push(v.result[0].cargo);lista7.push(v.result[0].domicilio);lista8.push(v.result[0].telefono);lista9.push(v.result[0].celular);
@@ -186,16 +183,32 @@ io.on("connection",function(socket){
     }); 
   });
   socket.on('Buscaruseradm',function(valor){
-    query2.get("usuarios").contains({'nombres_apellidos':valor}).execute(function(rows2){
+    console.log(valor);
+    query.get("usuarios").contains({'nombres_apellidos':valor}).execute(function(rows2){
       if(rows2.result.length>0){
         var nombreCompleto=[];var ci=[];
         for(var i=0; i<rows2.result.length; i++){
           nombreCompleto.push(rows2.result[i].nombres_apellidos);
           ci.push(rows2.result[i].idusuario);
         }
-        socket.emit('RespuestaBuscaruseradm',{'estado':'true','nombreCompleto':nombreCompleto,'idusuario':ci});
+        socket.emit('RespuestaBuscaruseradm',{'estado':true,'nombreCompleto':nombreCompleto,'idusuario':ci});
       }else{
-        socket.emit('RespuestaBuscaruseradm',{'estado':'false'}); 
+        socket.emit('RespuestaBuscaruseradm',{'estado':false}); 
+      }
+    });
+  });
+  socket.on('buscarvehiculos',function(valor){
+    query.get("vehiculos").contains({'codinterno':valor}).execute(function(rows2){
+      if(rows2.result.length>0){
+        var codinterno=[],placa=[],idvehiculo=[];
+        for(var i=0; i<rows2.result.length; i++){
+          codinterno.push(rows2.result[i].codinterno);
+          placa.push(rows2.result[i].placa);
+          idvehiculo.push(rows2.result[i].idequipos);
+        }
+        socket.emit('respuestabuscarvehiculos',{'estado':true,'codinterno':codinterno,'placa':placa,'idvehiculo':idvehiculo});
+      }else{
+        socket.emit('respuestabuscarvehiculos',{'estado':false}); 
       }
     });
   });
@@ -204,10 +217,10 @@ io.on("connection",function(socket){
     user.descripcion=usernoti.noticia;
     user.direccion=usernoti.direccion;
     var nombresNoti=[];var cargo=[];var descripNoti=[];var fechaNoti=[];var direccionImg=[];
-    query2.save("notificaciones",user,(function(r){
+    query.save("notificaciones",user,(function(r){
       if(r.affectedRows==1){
-        query2.get("usuarios").execute(function(rows1){
-          query2.get("notificaciones").execute(function(rows2){
+        query.get("usuarios").execute(function(rows1){
+          query.get("notificaciones").execute(function(rows2){
             for(var i=0; i<rows2.result.length; i++){
               for(var j=0; j<rows1.result.length; j++){
                 if(rows2.result[i].ciNoti==rows1.result[j].ci){
@@ -237,9 +250,9 @@ io.on("connection",function(socket){
     using.domicilio=informacion.domicilio;
     using.telefono=informacion.telefono;
     using.celular=informacion.celular;
-    query2.update("usuarios",using).where({"idusuario":informacion.idusuario}).execute(function(r){
+    query.update("usuarios",using).where({"idusuario":informacion.idusuario}).execute(function(r){
       if(r.affectedRows==1){
-        query2.get("usuarios").where({'idusuario':informacion.idusuario}).execute(function(v){
+        query.get("usuarios").where({'idusuario':informacion.idusuario}).execute(function(v){
           var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];var lista6=[];var lista7=[]; var lista8=[];var lista9=[];  
           lista1.push(v.result[0].idusuario);lista2.push(v.result[0].nombres_apellidos);lista3.push(v.result[0].nick);lista4.push(v.result[0].ci);lista5.push(v.result[0].cargo);lista6.push(v.result[0].ubicacion);lista7.push(v.result[0].domicilio);lista8.push(v.result[0].telefono);lista9.push(v.result[0].celular);
           socket.emit('RespuestaListaUnUsuario',{'estado':'actualizado',"idusuario":lista1,"nombres":lista2,'nick':lista3,'ci':lista4,'cargo':lista5,'ubicacion':lista6,'domicilio':lista7,'telefono':lista8,'celular':lista9});
@@ -261,7 +274,7 @@ io.on("connection",function(socket){
     carupdate.tipo=informacion.tipo;
     carupdate.combustible=informacion.combustible;
     carupdate.perfil=informacion.perfil;
-    query2.update("vehiculos",carupdate).where({"idequipos":informacion.idequipos}).execute(function(r){
+    query.update("vehiculos",carupdate).where({"idequipos":informacion.idequipos}).execute(function(r){
       if(r.affectedRows==1){
         socket.emit('respuestaActualizarVehiculos',true); 
       }
@@ -272,8 +285,8 @@ io.on("connection",function(socket){
   });
   socket.on('notificaciones',function(){
     var nombresNoti=[];var cargo=[];var descripNoti=[];var fechaNoti=[];var direccionImg=[];
-    query2.get("usuarios").execute(function(rows1){
-        query2.get("notificaciones").execute(function(rows2){
+    query.get("usuarios").execute(function(rows1){
+        query.get("notificaciones").execute(function(rows2){
             for(var i=0; i<rows2.result.length; i++){
               for(var j=0; j<rows1.result.length; j++){
                 if(rows2.result[i].ciNoti==rows1.result[j].idusuario){
@@ -291,7 +304,7 @@ io.on("connection",function(socket){
   });
   socket.on('BuscadorUsuarios',function(valor){
     var nombreCompleto=[];var ci=[];
-    query2.get("usuarios").contains({'nombres_apellidos':valor}).execute(function(rows2){
+    query.get("usuarios").contains({'nombres_apellidos':valor}).execute(function(rows2){
       if(rows2.result.length>0){
         console.log('estos son los nombres '+rows2.result.length);
         for(var i=0; i<rows2.result.length; i++){
@@ -306,8 +319,8 @@ io.on("connection",function(socket){
   });
   socket.on('ListaMisMensajes',function(valor){
     var nombresMensaje=[];var Mensajes=[];var fechaMensaje=[];var CIMensaje=[];
-    query2.get("usuarios").execute(function(rows1){
-      query2.get("mensajes").where_or({"ciOrigen":valor,"ciDestino":valor}).execute(function(rows2){
+    query.get("usuarios").execute(function(rows1){
+      query.get("mensajes").where_or({"ciOrigen":valor,"ciDestino":valor}).execute(function(rows2){
         for(var i=0; i<rows2.result.length; i++){
           for(var j=0; j<rows1.result.length; j++){
             if(rows2.result[i].ciOrigen==valor){
@@ -332,7 +345,7 @@ io.on("connection",function(socket){
     });
   });
   socket.on('BuscarUsuariosParaResidencia',function(){
-    query2.get("usuarios").where_or({'descripcion':'trabajador','cargo':'Encargado de Campamento'}).execute(function(v){
+    query.get("usuarios").where_or({'descripcion':'trabajador','cargo':'Encargado de Campamento'}).execute(function(v){
       var CI=[];var Nombres=[];
       for(var i=0; i<v.result.length; i++){
         Nombres.push(v.result[j].nombres_apellidos);
@@ -342,7 +355,7 @@ io.on("connection",function(socket){
     });
   });
   socket.on('DamePersonalResidencia',function(cis){
-    query2.get("usuarios").execute(function(usuarios){
+    query.get("usuarios").execute(function(usuarios){
       var Nombres=[];
       for(var i=0; i<cis.length; i++){
         for(var j=0; j<usuarios.result.length; j++){
@@ -356,7 +369,7 @@ io.on("connection",function(socket){
   });
   socket.on('listaMensajesUnUsuario',function(data){
     var mensaje=[];var fecha=[];var origen=[]; var destino=[];
-    query2.get("mensajes").where_or({"ciOrigen":data.mici,"ciDestino":data.mici}).execute(function(enviados){
+    query.get("mensajes").where_or({"ciOrigen":data.mici,"ciDestino":data.mici}).execute(function(enviados){
       console.log('enviados ',enviados);                 //1 2 3 6 7                        //4 5 8 9 10             
       for(var i=0; i<enviados.result.length; i++){  
         if(data.mici==enviados.result[i].ciOrigen){
@@ -379,6 +392,20 @@ io.on("connection",function(socket){
       socket.emit("ListaMensajesUnUsuario",{"origen":origen,"destino":destino,"mensaje":mensaje,"fecha":fecha,"ciDestino":ciDest}); 
     });
   });
+  socket.on('nuevousuario',function(data){
+    console.log('este es mi nick',data);
+    var nombre='username'+data;var aux=0;
+    for (var i = 0; i < nicknamesx.length; i++) {
+      if(nicknamesx[i]==nombre){
+        aux++;
+      }
+    };if(aux==0){
+      socket.nickname=nombre;
+      nicknamesx.push(nombre);
+      socket.join(nombre);
+      io.to(nombre).emit('usernames',true);
+    }
+  });
   socket.on('enviandoUnMensaje',function(MensajesEntrada){
     console.log('llegaron',MensajesEntrada);
     var date = new Date;
@@ -387,20 +414,23 @@ io.on("connection",function(socket){
     datosMensajes.ciOrigen=MensajesEntrada.origen;
     datosMensajes.ciDestino=MensajesEntrada.destino;
     datosMensajes.mensaje=MensajesEntrada.mensaje;
-    datosMensajes.fecha=date.getDate() + " " + meses[date.getMonth()] + " " + date.getFullYear();
-    datosMensajes.hora=date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
-    query2.save("mensajes",datosMensajes,(function(r){
+    var fecha=date.getDate() + " " + meses[date.getMonth()] + " " + date.getFullYear();
+    var hora=date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+    datosMensajes.fecha=fecha;
+    datosMensajes.hora=hora;
+    query.save("mensajes",datosMensajes,(function(r){
       if(r.affectedRows==1){
-        console.log('insertados');
-        //socket.join('salaChat'+ci+'');
-        //io.to('salaChat'+MensajesEntrada.destino+'').emit('RespuestaMensajeSolo',{msn:'Se ha Unido A la sala ',fecha:'04:30'});
-        //socket.broadcast.to(id).emit("mi mensaje",msg); 
+        var user='username'+MensajesEntrada.destino;
+        io.to(user).emit('respuestaMensajeSolo',{msn:MensajesEntrada.mensaje,fecha:fecha,hora:hora});
+      }
+      else{
+        //nose inserto el mensaje
       }
     }));
   });
   socket.on('ListaCI',function(todos){
     console.log('llego campamento',todos);
-    query2.get("usuarios").execute(function(usuarios){
+    query.get("usuarios").execute(function(usuarios){
       var Nombres=[];
       console.log('tamaño',todos.cis.length);
       for(var i=0; i<todos.cis.length; i++){
@@ -415,8 +445,8 @@ io.on("connection",function(socket){
   });
   socket.on('ListaLocalizados',function(){
     var nombresLocalizados=[];var Cargo=[];var Ci=[];
-    query2.get("usuarios").execute(function(usuario){
-      query2.get("ubicaciontiemporeal").execute(function(localizacion){
+    query.get("usuarios").execute(function(usuario){
+      query.get("ubicacionusuarios").execute(function(localizacion){
         for(var i=0; i<localizacion.result.length; i++){
           for(var j=0; j<usuario.result.length; j++){
             if(localizacion.result[i].CiUsuario==usuario.result[j].ci){
@@ -432,8 +462,8 @@ io.on("connection",function(socket){
   });
   socket.on('ListaCordenadasUnUser',function(valor){
     var nombresLocalizados=[];var Fecha=[];var Hora=[];var latitud=[];var longitud=[];
-    query2.get("usuarios").where({'ci':valor}).execute(function(usuario){
-      query2.get("ubicaciontiemporeal").where({'CiUsuario':valor}).execute(function(localizacion){
+    query.get("usuarios").where({'ci':valor}).execute(function(usuario){
+      query.get("ubicacionusuarios").where({'CiUsuario':valor}).execute(function(localizacion){
         nombresLocalizados.push(usuario.result[0].nombres_apellidos);
         for(var i=0; i<localizacion.result.length; i++){
           Fecha.push(localizacion.result[i].Fecha);
@@ -446,7 +476,7 @@ io.on("connection",function(socket){
     });
   });
   socket.on('buscarnombreusuario',function(valor){
-    query2.get("usuarios").contains({'nick':valor}).execute(function(rows2){
+    query.get("usuarios").contains({'nick':valor}).execute(function(rows2){
       if(rows2.result.length==0){
         socket.emit('respuestanombreusuario',true);
       }else{
@@ -455,7 +485,7 @@ io.on("connection",function(socket){
     });
   });
   socket.on('listaResidencias1',function(valor){
-    query2.get("residencias").execute(function(rows2){
+    query.get("residencias").execute(function(rows2){
       if(rows2.result.length==0){
         socket.emit('respuestalistaResidencias',false);
       }else{
@@ -465,7 +495,7 @@ io.on("connection",function(socket){
   });
   socket.on('listarSam',function(){
     var codsam=[];var descripcion=[];var unidad=[];var presunit=[];
-    query2.get("sam").execute(function(row){
+    query.get("codificacionsam").execute(function(row){
       if(row.result.length>0){
         for(var i=0; i<row.result.length; i++){
           codsam.push(row.result[i].codsam);
@@ -480,52 +510,25 @@ io.on("connection",function(socket){
       }
     });  
   });
-  socket.on('RegistrarSam',function(datos){
-    console.log('llegaron',datos);
-    var datosam=Object();
-    datosam.codsam=datos.codigo;
-    datosam.descripcion=datos.descripcion;
-    datosam.unidad=datos.unidad;
-    datosam.presunit=datos.preciounitario;
-    query2.save("sam",datosam,(function(r){
-      if(r.affectedRows==1){
-        socket.emit("RespuestaregistrarSam",true);
-      }
-      else{
-        socket.emit("RespuestaregistrarSam",false);
-      }
-    }));
-  });
-  socket.on('actualizarSam',function(informacion){
-    console.log(informacion);
-    var using=Object();
-    using.codsam=informacion.codsam;
-    using.descripcion=informacion.descripcion;
-    using.unidad=informacion.unidad;
-    using.presunit=informacion.presunit;
-    query2.update("sam",using).where({"codsam":informacion.codsam}).execute(function(r){
-      if(r.affectedRows==1){
-        query2.get("sam").where({"codsam":informacion.codsam}).execute(function(v){
-          var lista1=[];var lista2=[];var lista3=[];var lista4=[]; 
-          lista1.push(v.result[0].codsam);lista2.push(v.result[0].descripcion);lista3.push(v.result[0].unidad);lista4.push(v.result[0].presunit);
-          socket.emit('respuestaactualizarSam',{"estado":true,"codsam":lista1,"descripcion":lista2,'unidad':lista3,'presunit':lista4});
-        }); 
-      }else{
-        socket.emit('respuestaactualizarSam',{"estado":false});
-      }
-    });
-  });
   socket.on('buscarcodigointerno',function(valor){
-    query2.get("vehiculos").where({'codinterno':valor}).execute(function(rows2){
+    query.get("vehiculos").where({'codinterno':valor.valor}).execute(function(rows2){
       if(rows2.result.length==0){
-        socket.emit('respuestabuscarcodigointerno',true);
+        if(valor.estado!=undefined){
+          socket.emit('respuestabuscarcodigointerno2',true);
+        }else{
+          socket.emit('respuestabuscarcodigointerno',true);
+        }
       }else{
-        socket.emit('respuestabuscarcodigointerno',false); 
+        if(valor.estado!=undefined){
+          socket.emit('respuestabuscarcodigointerno2',false);
+        }else{
+          socket.emit('respuestabuscarcodigointerno',false); 
+        }
       }
     });
   });
   socket.on('listarVehiculos',function(aux){
-      query2.get("vehiculos").execute(function(v){
+      query.get("vehiculos").execute(function(v){
         if(v.result.length>0){
           var lista1=[];var lista2=[];var lista3=[];var lista4=[];
           for(var i=0; i<v.result.length; i++){
@@ -538,21 +541,58 @@ io.on("connection",function(socket){
       });
   });
   socket.on('listaUnVehiculo',function(aux){
-    query2.get("vehiculos").where({'codinterno':aux}).execute(function(v){
-        var lista1=[];var lista2=[];var lista3=[];var lista4=[];var lista5=[];var lista6=[];var lista7=[]; var lista8=[];var lista9=[];var lista10=[];
-        lista1.push(v.result[0].codinterno);lista2.push(v.result[0].idresidencia);lista3.push(v.result[0].encargado);lista4.push(v.result[0].placa);lista5.push(v.result[0].modelo);lista6.push(v.result[0].marca);lista7.push(v.result[0].color);lista8.push(v.result[0].tipo);lista9.push(v.result[0].combustible);lista9.push(v.result[0].estado);
-        socket.emit('RespuestalistaUnVehiculo',{"codinterno":lista1,"idresidencia":lista2,'encargado':lista3,'placa':lista4,'modelo':lista5,'marca':lista6,'color':lista7,'tipo':lista8,'combustible':lista9,'estado':lista10});
-    }); 
+    query.get("vehiculos").where({'idequipos':aux}).execute(function(v){
+      query.get("codificacionvehiculos").where({'idcodificacionvehiculos':v.result[0].tipo}).execute(function(t){
+        socket.emit('respuestalistaUnVehiculo',{"codinterno":v.result[0].codinterno,"idvehiculo":aux,'placa':v.result[0].placa,'modelo':v.result[0].modelo,'marca':v.result[0].marca,'color':v.result[0].color,'codtipo':v.result[0].tipo,'tipo':t.result[0].descripcion,'combustible':v.result[0].combustible,'estado':v.result[0].perfil});
+      });
+    });
   });
   socket.on('buscarquenoexistaresidencia',function(aux){
     console.log(aux);
-    query3.get("residencias").contains({'nombre':aux}).execute(function(v){
+    query.get("residencias").contains({'nombre':aux.valor}).execute(function(v){
       console.log(v.result.length);
       if(v.result.length==0){
-        socket.emit('respuestabuscarquenoexistaresidencia',true);
+        socket.emit('respuestabuscarquenoexistaresidencia',{estado:true});
       }
       else{
-        socket.emit('respuestabuscarquenoexistaresidencia',false);
+        var nombre=[],latitud=[],longitud=[],ubicacion=[],contador=0,auxii=0,valores=[];
+        for (var i = 0; i < v.result.length; i++) {
+          if(v.result[i].idresidencias!=''){
+            for (var j = i; j < v.result.length; j++) {
+              if((v.result[i].latitud==v.result[j].latitud)){
+                v.result[j].idresidencias='';
+                auxii=i;
+              }
+            }
+            valores.push(auxii);
+          }
+        }
+        if(aux.gestion==null){
+          query.get("residencias").where({'idresidencias':aux.idresidencia}).execute(function(ve){
+            gestion=ve.result[0].año;
+            for (var i = 0; i < valores.length; i++) {
+              var uu=valores[i];
+              if((gestion!=v.result[uu].año)){
+                nombre.push(v.result[uu].nombre);
+                latitud.push(v.result[uu].latitud);
+                longitud.push(v.result[uu].longitud);
+                ubicacion.push(v.result[uu].ubicacion);
+              }
+            }
+            socket.emit('respuestabuscarquenoexistaresidencia',{estado:false,nombre:nombre,lat:latitud,lng:longitud,ubicacion:ubicacion});
+          });
+        }else{
+          for (var i = 0; i < valores.length; i++) {
+            var uu=valores[i];
+            if((aux.gestion!=v.result[uu].año)){
+              nombre.push(v.result[uu].nombre);
+              latitud.push(v.result[uu].latitud);
+              longitud.push(v.result[uu].longitud);
+              ubicacion.push(v.result[uu].ubicacion);
+            }
+          }
+          socket.emit('respuestabuscarquenoexistaresidencia',{estado:false,nombre:nombre,lat:latitud,lng:longitud,ubicacion:ubicacion});
+        }
       } 
     }); 
   });
@@ -564,8 +604,8 @@ io.on("connection",function(socket){
     datoresidencia.longitud=datos.longitud;
     datoresidencia.ubicacion=datos.ubicacion;
     datoresidencia.estado=datos.estado;
-    datoresidencia.año=2016;
-    query3.save("residencias",datoresidencia,(function(r){
+    datoresidencia.año=datos.gestion;
+    query.save("residencias",datoresidencia,(function(r){
       if(r.affectedRows==1){
         socket.emit("RespuestaRegistrarResidencia",true);
       }
@@ -573,6 +613,22 @@ io.on("connection",function(socket){
         socket.emit("RespuestaRegistrarResidencia",false);
       }
     }));
+  });
+  socket.on('ActualizarResidencia',function(datos){
+    console.log('llegaron',datos);
+    var datoresidencia=Object();
+    datoresidencia.nombre=datos.nombre;
+    datoresidencia.latitud=datos.latitud;
+    datoresidencia.longitud=datos.longitud;
+    datoresidencia.ubicacion=datos.ubicacion;
+    query.update("residencias",datoresidencia).where({"idresidencias":datos.idresidencia}).execute(function(r){
+      if(r.affectedRows==1){
+        socket.emit("RespuestaActualizarResidencia",true);
+      }
+      else{
+        socket.emit("RespuestaActualizarResidencia",false);
+      }
+    });
   });
   socket.on('asignarusuariosaresidencia',function(datos){
     console.log('llegaron',datos);
@@ -583,7 +639,7 @@ io.on("connection",function(socket){
       useresidencia.idresidencia=datos.idresidencia;
       useresidencia.perfil=datos.perfil[i];
       useresidencia.estado='Activo';
-      query2.save("asignacionusuarios",useresidencia,(function(r){
+      query.save("asignacionusuarios",useresidencia,(function(r){
         if(r.affectedRows==1){
           if(i==(datos.idusuarios.length)){
               socket.emit('Respuestaasignarusuariosresidencia',{'estado':true});
@@ -602,7 +658,7 @@ io.on("connection",function(socket){
       var useresidencia=Object();
       useresidencia.idresidencia=datos.idresidencia;
       useresidencia.descripcion=datos.tramos[i];
-      query3.save("tramos",useresidencia,(function(r){
+      query.save("tramos",useresidencia,(function(r){
         if(r.affectedRows==1){
           socket.emit('Respuestaasignartramosaresidencia',true);
         }
@@ -618,7 +674,7 @@ io.on("connection",function(socket){
       caresidencia.idequipo=datos.idvehiculo[i];
       caresidencia.idresidencia=datos.idresidencia;
       caresidencia.estado='Activo';
-      query2.save("asignacionvehiculos",caresidencia,(function(r){
+      query.save("asignacionvehiculos",caresidencia,(function(r){
         if(r.affectedRows==1){
           socket.emit('Respuestaasignarvehiculosaresidencia',true);
         }
@@ -635,7 +691,7 @@ io.on("connection",function(socket){
     materiales.cantidad=datos.cantidad;
     materiales.preciounitario=datos.preciounitario;
     materiales.idresidenciamateriales=datos.idresidencia;
-    query3.save("materialesaresidencia",materiales,(function(r){
+    query.save("asignacionmateriales",materiales,(function(r){
       if(r.affectedRows==1){
         socket.emit('respuestaasignamaterialresidencia',true);
       }
@@ -650,7 +706,7 @@ io.on("connection",function(socket){
     servicios.servicios=datos.servicio;
     servicios.preciounitario=datos.preciounitario;
     servicios.idresidenciaservicios=datos.idresidencia;
-    query3.save("serviciosnobasicos",servicios,(function(r){
+    query.save("asignacionservicios",servicios,(function(r){
       if(r.affectedRows==1){
         socket.emit('respuestaasignaservicioresidencia',true);
       }
@@ -663,7 +719,7 @@ io.on("connection",function(socket){
     console.log(informacion);
     var residencia=Object();
     residencia.estado=informacion.estado;
-    query3.update("residencias",residencia).where({"idresidencias":informacion.idresidencia}).execute(function(r){
+    query.update("residencias",residencia).where({"idresidencias":informacion.idresidencia}).execute(function(r){
       if(r.affectedRows==1){
         socket.emit('respuestacambiarEstadoResidencia',true);
       }else{
@@ -672,7 +728,7 @@ io.on("connection",function(socket){
     });
   });
   socket.on('damecordenadasdeusuario',function(aux){
-    query2.get("ubicaciontiemporeal").where({'idusuarios':aux.iduser,'Fecha':aux.fecha}).execute(function(ubicaciones){
+    query.get("ubicacionusuarios").where({'idusuarios':aux.iduser,'Fecha':aux.fecha}).execute(function(ubicaciones){
       console.log(ubicaciones);
       if(ubicaciones.result.length>0){
         var lista1=[],lista2=[],lista3=[],lista4=[];
@@ -697,11 +753,12 @@ io.on("connection",function(socket){
       coordenadas.longitud=parseFloat(datos.longitud[i]);
       coordenadas.Fecha=datos.fecha[i].toString();
       coordenadas.Hora=datos.hora[i];
-      query2.save("ubicaciontiemporeal",coordenadas,(function(r){
+      query.save("ubicacionusuarios",coordenadas,(function(r){
         if(r.affectedRows==1){
           x=x+1;
           if(x==datos.idusuarios.length){
             socket.emit('response_android',{'estado':true});
+            socket.broadcast.emit('coordenadas_android',{'estado':true,'idusuarios':datos.idusuarios,'latitudes':datos.latitud,'longitudes':datos.longitud,'fechas':datos.fecha,'horas':datos.hora});
           }
         }
         else{
@@ -714,11 +771,11 @@ io.on("connection",function(socket){
     var idproquincenal;
     var idproquincenal2;
     var asignartotal=[];
-    query2.get("sam").execute(function(sam){
-      query3.get("asignaciondiasquincenal").where({'idresidencia':aux.idresidencia,'mes':aux.mes}).execute(function(asignardias){
+    query.get("codificacionsam").execute(function(sam){
+      query.get("asignaciondiasquincenal").where({'idresidencia':aux.idresidencia,'mes':aux.mes}).execute(function(asignardias){
         if(asignardias.result.length>0){
-          query3.get("asignaciontareaspersonalquincenal").execute(function(usertareas){
-            query2.get("usuarios").execute(function(users){
+          query.get("asignaciontareaspersonalquincenal").execute(function(usertareas){
+            query.get("usuarios").execute(function(users){
               for(var i=0; i<asignardias.result.length; i++){
                 var usuarios,dias=asignardias.result[i].dia,samcod;
                 for(var j=0; j<usertareas.result.length; j++){
@@ -741,16 +798,16 @@ io.on("connection",function(socket){
             });
           });
         }else{
-          query3.get("programacionquincenal").where({'idresidencia':aux.idresidencia,'mes':aux.mes}).execute(function(quincenal){
+          query.get("programacionquincenal").where({'idresidencia':aux.idresidencia,'mes':aux.mes}).execute(function(quincenal){
             if(quincenal.result.length>0){
               idproquincenal=quincenal.result[0].idprogramacionquincenal;
               idproquincenal2=quincenal.result[0].idprogramacionquincenal;
               if(quincenal.result.length>1){
                 idproquincenal2=quincenal.result[1].idprogramacionquincenal;
                 var totaltickes=[],totaltickes1=[];
-                query3.get("detalleproquincenal").where_or({'idproquincena':idproquincenal}).execute(function(detallequincenal){
-                  query3.get("detalleproquincenal").where_or({'idproquincena':idproquincenal2}).execute(function(detallequincenal2){
-                    query3.get("asignaciontareaspersonalquincenal").execute(function(usertareas){
+                query.get("detalleproquincenal").where_or({'idproquincena':idproquincenal}).execute(function(detallequincenal){
+                  query.get("detalleproquincenal").where_or({'idproquincena':idproquincenal2}).execute(function(detallequincenal2){
+                    query.get("asignaciontareaspersonalquincenal").execute(function(usertareas){
                       for(var i=0; i<detallequincenal.result.length; i++){
                         var samcod,tickeo,idsam;
                         for(var j=0; j<sam.result.length; j++){
@@ -782,9 +839,9 @@ io.on("connection",function(socket){
               }
               else{
                 var totaltickes=[];
-                query3.get("detalleproquincenal").where_or({'idproquincena':idproquincenal}).execute(function(detallequincenal){
+                query.get("detalleproquincenal").where_or({'idproquincena':idproquincenal}).execute(function(detallequincenal){
                   console.log('ñññññ',detallequincenal);
-                  query3.get("asignaciontareaspersonalquincenal").execute(function(usertareas){
+                  query.get("asignaciontareaspersonalquincenal").execute(function(usertareas){
                     for(var i=0; i<detallequincenal.result.length; i++){
                       var samcod=[],tickeo=[],idsam=[];
                       for(var j=0; j<sam.result.length; j++){
@@ -819,13 +876,13 @@ io.on("connection",function(socket){
       dato0.mes=valor.mes;
       dato0.dia=valor.diass[i];
       dato0.idsam=valor.actividadd[i];
-      query3.save("asignaciondiasquincenal",dato0,(function(resultado){
+      query.save("asignaciondiasquincenal",dato0,(function(resultado){
         if(resultado.affectedRows==1){
           aux=aux+1;
           console.log('aux',aux);
           if(aux==i){
             console.log('entro if',aux);
-            query3.get("asignaciondiasquincenal").execute(function(volumen){
+            query.get("asignaciondiasquincenal").execute(function(volumen){
               console.log('asignacion de dias:',volumen);
               var ultimo=(volumen.result.length)-(valor.diass.length);
               console.log('ultimo:',ultimo);
@@ -844,7 +901,7 @@ io.on("connection",function(socket){
       for(var i=0;i<valor.userids.length;i++){
         dato0.idasignaciondias=valor.volumenes[i];
         dato0.idusuario=valor.userids[i];
-        query3.save("asignaciontareaspersonalquincenal",dato0,(function(resultado){
+        query.save("asignaciontareaspersonalquincenal",dato0,(function(resultado){
           if(resultado.affectedRows==1){
             socket.emit('respondellenarasignacionusuarios',true);
           }else{
@@ -855,9 +912,9 @@ io.on("connection",function(socket){
   });
   socket.on('usuariosparamiresidencia',function(){
     var idresidencia=2;
-    query2.get('asignacionusuarios').where({'idresidencia':idresidencia}).execute(function(usuarioresidencia){
+    query.get('asignacionusuarios').where({'idresidencia':idresidencia}).execute(function(usuarioresidencia){
       if(usuarioresidencia.result.length>0){
-        query2.get('usuarios').execute(function(usuario){
+        query.get('usuarios').execute(function(usuario){
           var nombres_apellidos=[];var idusuario=[];
             for(var j=0;j<usuarioresidencia.result.length;j++){
               idusuario.push(usuarioresidencia.result[j].idusuario);
@@ -901,7 +958,7 @@ io.on("connection",function(socket){
         gpsdata.fecha=(data.datetime).toString().substring(8,10)+"-"+mes+"-"+(data.datetime).toString().substring(11,15);
         gpsdata.hora=(data.datetime).toString().substring(16,24);
         gpsdata.velocidad=data.speed.kmh;
-        query2.save("ubicaciongps",gpsdata,(function(resultado){
+        query.save("ubicaciongps",gpsdata,(function(resultado){
           if(resultado.affectedRows==1){
             aux=aux+1;
             if(aux==i){
@@ -923,7 +980,7 @@ io.on("connection",function(socket){
     }
   });
   socket.on('damecordenadasdeunvehiculo',function(aux){
-    query2.get("ubicaciongps").where({'idvehiculo':aux.idcar,'fecha':aux.fecha}).execute(function(ubicaciones){
+    query.get("ubicaciongps").where({'idvehiculo':aux.idcar,'fecha':aux.fecha}).execute(function(ubicaciones){
       console.log(ubicaciones);
       if(ubicaciones.result.length>0){
         var lista1=[],lista2=[],lista3=[],lista4=[],lista5=[];
@@ -934,6 +991,279 @@ io.on("connection",function(socket){
         socket.emit('respuestadamecordenadasdeunvehiculo',{'responde':true,"fecha":lista1,"hora":lista2,'latitud':lista3,'longitud':lista4,'velocidad':lista5});
       }else{
         socket.emit('respuestadamecordenadasdeunvehiculo',{'responde':false});
+      }
+    });
+  });
+  socket.on('enviarcodificacionactividades',function(datos){
+    console.log('llegaron',datos);
+    var x=0;
+    for (var i=0;i<datos.codigo.length;i++){
+      var datosam=Object();
+      datosam.codsam=datos.codigo[i];
+      datosam.descripcion=datos.descripcion[i];
+      datosam.unidad=datos.unidad[i];
+      query.save("codificacionsam",datosam,(function(r){
+        if(r.affectedRows==1){
+          x=x+1;
+          if(x==datos.codigo.length){
+            socket.emit('respuestaenviarcodificacionactividades',true);
+          }
+        }
+        else{
+          x=x+1;
+          if(x==datos.codigo.length){
+            socket.emit("respuestaenviarcodificacionactividades",false);
+          }
+        }
+      }));
+    }
+  });
+  socket.on('actualizarSam',function(informacion){
+    console.log(informacion);
+    var using=Object();
+    using.codsam=informacion.codsam;
+    using.descripcion=informacion.descripcion;
+    using.unidad=informacion.unidad;
+    using.presunit=informacion.presunit;
+    query.update("codificacionsam",using).where({"codsam":informacion.codsam}).execute(function(r){
+      if(r.affectedRows==1){
+        query.get("codificacionsam").where({"codsam":informacion.codsam}).execute(function(v){
+          var lista1=[];var lista2=[];var lista3=[];var lista4=[]; 
+          lista1.push(v.result[0].codsam);lista2.push(v.result[0].descripcion);lista3.push(v.result[0].unidad);lista4.push(v.result[0].presunit);
+          socket.emit('respuestaactualizarSam',{"estado":true,"codsam":lista1,"descripcion":lista2,'unidad':lista3,'presunit':lista4});
+        }); 
+      }else{
+        socket.emit('respuestaactualizarSam',{"estado":false});
+      }
+    });
+  });
+  socket.on('enviarcodificacionpersonal',function(datos){
+    console.log('llegaron',datos);
+    var x=0;
+    for (var i=0;i<datos.clase.length;i++){
+      var codperson=Object();
+      codperson.clase=datos.clase[i];
+      codperson.descripcion=datos.descripcion[i];
+      codperson.unidad='Hora';
+      query.save("codificacionpersonal",codperson,(function(r){
+        if(r.affectedRows==1){
+          x=x+1;
+          if(x==datos.clase.length){
+            socket.emit('respuestaenviarcodificacionpersonal',true);
+          }
+        }
+        else{
+          x=x+1;
+          if(x==datos.clase.length){
+            socket.emit("respuestaenviarcodificacionpersonal",false);
+          }
+        }
+      }));
+    }
+  });
+  socket.on('enviarcodificacionvehiculo',function(datos){
+    console.log('llegaron',datos);
+    var x=0;
+    for (var i=0;i<datos.clase.length;i++){
+      var codvehic=Object();
+      codvehic.clase=datos.clase[i];
+      codvehic.descripcion=datos.descripcion[i];
+      query.save("codificacionvehiculos",codvehic,(function(r){
+        if(r.affectedRows==1){
+          x=x+1;
+          if(x==datos.clase.length){
+            socket.emit('respuestaenviarcodificacionvehiculo',true);
+          }
+        }
+        else{
+          x=x+1;
+          if(x==datos.clase.length){
+            socket.emit("respuestaenviarcodificacionvehiculo",false);
+          }
+        }
+      }));
+    }
+  });
+  socket.on('enviarcodificacionmaterial',function(datos){
+    console.log('llegaron',datos);
+    var x=0;
+    for (var i=0;i<datos.clase.length;i++){
+      var codmaterial=Object();
+      codmaterial.clase=datos.clase[i];
+      codmaterial.descripcion=datos.descripcion[i];
+      codmaterial.unidad=datos.unidad[i];
+      query.save("codificacionmaterial",codmaterial,(function(r){
+        if(r.affectedRows==1){
+          x=x+1;
+          if(x==datos.clase.length){
+            socket.emit('respuestaenviarcodificacionmaterial',true);
+          }
+        }
+        else{
+          x=x+1;
+          if(x==datos.clase.length){
+            socket.emit("respuestaenviarcodificacionmaterial",false);
+          }
+        }
+      }));
+    }
+  });
+  socket.on('enviarsueldousuarios',function(datos){
+    console.log('llegaron',datos);
+    var x=0;
+    for (var i=0;i<datos.codpersonal.length;i++){
+      var salarios=Object();
+      salarios.idcodificacionpersonal=datos.codpersonal[i];
+      salarios.numeroitems=datos.nroitems[i];
+      salarios.sueldomensual=datos.sueldomensual[i];
+      salarios.gestion=datos.gestion;
+      query.save("planillasalarial",salarios,(function(r){
+        if(r.affectedRows==1){
+          x=x+1;
+          if(x==datos.codpersonal.length){
+            socket.emit('respuestaenviarsueldousuarios',true);
+          }
+        }
+        else{
+          x=x+1;
+          if(x==datos.codpersonal.length){
+            socket.emit("respuestaenviarsueldousuarios",false);
+          }
+        }
+      }));
+    }
+  });
+  socket.on('versalariosgestiones',function(datos){
+    query.get("planillasalarial").where({'gestion':datos}).execute(function(salario){
+      console.log('salario------',salario.result);
+      if(salario.result.length>0){
+        var descripcions=[],nroitems=[],sueldomensual=[];
+        query.get("codificacionpersonal").execute(function(codpersonal){
+          for(var i=0; i<salario.result.length; i++){
+            for(var j=0; j<codpersonal.result.length; j++){
+              if(codpersonal.result[j].codigo==salario.result[i].idcodificacionpersonal){
+                descripcions.push(codpersonal.result[j].descripcion);
+              }
+            }
+            nroitems.push(salario.result[i].numeroitems);
+            sueldomensual.push(salario.result[i].sueldomensual);
+          }
+          socket.emit('respuestaversalariosgestiones',{"estado":true,"descripcion":descripcions,"nroitem":nroitems,"sueldomensual":sueldomensual});
+        });
+      }
+      else{
+        socket.emit('respuestaversalariosgestiones',{"estado":false});
+      }
+    });
+  });
+  socket.on('eliminartramo',function(datos){
+    query.delete('tramos').where({'idtramos':datos}).execute(function(res){
+      console.log(res);
+      if(res.affectedRows==1){
+        console.log('sii');
+        socket.emit('respuestaeliminartramo',true);
+
+      }else{
+        console.log('noo');
+        socket.emit("respuestaeliminartramo",false);
+      }
+    });
+  });
+  socket.on('modificartramo',function(datos){
+    console.log(datos);
+    var using=Object();
+    using.descripcion=datos.valor;
+    query.update("tramos",using).where({"idtramos":datos.idtramo}).execute(function(r){
+      if(r.affectedRows==1){
+        socket.emit('respuestamodificartramo',true);
+      }else{
+        socket.emit("respuestamodificartramo",false);
+      }
+    });
+  });
+  socket.on('eliminarasignacionp',function(datos){
+    query.delete('asignacionusuarios').where({'idasignacionusuarios':datos}).execute(function(res){
+      if(res.affectedRows==1){
+        socket.emit('respuestaeliminarasignacionp',true);
+
+      }else{
+        socket.emit("respuestaeliminarasignacionp",false);
+      }
+    });
+  });
+  socket.on('modificarpersonalresidencia',function(datos){
+    console.log(datos);
+    var using=Object();
+    using.estado=datos.estado;
+    using.perfil=datos.perfil;
+    using.observaciones=datos.observacion;
+    query.update("asignacionusuarios",using).where({"idasignacionusuarios":datos.idasignacionp}).execute(function(r){
+      if(r.affectedRows==1){
+        socket.emit('respuestamodificarpersonalresidencia',true);
+      }else{
+        socket.emit("respuestamodificarpersonalresidencia",false);
+      }
+    });
+  });
+
+  socket.on('eliminarasignacionv',function(datos){
+    query.delete('asignacionvehiculos').where({'idasignacionvehiculos':datos}).execute(function(res){
+      if(res.affectedRows==1){
+        socket.emit('respuestaeliminarasignacionv',true);
+
+      }else{
+        socket.emit("respuestaeliminarasignacionv",false);
+      }
+    });
+  });
+  socket.on('modificarvehiculoresidencia',function(datos){
+    console.log(datos);
+    var using=Object();
+    using.estado=datos.estado;
+    using.observaciones=datos.observacion;
+    query.update("asignacionvehiculos",using).where({"idasignacionvehiculos":datos.idasignacionv}).execute(function(r){
+      if(r.affectedRows==1){
+        socket.emit('respuestamodificarvehiculoresidencia',true);
+      }else{
+        socket.emit("respuestamodificarvehiculoresidencia",false);
+      }
+    });
+  });
+
+  socket.on('eliminarasignacionm',function(datos){
+    query.delete('asignacionmateriales').where({'idmaterialesysuministros':datos}).execute(function(res){
+      if(res.affectedRows==1){
+        socket.emit('respuestaeliminarasignacionm',true);
+
+      }else{
+        socket.emit("respuestaeliminarasignacionm",false);
+      }
+    });
+  });
+  socket.on('modificarmaterialresidencia',function(datos){
+    console.log(datos);
+    var using=Object();
+    using.unidaddemedida=datos.unidad;
+    using.cantidad=datos.cantidad;
+    using.preciounitario=datos.precio;
+    query.update("asignacionmateriales",using).where({"idmaterialesysuministros":datos.idasignacionm}).execute(function(r){
+      if(r.affectedRows==1){
+        socket.emit('respuestamodificarmaterialresidencia',true);
+      }else{
+        socket.emit("respuestamodificarmaterialresidencia",false);
+      }
+    });
+  });
+  socket.on('verreportesporgestiones',function(datos){
+    query.get("residencias").where({'año':datos}).execute(function(v){
+      if(v.result.length>0){
+        var lista1='',lista2='',residencias=[];
+        for (var i = 0; i < v.result.length; i++) {
+          residencias.push({idresidencia:v.result[i].idresidencias,nombre:v.result[i].nombre});
+        }
+        socket.emit('respuestaverreportesporgestiones',{estado:true,residencias:residencias});
+      }else{
+        socket.emit('respuestaverreportesporgestiones',{estado:false});
       }
     });
   });

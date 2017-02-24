@@ -39,11 +39,28 @@ $(function(){
         }
     );
 
+	 var onlyThisDates = ['12-01-2017', '13-01-2017', '14-01-2017'];
 
+            // $('#<%= txtDate.ClientID  %>').datepicker({
+            //     beforeShowDay: enableSpecificDates,
+            //     dateFormat: 'mm-dd-yy'
+            // });
 	$('#datetimepicker').datetimepicker({
 		pickTime: false,
-		format: 'dd-MM-yyyy',
-		language: 'pt-BO'
+    	format: 'dd-MM-yyyy',
+		language: 'pt-BO',
+		enabledDates : ["02/23/2017","02/28/2017","03/02/2017"]
+	    // beforeShowDay: function (date) {
+	    //     var dt_ddmmyyyy = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+	    //     if (onlyThisDates.indexOf(dt_ddmmyyyy) != -1) {
+	    //         return {
+	    //             tooltip: 'This date is enabled',
+	    //             classes: 'active'
+	    //         };
+	    //     } else {
+	    //         return false;
+	    //     }
+	    // }
 	}).on('changeDate', function(ev){
 		// do what you want here
 		$(this).datetimepicker('hide');
@@ -54,6 +71,8 @@ $(function(){
 		$('#btnfecha').addClass('disabled');
 		socket.emit('damecordenadasdeunvehiculo',{idcar:$.urlParam('idVehiculo'),fecha:i});
 	});
+	var picker = $('#datetimepicker').data("DateTimePicker");
+	picker.enabledDates(onlyThisDates);
 	var layerGroup;
 	if(window.location.pathname=='/Location_GPS_principal'){
 		var markers=[];

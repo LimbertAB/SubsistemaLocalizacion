@@ -20,95 +20,100 @@ block content
                 h3(style='text-align:center') LISTA DE VEHICULOS
               .col-md-4
                 .sectionBuscador
-                  input.buscador(type='text',size='50', placeholder="Ejemplo: PDP456",style='width:80%;margin-top: 0;')
-                  #resultado
-            
+                  input.buscador(tabindex="0",type='text',size='50',role="button",id="buscarvehiculos",placeholder="Ejemplo: PDP456",style='width:80%;margin-top: 0;',data-container='body', data-toggle='popover', data-placement='bottom', data-trigger="focus",title="LISTA VEHICULOS" data-content='' html=true)
             table.table.table-responsive.table-bordered(style="width:85%;margin:0 auto;background:#fff;padding-bottom:20px")
-                thead
-                  tr
-                    td COD INTERNO
-                    td UBICACION
-                    td(style='display:none') ENCARGADO
-                    td(style='display:none') PLACA
-                    td(style='display:none') MODELO
-                    td(style='display:none') MARCA
-                    td(style='display:none') COLOR
-                    td TIPO
-                    td(style='display:none') COMBUSTIBLE
-                    td ESTADO
-                tbody.tablabodyVehiculos
+              thead
+                tr
+                  td N°
+                  td COD INTERNO
+                  td UBICACION
+                  td TIPO
+                  td ESTADO
+              tbody.tablabodyVehiculos
+                if estadocodificaciones==true
                   if estadocar==true
-                    - for (var x=0;x<idequipos.length;x++)
+                    -var aux=idequipos.length
+                    if aux>10
+                      - aux=10
+                    - for (var x=0;x<aux;x++)
                       if x%2
                         tr(id=idequipos[x],data-toggle="modal" class="info" data-target="#modalUnvehiculo")
+                          td #{x+1}
                           td(id="codv") #{codinterno[x]}
                           if ubicacion[x]
                             td(id="ubiv") #{ubicacion[x]}
                           else
                             td(id="ubiv") No Asignado
-                          td(id="plav",style='display:none') #{placa[x]}
-                          td(id="modv",style='display:none') #{modelo[x]}
-                          td(id="marv",style='display:none') #{marca[x]}
-                          td(id="colv",style='display:none') #{color[x]}
                           td(id="tipv") #{tipo[x]}
-                          td(id="comv",style='display:none') #{combustible[x]}
                           td(id="estv") #{perfil[x]}
                       else
                         tr(id=idequipos[x],data-toggle="modal" data-target="#modalUnvehiculo")
+                          td #{x+1}
                           td(id="codv") #{codinterno[x]}
                           if ubicacion[x]
                             td(id="ubiv") #{ubicacion[x]}
                           else
                             td(id="ubiv") No Asignado
-                          td(id="plav",style='display:none') #{placa[x]}
-                          td(id="modv",style='display:none') #{modelo[x]}
-                          td(id="marv",style='display:none') #{marca[x]}
-                          td(id="colv",style='display:none') #{color[x]}
                           td(id="tipv") #{tipo[x]}
-                          td(id="comv",style='display:none') #{combustible[x]}
                           td(id="estv") #{perfil[x]}
-          - for (var x=0;x<residencias.length;x++)
-            .tab-pane(role='tabpanel',id=residencias[x].nombreres)
-                table.table.table-responsive.table-bordered(style="width:85%;margin:0 auto;background:#fff;padding-bottom:20px")
-                  thead
-                    tr
-                      td COD INTERNO
-                      td UBICACION
-                      td(style='display:none') ENCARGADO
-                      td(style='display:none') PLACA
-                      td(style='display:none') MODELO
-                      td(style='display:none') MARCA
-                      td(style='display:none') COLOR
-                      td TIPO
-                      td(style='display:none') COMBUSTIBLE
-                      td ESTADO
-                  tbody.tablabodyVehiculos
-                    if estadoasignacion==true
-                      if residencias[x].idequipos.length
-                        - for (var y=0;y<residencias[x].idequipos.length;y++)
-                          if y%2
-                            tr(id=residencias[x].idequipos[y],data-toggle="modal" class="info" data-target="#modalUnvehiculo")
-                              td(id="codv") #{residencias[x].codinterno[x]}
-                              td(id="ubiv") #{residencias[x].ubicacion[x]}
-                              td(id="encv",style='display:none') #{residencias[x].encargado[x]}
-                              td(id="plav",style='display:none') #{residencias[x].placa[x]}
-                              td(id="modv",style='display:none') #{residencias[x].modelo[x]}
-                              td(id="marv",style='display:none') #{residencias[x].marca[x]}
-                              td(id="colv",style='display:none') #{residencias[x].color[x]}
-                              td(id="tipv") #{residencias[x].tipo[x]}
-                              td(id="comv",style='display:none') #{residencias[x].combustible[x]}
-                              td(id="estv") #{residencias[x].perfil[x]}
-                          else
-                            tr(id=residencias[x].idequipos[y],data-toggle="modal" data-target="#modalUnvehiculo")
-                              td(id="codv") #{residencias[x].codinterno[x]}
-                              td(id="ubiv") #{residencias[x].ubicacion[x]}
-                              td(id="plav",style='display:none') #{residencias[x].placa[x]}
-                              td(id="modv",style='display:none') #{residencias[x].modelo[x]}
-                              td(id="marv",style='display:none') #{residencias[x].marca[x]}
-                              td(id="colv",style='display:none') #{residencias[x].color[x]}
-                              td(id="tipv") #{residencias[x].tipo[x]}
-                              td(id="comv",style='display:none') #{residencias[x].combustible[x]}
-                              td(id="estv") #{residencias[x].perfil[x]}
+                  else
+                    .row(style='background:#fff')
+                      .col-md-8.col-md-offset-2
+                        .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                          button.close(type='button', data-dismiss='alert', aria-label='Close')
+                            span(aria-hidden='true') ×
+                          strong NO EXISTE NINGUN VEHICULO REGISTRADO!
+                          |  Registre vehiculos para evitar problemas en el sistema.
+                else
+                    .row(style='background:#fff')
+                      .col-md-8.col-md-offset-2
+                        .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                          button.close(type='button', data-dismiss='alert', aria-label='Close')
+                            span(aria-hidden='true') ×
+                          strong NO EXISTE NINGUNA CODIFICACION DE EQUIPO SAM!
+                          |  Registre codificacion en CODIGOS para evitar problemas en el sistema.
+            .row
+              .col-md-12
+                #page-selection  
+          if estadoresidencia==true
+            - for (var x=0;x<residencias.length;x++)
+              .tab-pane(role='tabpanel',id=residencias[x].nombreres)
+                  table.table.table-responsive.table-bordered(style="width:85%;margin:0 auto;background:#fff;padding-bottom:20px")
+                    thead
+                      tr
+                        td N°
+                        td COD INTERNO
+                        td UBICACION
+                        td TIPO
+                        td ESTADO
+                    tbody.tablabodyVehiculos
+                      if estadoasignacion==true
+                        if residencias[x].idequipos.length
+                          - local_data = JSON.stringify(codinterno) // data coming in from Express.js
+                            input(type='hidden', value=local_data)#myLocalDataObj
+                          - for (var y=0;y<residencias[x].idequipos.length;y++)
+                            if y%2
+                              tr(id=residencias[x].idequipos[y],data-toggle="modal" class="info" data-target="#modalUnvehiculo")
+                                td #{x+1}
+                                td(id="codv") #{residencias[x].codinterno[x]}
+                                td(id="ubiv") #{residencias[x].ubicacion[x]}
+                                td(id="tipv") #{residencias[x].tipo[x]}
+                                td(id="estv") #{residencias[x].perfil[x]}
+                            else
+                              tr(id=residencias[x].idequipos[y],data-toggle="modal" data-target="#modalUnvehiculo")
+                                td #{x+1}
+                                td(id="codv") #{residencias[x].codinterno[x]}
+                                td(id="ubiv") #{residencias[x].ubicacion[x]}
+                                td(id="tipv") #{residencias[x].tipo[x]}
+                                td(id="estv") #{residencias[x].perfil[x]}
+                        else
+                          .row(style='background:#fff')
+                            .col-md-8.col-md-offset-2
+                              .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                                    button.close(type='button', data-dismiss='alert', aria-label='Close')
+                                      span(aria-hidden='true') ×
+                                    strong NO SE ENCONTRARON RESULTADOS!
+                                    |  Aun no se Asignaron vehiculos para esta residencia.
                       else
                         .row(style='background:#fff')
                           .col-md-8.col-md-offset-2
@@ -116,15 +121,7 @@ block content
                                   button.close(type='button', data-dismiss='alert', aria-label='Close')
                                     span(aria-hidden='true') ×
                                   strong NO SE ENCONTRARON RESULTADOS!
-                                  |  Aun no se Asignaron vehiculos para esta residencia.
-                    else
-                      .row(style='background:#fff')
-                        .col-md-8.col-md-offset-2
-                          .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
-                                button.close(type='button', data-dismiss='alert', aria-label='Close')
-                                  span(aria-hidden='true') ×
-                                strong NO SE ENCONTRARON RESULTADOS!
-                                |  Aun no se Asignaron vehiculos para esta residencia. 
+                                  |  Aun no se Asignaron vehiculos para esta residencia. 
     h1.resultadoRegistroVehiculo(style='display:none') #{estadoinsertarvehiculo}
     #ContentNewCar.row(style='background:rgba(241, 196, 15, .8);padding-bottom:50px;')
       form.form-horizontal(method="post",style='margin-top:30px;',id='formVehiculo')
@@ -160,11 +157,10 @@ block content
           .col-sm-5
             select.form-control(name='tipo')
               option Seleccione Tipo
-              option Camioneta
-              option Volvo
-              option Volqueta
-              option Flota
-              option Tractor
+              if estadocodificaciones==true
+                - for (var y=0;y<codificaciones[0].idcodificacion.length;y++)
+                  option(value=codificaciones[0].idcodificacion[y],id="codigoscar") #{codificaciones[0].descripcion[y]}
+
         .form-group.group7.has-error.has-feedback.formulariosRegistro
           label.col-sm-2.control-label.col-sm-offset-2 Combustible
           .col-sm-5
@@ -186,3 +182,15 @@ block content
     include modalEquipo
     include modalUsuario
     script(src="/javascripts/bootstrap.min.js")
+    script(type="text/javascript").
+      var idequipos1=[],codinterno1=[],tipo1=[],perfil1=[]
+      idequipos1=!{JSON.stringify(idequipos)}
+      codinterno1=!{JSON.stringify(codinterno)}
+      ubicacion1=!{JSON.stringify(ubicacion)}
+      tipo1=!{JSON.stringify(tipo)}
+      perfil1=!{JSON.stringify(perfil)}
+      for(var i=0;i<ci1.length;i++){
+        if(!ubicacion1[i]){
+          ubicacion1[i]='No Asignado';
+        }
+      }

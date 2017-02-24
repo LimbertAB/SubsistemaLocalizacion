@@ -1,120 +1,137 @@
 extends layout2
 
 block content
-    .row.filaimagenPrincipal
-        h1 SERVICIO DEPARTAMENTAL DE CAMINOS POTOSÍ
-        h3 Subsistema Administrador
-        .row.userResidencia
-            .col-md-2.col-md-offset-1
-                a(href="Residencias")
-                    img(src="/images/home.jpg",class="img-circle")
-                    h3 RESIDENCIAS
-            .col-md-2
-                a(href="Usuarios")
-                    img(src="/images/user.jpg",class="img-circle")
-                    h3 USUARIOS
-            .col-md-2
-                a(href="equipos")
-                    img(src="/images/car.jpg",class="img-circle")
-                    h3 VEHICULOS
-            .col-md-2
-                a(class="arrow",href="#Notificaciones")
-                    img(src="/images/reportes.jpg",class="img-circle")
-                    h3 REPORTES
-            .col-md-2(data-toggle="modal" data-target="#myModal")
-                img(src="/images/mensajes.jpg",class="img-circle")
-                h3 MENSAJES
-        .row.col-md-12(style='margin-top:80px;margin-bottom:40px;')
-            a(class="arrow",href="#Notificaciones",style='text-align:center;display:block;')
-                img(src='/images/arrow.png',style='width:70px;')
-    .row.filaNotificaciones#Notificaciones
-        h1(style='margin-top:80px;') REPORTES
-        .row(style='padding:40px;')
-            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
-              .hovereffect
-                img.img-responsive(src='/images/maestranza.jpg', alt='')
+  .row.filaimagenPrincipal
+    h1 SERVICIO DEPARTAMENTAL DE CAMINOS POTOSÍ
+    h3 Subsistema Administrador
+    .row.userResidencia
+      .col-md-2.col-md-offset-1
+        a(href="Residencias")
+          img(src="/images/home.jpg",class="img-circle")
+          h3 RESIDENCIAS
+      .col-md-2
+        a(href="Usuarios")
+          img(src="/images/user.jpg",class="img-circle")
+          h3 USUARIOS
+      .col-md-2
+        a(href="equipos")
+          img(src="/images/car.jpg",class="img-circle")
+          h3 VEHICULOS
+      .col-md-2
+        a(class="arrow",href="#Notificaciones")
+          img(src="/images/reportes.jpg",class="img-circle")
+          h3 REPORTES
+      .col-md-2(data-toggle="modal" data-target="#myModal")
+        img(src="/images/mensajes.jpg",class="img-circle")
+        h3 MENSAJES
+    .row.col-md-12(style='margin-top:80px;margin-bottom:40px;')
+        a(class="arrow",href="#Notificaciones",style='text-align:center;display:block;')
+            img(src='/images/arrow.png',style='width:70px;')
+  .row.filaNotificaciones#Notificaciones
+    h1(style='margin-top:70px;') REPORTES
+    .row(style='padding-top:10px;')
+      .form-group(style='margin:0')
+        #datetimepicker13.input-append.date
+          input(data-format="yyyy" type="text",id='valorr',style='display:none')
+          button.btn.btn-warning.btn-lg.add-on(type='button',id='btnfecha',style='margin:0 auto;display:block',data-toggle="tooltip" data-placement="bottom" title="Ver reportes de gestiones anteriores") #{gestion}
+            span.glyphicon.glyphicon-calendar(style='padding-left:5px;',aria-hidden="true") 
+    .row(style='padding-bottom:10px;')
+      .col-md-12(style='padding-left:50px;padding-right:50px;padding-top:20px;padding-bottom:40px;' ,id='filaerrorreporte')
+        if estado
+          - for (var x=0;x<residencias.length;x++)
+            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:10px;')
+              .hovereffect(value=residencias[x].idresidencia)
+                img.img-responsive(src='/images/resid'+x+'.jpg', alt='')
                 .overlay
-                    h2 RESIDENCIA ACASIO
-                    p
-                        a(href='#') VER REPORTES
-            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
-              .hovereffect
-                img.img-responsive(src='/images/fondoo.jpg', alt='')
-                .overlay
-                    h2 RESIDENCIA UNCIA
-                    p
-                        a(href='#') VER REPORTES
-            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
-              .hovereffect
-                img.img-responsive(src='/images/banner.jpg', alt='')
-                .overlay
-                    h2 RESIDENCIA UYUNI
-                    p
-                        a(href='#') VER REPORTES
-            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
-              .hovereffect
-                img.img-responsive(src='/images/residencias.jpe', alt='')
-                .overlay
-                    h2 RESIDENCIA VILLA MAR
-                    p
-                        a(href='#') VER REPORTES
-            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
-              .hovereffect
-                img.img-responsive(src='/images/residen.jpg', alt='')
-                .overlay
-                    h2 RESIDENCIA RETIRO
-                    p
-                        a(href='#') VER REPORTES
-            .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
-              .hovereffect
-                img.img-responsive(src='/images/fondoo.jpg', alt='')
-                .overlay
-                    h2 RESIDENCIA TUPIZA
-                    p
-                        a(href='#') VER REPORTES
-        .bodyNoticias(style='margin-top:60px;')
-            .row
-                .formNoticia
-                    .navii.col-md-12
-                        .etNoticia.col-md-11(style="padding-left:0px; padding-right:0px;")
-                            textarea(type='text',placeholder='Publicar Noticia..',id='textNoticiaNew',rows="5",style="padding-right:10px;padding-left:10px;")
-                        .btnNoticia.col-md-1(style="padding-right:0px;")
-                            form(enctype="multipart/form-data",method="post")
-                                .form-group.col-md-12
-                                    .row
-                                        .imgButton.col-md-10(style="margin:0 auto;display:block;width:100%;")
-                                            input.disabled(type='file',name="nombre",id="botonImg", placeholder="Subir Imagen",accept="image/*")
-                                    .row
-                                            a.nombreImg
-                                .form-group.col-md-12
-                                    .row
-                                        input.btn.btn-primary.disabled(type="submit",value="Enviar",id='btnNoticiaNew')
-            .row
-                h1 REPORTES
-                .noticias.col-md-12
-                    p.dirImagen #{dirImagen}
-                        .cajaNoticia
-                            .cajaPosicionNoti
-                                strong
-                                span
-                                span.fechaNoti
-                                p
-                                img.imagenNoti
-    
-        #modalResidentes.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
-          .modal-dialog(role='document')
-            .modal-content
-              .modal-header
-                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                  h2 #{residencias[x].nombre}
+                  p
+                    a(href='#') VER REPORTES
+        else
+          .row(style='background:#fff',id='alerterror')
+            .col-md-8.col-md-offset-2
+              .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+                button.close(type='button', data-dismiss='alert', aria-label='Close')
                   span(aria-hidden='true') ×
-                h4#myModalLabel.modal-title ENCARGADOS DE RESIDENCIAS
-              .modal-body
-                
-              .modal-footer
-                button.btn.btn-primary(type='button') GUARDAR CAMBIOS
-                button.btn.btn-default(type='button', data-dismiss='modal') CANCELAR
-                
-    .footer
-        #mimapa
-    include modalUsuario
-    script(src="/javascripts/bootstrap.min.js")
+                strong NO SE ENCONTRARON RESULTADOS!
+                |  No se encontraron residencias en esta gestion. 
+
+      //- table.table.table-bordered.table-hover.table-responsive(id='tablaSam',style='width:80vw;margin:0 auto')
+      //-   thead
+      //-     tr
+      //-       th NOMBRE
+      //-       th ULTIMO REPORTE
+      //-       th ENVIADO POR
+      //-       th FECHA
+      //-   tbody#tablareportesmp
+      //-     if estado
+      //-       if reportes
+      //-         - for (var x=0;x<residencias.length;x++)
+      //-           tr(value=residencias[x].idresidencia)
+      //-             td #{residencias[x].nombre}
+      //-             if residencias[x].ultimo!=''
+      //-               td #{residencias[x].ultimo}
+      //-             else
+      //-               td Sin Reportes
+      //-             td #{residencias[x].usuario}
+      //-             td #{residencias[x].fecha}
+      //-       else
+      //-         - for (var x=0;x<residencias.length;x++)
+      //-           tr(value=residencias[x].idresidencia)
+      //-             td #{residencias[x].nombre}
+      //-             td Sin Reportes
+      //-             td
+      //-             td
+      //-     else
+      //-       .row(style='background:#fff',id='alerterror')
+      //-         .col-md-8.col-md-offset-2
+      //-           .alert.alert-danger.alert-dismissible(role='alert',id='alertaSamError',style='margin:20px;')
+      //-             button.close(type='button', data-dismiss='alert', aria-label='Close')
+      //-               span(aria-hidden='true') ×
+      //-             strong NO SE ENCONTRARON RESULTADOS!
+      //-             |  No se encontraron residencias en esta gestion. 
+
+
+      //- .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
+      //-   .hovereffect
+      //-     img.img-responsive(src='/images/maestranza.jpg', alt='')
+      //-     .overlay
+      //-         h2 RESIDENCIA ACASIO
+      //-         p
+      //-             a(href='#') VER REPORTES
+      //- .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
+      //-   .hovereffect
+      //-     img.img-responsive(src='/images/fondoo.jpg', alt='')
+      //-     .overlay
+      //-         h2 RESIDENCIA UNCIA
+      //-         p
+      //-             a(href='#') VER REPORTES
+      //- .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
+      //-   .hovereffect
+      //-     img.img-responsive(src='/images/banner.jpg', alt='')
+      //-     .overlay
+      //-         h2 RESIDENCIA UYUNI
+      //-         p
+      //-             a(href='#') VER REPORTES
+      //- .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
+      //-   .hovereffect
+      //-     img.img-responsive(src='/images/residencias.jpe', alt='')
+      //-     .overlay
+      //-         h2 RESIDENCIA VILLA MAR
+      //-         p
+      //-             a(href='#') VER REPORTES
+      //- .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
+      //-   .hovereffect
+      //-     img.img-responsive(src='/images/residen.jpg', alt='')
+      //-     .overlay
+      //-         h2 RESIDENCIA RETIRO
+      //-         p
+      //-             a(href='#') VER REPORTES
+      //- .col-lg-3.col-md-4.col-sm-6.col-xs-12(style='padding:5px;')
+      //-   .hovereffect
+      //-     img.img-responsive(src='/images/fondoo.jpg', alt='')
+      //-     .overlay
+      //-         h2 RESIDENCIA TUPIZA
+      //-         p
+      //-           a(href='#') VER REPORTES        
+  include modalUsuario
+  script(src="/javascripts/bootstrap.min.js")

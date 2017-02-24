@@ -1,7 +1,7 @@
 extends layout2
 
 block content
-  .row(style='padding-top:100px')
+  .row(style='padding-top:85px')
     .col-md-2
       ul(class="nav nav-pills nav-stacked",style='background:#fff')
           li.active(role='presentation') 
@@ -11,24 +11,29 @@ block content
                 li(role='presentation')
                   a(href='#'+residencias[x].nombreres+'', aria-controls='acasio', role='tab', data-toggle='tab') #{residencias[x].nombreres}
     .col-md-10(style='padding:0')
-      .tab-content(style='padding-top:30px;padding-bottom:30px')
+      .tab-content
         #todos.tab-pane.active(role='tabpanel')
-          .sectionBuscador(style='background:#fff;padding:10px;margin-top:0')
-              input.buscador(type='text',size='50', placeholder="Buscar Personal ...")
-              #resultado
+          .col-md-12
+            .sectionBuscador.col-md-6.col-md-offset-3(style='background:#fff;padding:10px;margin-top:0')
+              input.buscador(tabindex="0",type='text',size='50',role="button",id="buscarusuarios",placeholder="Ejemplo: Limbert Arando Benavides",style='width:80%;margin-top: 0;',data-container='body', data-toggle='popover', data-placement='bottom', data-trigger="focus",title="LISTA USUARIOS" data-content='')
           li.app(id='variables')=nombres
           table.table.table-responsive(style="width:85%;margin:0 auto;background:#fff")
               thead
                 tr
+                  td N°
                   td CI
                   td NOMBRE COMPLETO
                   td CARGO
                   td UBICACION
-              tbody.tablaV
+              tbody.tablaV(id='tablaU')
                 if estadouser==true
-                  - for (var x=0;x<ci.length;x++)
+                  -var aux=ci.length
+                  if aux>10
+                    - aux=10
+                  - for (var x=0;x<aux;x++)
                     if x%2
                       tr(value=idusuario[x],data-toggle="modal" class="info" data-target="#modalUser")
+                        td #{x+1}
                         td(id="ciT") #{ci[x]}
                         td(id="nomT") #{nombres[x]}
                         td(id="cargT") #{cargo[x]}
@@ -38,6 +43,7 @@ block content
                           td(id="ubicT") No Asignado
                     else
                       tr(value=idusuario[x],data-toggle="modal" data-target="#modalUser")
+                        td #{x+1}
                         td(id="ciT") #{ci[x]}
                         td(id="nomT") #{nombres[x]}
                         td(id="cargT") #{cargo[x]}
@@ -45,27 +51,34 @@ block content
                           td(id="ubicT") #{ubicacion[x]}
                         else
                           td(id="ubicT") No Asignado
+          .row
+            .col-md-12
+              #page-selection
         - for (var x=0;x<residencias.length;x++)
-            .tab-pane(role='tabpanel',id=residencias[x].nombreres)
+            .tab-pane(role='tabpanel',id=residencias[x].nombreres,style="padding-top:10px")
               table.table.table-responsive(style="width:80%;margin:0 auto;background:#fff")
-                  thead
-                    tr
-                      td CI
-                      td NOMBRE COMPLETO
-                      td CARGO
-                      td UBICACION
-                  tbody.tablaV
+                thead
+                  tr
+                    td N°
+                    td CI
+                    td NOMBRE COMPLETO
+                    td CARGO
+                    td UBICACION
+                tbody.tablaV
                     if estadoasignacion==true
-                      if residencias[x].idusuario.length
-                        - for (var y=0;y<residencias[x].idusuario.length;y++)
+                      -var tam=residencias[x].idusuario.length
+                      if tam
+                        - for (var y=0;y<tam;y++)
                           if y%2
                             tr(value=residencias[x].idusuario[y],data-toggle="modal" class="info" data-target="#modalUser")
+                              td #{y+1}    
                               td(id="ciT") #{residencias[x].ci[y]}
                               td(id="nomT") #{residencias[x].nombres[y]}
                               td(id="cargT") #{residencias[x].cargo[y]}
                               td(id="ubicT") #{residencias[x].nombreres}
                           else
                             tr(value=residencias[x].idusuario[y],data-toggle="modal" data-target="#modalUser")
+                              td #{y+1}
                               td(id="ciT") #{residencias[x].ci[y]}
                               td(id="nomT") #{residencias[x].nombres[y]}
                               td(id="cargT") #{residencias[x].cargo[y]}
@@ -88,3 +101,15 @@ block content
                                 |  Aun no se asigno personal para esta residencia.     
   include modalUsuario
   script(src="/javascripts/bootstrap.min.js")
+  script(type="text/javascript").
+    var idusuario1=[],ci1=[],nombres1=[],cargo1=[],ubicacion1=[]
+    idusuario1=!{JSON.stringify(idusuario)}
+    ci1=!{JSON.stringify(ci)}
+    nombres1=!{JSON.stringify(nombres)}
+    cargo1=!{JSON.stringify(cargo)}
+    ubicacion1=!{JSON.stringify(ubicacion)}
+    for(var i=0;i<ci1.length;i++){
+      if(!ubicacion1[i]){
+        ubicacion1[i]='No Asignado';
+      }
+    }

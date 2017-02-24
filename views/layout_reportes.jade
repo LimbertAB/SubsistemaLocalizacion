@@ -1,0 +1,57 @@
+doctype html
+html
+  head
+    title= title
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel='stylesheet', href='/stylesheets/stylereportes.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    script(src="/javascripts/jquery.js")
+    script(src="/socket.io/socket.io.js")
+    script(src="/javascripts/Mensajes.js")
+    script(src="/javascripts/reportes.js")
+    script(src="/javascripts/pdfobject.min.js")
+  body
+    .row
+        nav#mainNav.navbar.navbar-inverse.navbar-fixed-top
+          .container(style='width:100vw')
+            .navbar-header
+              button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+                span.sr-only Toggle navigation
+                span.icon-bar
+                span.icon-bar
+                span.icon-bar
+              a(href="MenuPrincipal",style='padding:0')
+                img(src="/images/logoSEDECA.png",class="logoSEDECA")
+            #bs-example-navbar-collapse-1.collapse.navbar-collapse
+              ul.nav.navbar-nav.navbar-right
+                li
+                  a(href='Residencias') Residencias
+                li
+                  a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="false", aria-expanded="true") Usuarios
+                            ul(class="dropdown-menu")
+                                li
+                                    a(href="Usuarios") Listar Usuarios
+                                li
+                                    a(href="RegistrarUsuario") Nuevo Usuario
+                li
+                  a(href='equipos') Vehiculos
+                li
+                  a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Ubicacion
+                                  ul(class="dropdown-menu")
+                                    li
+                                      a(href="Principal_TiempoReal") Localización Usuarios
+                                    li
+                                      a(href="Location_GPS_principal") Localizacion Vehiculos
+                li
+                  a(href='Codificacion_Sam') Codificacion SAM
+                li
+                  a(href='#',id='btnMensajes', data-toggle="modal" data-target="#myModal") Mensajes
+                li
+                  a(href="#", class="dropdown-toggle avatarNombre", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Mi Perfil
+                                  span(class="glyphicon glyphicon-user")
+                                    ul(class="dropdown-menu")
+                                      li
+                                        a(id='miperfil', data-toggle="modal", class="info", data-target="#modalUser",style='cursor:pointer') Mis Datos
+                                      li
+                                        a(href="#") Salir
+    block content
